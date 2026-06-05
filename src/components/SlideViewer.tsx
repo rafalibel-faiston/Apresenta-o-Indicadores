@@ -957,14 +957,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       groupMap[p].totalQty += proj.itemQty;
                     });
                   const sortedGroups = Object.values(groupMap).sort((a, b) => b.totalValue - a.totalValue);
-                  const maxGroupVal = sortedGroups[0]?.totalValue || 1;
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sortedGroups.map((group, gIdx) => {
                         const rankColor = gradientColor(gIdx, sortedGroups.length);
-                        const ratio = Math.min((group.totalValue / maxGroupVal) * 100, 100);
+                        const pct = (group.totalValue / content.total) * 100;
+                        const ratio = Math.min(pct, 100);
                         const isMulti = group.items.length > 1;
                         const isOpen = expandedStockGroups.includes(group.prefix);
                         const toggle = () => setExpandedStockGroups(prev =>
@@ -993,11 +993,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 </span>
                               </div>
 
-                              {/* Inline progress bar */}
-                              <div className="w-20 hidden md:block">
-                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                              {/* Inline progress bar + % label */}
+                              <div className="hidden md:flex items-center gap-1.5 w-28">
+                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
                                   <div className="h-full rounded-full transition-all" style={{ width: `${ratio}%`, backgroundColor: rankColor }} />
                                 </div>
+                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color: rankColor }}>{pct.toFixed(1)}%</span>
                               </div>
 
                               {/* Value inline */}
@@ -1067,13 +1068,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     return `rgb(${Math.round(r1+(r2-r1)*st)},${Math.round(g1+(g2-g1)*st)},${Math.round(b1+(b2-b1)*st)})`;
                   };
                   const sorted = [...content.semNf].sort((a: any, b: any) => b.value - a.value);
-                  const maxVal = sorted[0]?.value || 1;
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sorted.map((item: any, idx: number) => {
                           const color = gradColor(idx, sorted.length);
-                          const ratio = Math.min((item.value / maxVal) * 100, 100);
+                          const pct = (item.value / content.total) * 100;
+                          const ratio = Math.min(pct, 100);
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
                               <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
@@ -1081,10 +1082,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
                                 <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="w-20 hidden md:block">
-                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                              <div className="hidden md:flex items-center gap-1.5 w-28">
+                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
                                   <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
                                 </div>
+                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
                               </div>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
                                 <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
@@ -1108,13 +1110,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     return `rgb(${Math.round(r1+(r2-r1)*st)},${Math.round(g1+(g2-g1)*st)},${Math.round(b1+(b2-b1)*st)})`;
                   };
                   const sorted = [...content.guardaTecnica].sort((a: any, b: any) => b.value - a.value);
-                  const maxVal = sorted[0]?.value || 1;
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sorted.map((item: any, idx: number) => {
                           const color = gradColor(idx, sorted.length);
-                          const ratio = Math.min((item.value / maxVal) * 100, 100);
+                          const pct = (item.value / content.total) * 100;
+                          const ratio = Math.min(pct, 100);
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
                               <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
@@ -1122,10 +1124,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
                                 <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="w-20 hidden md:block">
-                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                              <div className="hidden md:flex items-center gap-1.5 w-28">
+                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
                                   <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
                                 </div>
+                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
                               </div>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
                                 <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
