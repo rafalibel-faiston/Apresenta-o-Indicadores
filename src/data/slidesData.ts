@@ -147,9 +147,9 @@ export const slidesData: Slide[] = [
       ],
       rotas: [
         { transportadora: "CASARINI", total: 1650.00, breakdown: [{ project: "NTT", val: 950.00 }, { project: "ZAMP", val: 700.00 }] },
-        { transportadora: "THOMÉ", total: 125.00, breakdown: [{ project: "METSO", val: 125.00 }] },
         { transportadora: "WASHINGTON", total: 1550.00, breakdown: [{ project: "T-SYSTEMS", val: 750.00 }, { project: "NTT", val: 400.00 }, { project: "HPE", val: 200.00 }, { project: "OPEX", val: 200.00 }] },
-        { transportadora: "SEVERINO", total: 170.00, breakdown: [{ project: "NTT", val: 170.00 }] }
+        { transportadora: "SEVERINO", total: 170.00, breakdown: [{ project: "NTT", val: 170.00 }] },
+        { transportadora: "THOMÉ", total: 125.00, breakdown: [{ project: "METSO", val: 125.00 }] }
       ],
       projects: [
         { project: "NTT", cost: 1520.00, equipments: 39 },
@@ -314,8 +314,34 @@ export const slidesData: Slide[] = [
     }
   },
   {
-    id: "divisor-seguros",
+    id: "todo-gerencial",
     number: 12,
+    title: "Todo Gerencial da Logística de Custos",
+    subtitle: "Resumo executivo de gastos e savings do período (MAI.26)",
+    category: "financials",
+    content: {
+      totalSpent: 61234.09,
+      totalSavings: 9280.00,
+      savingsRate: 15.2,
+      breakdown: [
+        { category: "Transportadora", spent: 33893.50, saving: 4200.00, color: "#6366f1" },
+        { category: "Correios", spent: 15118.89, saving: 1850.00, color: "#8b5cf6" },
+        { category: "Cia Aérea", spent: 4532.03, saving: 980.00, color: "#3b82f6" },
+        { category: "Dedicados", spent: 3495.00, saving: 1450.00, color: "#ec4899" },
+        { category: "Courier (Loggi)", spent: 3077.77, saving: 650.00, color: "#06b6d4" },
+        { category: "Self Storage", spent: 1116.90, saving: 150.00, color: "#10b981" }
+      ],
+      actions: [
+        { type: "saving", text: "Renegociação BESTLOG/SCALT gerou saving de R$ 4.200 em transportadoras — contrato ajustado em ABR.26." },
+        { type: "saving", text: "Otimização de rotas Dedicados (CASARINI e WASHINGTON) economizou R$ 1.450 em relação ao mês anterior." },
+        { type: "alert", text: "Cia Aérea ainda acima da meta: potencial de saving adicional de R$ 1.800 via consolidação de cargas GOL." },
+        { type: "next", text: "Próxima ação: Renegociação de contrato Self Storage PE prevista para JUN.26 com meta de redução de 12%." }
+      ]
+    }
+  },
+  {
+    id: "divisor-seguros",
+    number: 13,
     title: "DEPARTAMENTO DE SEGUROS",
     subtitle: "Gestão de Riscos, Apólices e Garantia Patrimonial",
     category: "divider",
@@ -327,7 +353,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-patrimonial",
-    number: 13,
+    number: 14,
     title: "Garantia Patrimonial de Estoque",
     subtitle: "Estrutura securitária regular e estoque em transição fiscal",
     category: "insurance",
@@ -358,7 +384,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-extra",
-    number: 14,
+    number: 15,
     title: "Seguros de Trânsito & Guarda Técnica",
     subtitle: "Proteção extraordinária de ativos e estoque em pontos satélites",
     category: "insurance",
@@ -388,7 +414,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-trags",
-    number: 15,
+    number: 16,
     title: "Seguro TRAGs & Instalações",
     subtitle: "Atuação em desativação e garantia de roubo local pós-entrega",
     category: "insurance",
@@ -420,7 +446,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-satelite",
-    number: 16,
+    number: 17,
     title: "Seguro Starlink, Medição & Notebooks",
     subtitle: "Antenas satelitais, calibradores e notebooks corporativos",
     category: "insurance",
@@ -460,7 +486,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "custo-fatura",
-    number: 17,
+    number: 18,
     title: "Composição de Despesa de Faturas de Seguros",
     subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (MAI.26)",
     category: "financials",
@@ -486,7 +512,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "agradecimento",
-    number: 18,
+    number: 19,
     title: "Obrigado!",
     subtitle: "Sempre evoluindo por meio de tecnologia e cooperação",
     category: "contact",
