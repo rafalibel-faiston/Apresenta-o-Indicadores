@@ -357,7 +357,7 @@ export default function App() {
 
           <div className={`h-8 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'}`} />
 
-          <FaistonLogo width={130} height={36} className={dk ? 'opacity-95' : 'opacity-100'} />
+          <FaistonLogo width={130} height={36} className={dk ? 'text-white opacity-95' : 'text-slate-900 opacity-100'} />
 
           <div className={`h-8 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'}`} />
 

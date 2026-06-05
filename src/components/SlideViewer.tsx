@@ -39,6 +39,20 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
     setConsolidatedTab('chart');
   }, [slide]);
 
+  const dk = isDarkMode;
+  const cardCls = `border rounded-3xl p-6 shadow-sm flex flex-col ${dk ? 'bg-[#12131a] border-[#1c1f2e] shadow-black/20' : 'bg-white border-slate-200/90'}`;
+  const innerCls = `rounded-xl border ${dk ? 'bg-[#0d0f17] border-slate-800/50' : 'bg-slate-50/70 border-slate-100'}`;
+  const divCls = dk ? 'border-slate-800' : 'border-slate-150';
+  const txtPri = dk ? 'text-white' : 'text-slate-900';
+  const txtMuted = dk ? 'text-slate-400' : 'text-slate-500';
+  const tabBg = dk ? 'bg-[#0d0f17] border border-slate-800' : 'bg-slate-50';
+  const tabActiveCls = (active: boolean) => active
+    ? (dk ? 'bg-[#1a1c27] text-[#00fafb] shadow-sm' : 'bg-white text-[#0054ec] shadow-sm')
+    : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600');
+  const commentWrapCls = `border p-5 rounded-2xl flex flex-col gap-3 ${dk ? 'bg-[#0d0f17]/70 border-slate-800/60' : 'bg-slate-50/50 border-slate-150'}`;
+  const commentItemCls = `flex items-start gap-3.5 p-4 rounded-xl border border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 ${dk ? 'bg-[#151720] border-[#1e2230] text-slate-300' : 'bg-white border-slate-200/70 text-slate-700'}`;
+  const subItemCls = `flex flex-col gap-1.5 px-3.5 py-2.5 rounded-xl border shadow-xs ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40 hover:bg-[#0d0f17]/80' : 'bg-slate-50/50 border-slate-100/50 hover:bg-slate-50'}`;
+
   const { category, title, subtitle, content } = slide;
 
   // Render a lovely geometric Faiston logo icon using styling
@@ -323,32 +337,27 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               {/* Comentários/Observações section */}
               {content.commentary && (
-                <div className="bg-slate-50/50 border border-slate-150 p-5 rounded-2xl flex flex-col gap-3">
+                <div className={commentWrapCls}>
                   <div className="flex flex-col gap-3.5">
                     {content.commentary.map((comm: any, idx: number) => {
                       const isSuccess = comm.type === 'success';
                       const isStats = comm.type === 'stats' || comm.type === 'link';
-                      const accentColor = isSuccess 
-                        ? '#10b981' // emerald
-                        : isStats 
-                          ? '#2226c0' // purple
-                          : '#0054ec'; // indigo/theme
-
+                      const accentColor = isSuccess ? '#10b981' : isStats ? '#2226c0' : '#0054ec';
                       return (
-                        <div 
-                          key={idx} 
-                          className="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-slate-200/70 border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 text-slate-700"
+                        <div
+                          key={idx}
+                          className={commentItemCls}
                           style={{ borderLeftColor: accentColor }}
                         >
-                          <span 
-                            className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-150 transition-colors"
+                          <span
+                            className={`p-2 rounded-lg flex-shrink-0 flex items-center justify-center border transition-colors ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-150'}`}
                             style={{ color: accentColor }}
                           >
                             {isSuccess ? <CheckCircle2 size={13} strokeWidth={2.5} /> :
                              isStats ? <TrendingUp size={13} strokeWidth={2.5} /> :
                              <Info size={13} strokeWidth={2.5} />}
                           </span>
-                          <p className="font-bold text-[12px] leading-relaxed mt-0.5 text-slate-700">{comm.text}</p>
+                          <p className={`font-bold text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{comm.text}</p>
                         </div>
                       );
                     })}
@@ -358,20 +367,20 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* Right columnar detailed tables/charts */}
-            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
-              <div className="flex items-center justify-between border-b border-slate-150 pb-3 mb-4">
-                {/* Control tabs representation */}
-                <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
-                  <button 
+            <div className={`lg:col-span-8 ${cardCls}`}>
+              <div className={`flex items-center justify-between border-b pb-3 mb-4 ${divCls}`}>
+                {/* Control tabs */}
+                <div className={`flex p-1 rounded-xl gap-1 ${tabBg}`}>
+                  <button
                     onClick={() => setActiveTab('summary')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
                   >
                     <BarChart3 size={12} />
                     Gráfico Comparativo
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveTab('table')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
                   >
                     <List size={12} />
                     Tabela de Dados
@@ -557,21 +566,21 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               {activeTab === 'table' && (
                 <div className="flex-1 flex flex-col">
                   {/* Table search filter */}
-                  <div className="flex items-center gap-2 border border-slate-100 rounded-xl px-3 py-2 text-xs bg-slate-50 mb-3 max-w-sm">
+                  <div className={`flex items-center gap-2 border rounded-xl px-3 py-2 text-xs mb-3 max-w-sm ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <Search size={14} className="text-slate-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Pesquisar projeto..." 
-                      className="bg-transparent border-none outline-none text-slate-700 w-full font-medium"
+                    <input
+                      type="text"
+                      placeholder="Pesquisar projeto..."
+                      className={`bg-transparent border-none outline-none w-full font-medium ${dk ? 'text-slate-300 placeholder:text-slate-600' : 'text-slate-700'}`}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                   </div>
 
-                  <div className={`overflow-x-auto border border-slate-50 rounded-2xl flex-1 overflow-y-auto ${isFullscreen ? "max-h-[50vh]" : "max-h-[290px]"}`}>
+                  <div className={`overflow-x-auto border rounded-2xl flex-1 overflow-y-auto ${isFullscreen ? "max-h-[50vh]" : "max-h-[290px]"} ${dk ? 'border-slate-800' : 'border-slate-50'}`}>
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-slate-50 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
+                        <tr className={`uppercase font-bold text-[10px] border-b ${dk ? 'bg-[#0d0f17] text-slate-500 border-slate-800' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
                           <th className="py-2.5 px-4 font-black">Projeto</th>
                           <th className="py-2.5 px-4 text-right font-black">Custo Total</th>
                           {content.projects[0]?.shipments !== undefined && <th className="py-2.5 px-4 text-right font-black">Embarques</th>}
@@ -579,14 +588,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           {content.projects[0]?.averageCost !== undefined && <th className="py-2.5 px-4 text-right font-black">Custo Médio</th>}
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-slate-50 text-slate-700 font-semibold">
+                      <tbody className={`divide-y font-semibold ${dk ? 'divide-slate-800 text-slate-300' : 'divide-slate-50 text-slate-700'}`}>
                         {filterList(content.projects, 'project').map((p: any, idx: number) => (
-                          <tr key={idx} className="hover:bg-[#0054ec]/8/20 transition-colors">
-                            <td className="py-2.5 px-4 font-bold text-slate-900">{p.project}</td>
-                            <td className="py-2.5 px-4 font-mono text-slate-950 font-black text-right">{formatCurrency(p.cost)}</td>
+                          <tr key={idx} className={`transition-colors ${dk ? 'hover:bg-[#0054ec]/10' : 'hover:bg-slate-50'}`}>
+                            <td className={`py-2.5 px-4 font-bold ${dk ? 'text-slate-200' : 'text-slate-900'}`}>{p.project}</td>
+                            <td className={`py-2.5 px-4 font-mono font-black text-right ${dk ? 'text-white' : 'text-slate-950'}`}>{formatCurrency(p.cost)}</td>
                             {p.shipments !== undefined && <td className="py-2.5 px-4 font-mono text-right">{p.shipments}</td>}
                             {p.equipments !== undefined && <td className="py-2.5 px-4 font-mono text-right">{p.equipments}</td>}
-                            {p.averageCost !== undefined && <td className="py-2.5 px-4 font-mono text-right text-slate-500">{formatCurrency(p.averageCost)}</td>}
+                            {p.averageCost !== undefined && <td className={`py-2.5 px-4 font-mono text-right ${dk ? 'text-slate-400' : 'text-slate-500'}`}>{formatCurrency(p.averageCost)}</td>}
                           </tr>
                         ))}
                       </tbody>
@@ -602,25 +611,25 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         {slide.id === 'custo-consolidado' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             {/* Left columnar breakdown bar list */}
-            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
-              <div className="flex flex-col gap-4 text-slate-850">
-                <div className="flex justify-between items-center border-b border-slate-100 pb-2 mb-1">
+            <div className={`lg:col-span-5 flex flex-col justify-between ${cardCls}`}>
+              <div className={`flex flex-col gap-4 ${dk ? 'text-slate-200' : 'text-slate-850'}`}>
+                <div className={`flex justify-between items-center border-b pb-2 mb-1 ${divCls}`}>
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#0054ec]/80 animate-ping" />
                     Divisão por Modalidade Geral
                   </h3>
                   
                   {/* Selector tabs buttons */}
-                  <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-0.5 rounded-xl">
+                  <div className={`flex items-center gap-1 p-0.5 rounded-xl border ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <button
                       onClick={() => setConsolidatedTab('chart')}
-                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-[#0054ec] text-white shadow-xs font-semibold' : 'text-slate-450 hover:text-slate-600'}`}
+                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-[#0054ec] text-white shadow-xs' : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
                     >
                       Gráfico
                     </button>
                     <button
                       onClick={() => setConsolidatedTab('bars')}
-                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'bars' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-450 hover:text-slate-600'}`}
+                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'bars' ? (dk ? 'bg-[#1a1c27] text-white shadow-xs' : 'bg-white text-slate-800 shadow-xs') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
                     >
                       Barras
                     </button>
@@ -684,21 +693,20 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* Right ranking projects list */}
-            <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+            <div className={`lg:col-span-7 flex flex-col justify-between ${cardCls}`}>
               <div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-150 pb-3 mb-4">
+                <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 mb-4 ${divCls}`}>
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <BarChart3 size={14} className="text-[#fd11a4]" />
                     Principais Projetos Contratantes (Ranking Custo)
                   </h3>
 
-                  {/* Search input field */}
-                  <div className="flex items-center gap-1.5 border border-slate-100 rounded-xl px-2.5 py-1 text-[10px] bg-slate-50 max-w-[200px]">
+                  <div className={`flex items-center gap-1.5 border rounded-xl px-2.5 py-1 text-[10px] max-w-[200px] ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <Search size={12} className="text-slate-400" />
-                    <input 
-                      type="text" 
-                      placeholder="Pesquisar..." 
-                      className="bg-transparent border-none outline-none text-slate-700 w-full font-semibold"
+                    <input
+                      type="text"
+                      placeholder="Pesquisar..."
+                      className={`bg-transparent border-none outline-none w-full font-semibold ${dk ? 'text-slate-300 placeholder:text-slate-600' : 'text-slate-700'}`}
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
@@ -709,14 +717,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   {filterList(content.projects, 'name').map((proj: any, idx: number) => {
                     const progress = Math.max((proj.value / 110641.69) * 100, 1);
                     return (
-                      <div key={idx} className="bg-slate-50/70 border border-slate-100/50 p-3 rounded-xl flex flex-col gap-1 hover:bg-slate-100 transition-colors">
+                      <div key={idx} className={`border p-3 rounded-xl flex flex-col gap-1 transition-colors ${dk ? 'bg-[#0d0f17]/60 border-slate-800/50 hover:bg-[#0d0f17]' : 'bg-slate-50/70 border-slate-100/50 hover:bg-slate-100'}`}>
                         <div className="flex justify-between items-center text-xs font-semibold">
-                          <span className="font-bold text-slate-900 truncate max-w-[70%]">{proj.name}</span>
-                          <span className="font-mono font-black text-slate-950">{formatCurrency(proj.value)}</span>
+                          <span className={`font-bold truncate max-w-[70%] ${dk ? 'text-slate-200' : 'text-slate-900'}`}>{proj.name}</span>
+                          <span className={`font-mono font-black ${dk ? 'text-white' : 'text-slate-950'}`}>{formatCurrency(proj.value)}</span>
                         </div>
-                        <div className="w-full bg-white h-1.5 rounded-full overflow-hidden border border-slate-100/50">
-                          <div 
-                            className="bg-gradient-to-r from-[#fd11a4] to-[#2226c0] h-full rounded-full" 
+                        <div className={`w-full h-1.5 rounded-full overflow-hidden border ${dk ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-100/50'}`}>
+                          <div
+                            className="bg-gradient-to-r from-[#fd11a4] to-[#2226c0] h-full rounded-full"
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -737,7 +745,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         {slide.id === 'entrada-saida' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             {/* ENTRADA CARD */}
-            <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+            <div className={`lg:col-span-4 flex flex-col justify-between ${cardCls}`}>
               <div>
                 <div className="flex items-center gap-3 border-b border-slate-150 pb-3 mb-5">
                   <div className="w-9 h-9 rounded-xl bg-[#0054ec]/8 text-[#0054ec] flex items-center justify-center font-black">
@@ -794,7 +802,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* SAÍDA CARD */}
-            <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+            <div className={`lg:col-span-4 flex flex-col justify-between ${cardCls}`}>
               <div>
                 <div className="flex items-center gap-3 border-b border-slate-150 pb-3 mb-5">
                   <div className="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center font-black">
@@ -855,8 +863,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         {slide.id === 'estoque-atual' && (
           <div className="flex flex-col gap-6">
             {/* Top overview KPIs with a beautiful Segment Comparison bar */}
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-150 pb-4">
+            <div className={`flex flex-col gap-4 ${cardCls}`}>
+              <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4 ${divCls}`}>
                 <div>
                   <span className="text-[10px] font-black text-[#0054ec] uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
                   <p className="text-3xl font-black text-slate-900 font-sans tracking-tight mt-1">{formatCurrency(content.total)}</p>
@@ -893,24 +901,24 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               {/* Collapsed content categories switcher */}
-              <div className="flex bg-slate-100 p-1 rounded-xl self-start gap-1">
-                <button 
+              <div className={`flex p-1 rounded-xl self-start gap-1 ${tabBg}`}>
+                <button
                   onClick={() => setActiveStockTab('topNf')}
-                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? (dk ? 'bg-[#1a1c27] text-[#00fafb] shadow-sm' : 'bg-white text-[#0054ec] shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
                 >
                   <Database size={12} />
                   Top Projetos (com NF)
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveStockTab('semNf')}
-                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? 'bg-white text-pink-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? (dk ? 'bg-[#1a1c27] text-pink-400 shadow-sm' : 'bg-white text-pink-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
                 >
                   <Layers size={12} />
                   Sem NF (Fila Reversa)
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveStockTab('guarda')}
-                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? 'bg-white text-cyan-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? (dk ? 'bg-[#1a1c27] text-cyan-400 shadow-sm' : 'bg-white text-cyan-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
                 >
                   <ShieldCheck size={12} />
                   Guarda de Técnico
@@ -1080,7 +1088,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* Right lotes breakdown */}
-            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+            <div className={`lg:col-span-8 ${cardCls}`}>
               <div className="flex justify-between items-center border-b border-slate-150 pb-3 mb-4">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Layers size={14} className="text-[#fd11a4]" />
@@ -1250,24 +1258,24 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               {/* Sub-group layout if slide has nested text commentary sections */}
               {content.comentarios ? (
-                <div className="bg-slate-50/50 border border-slate-150 p-5 rounded-2xl flex flex-col gap-3">
+                <div className={commentWrapCls}>
                   <div className="flex flex-col gap-3.5">
                     {content.comentarios.map((cText: string, idx: number) => (
-                      <div 
-                        key={idx} 
-                        className="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-slate-200/70 border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 text-slate-700"
+                      <div
+                        key={idx}
+                        className={commentItemCls}
                         style={{ borderLeftColor: '#0054ec' }}
                       >
-                        <span className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-150 text-blue-600">
+                        <span className={`p-2 rounded-lg flex-shrink-0 flex items-center justify-center border ${dk ? 'bg-[#0d0f17] border-slate-800 text-[#00fafb]' : 'bg-slate-50 border-slate-150 text-blue-600'}`}>
                           <Sparkles size={13} strokeWidth={2.5} />
                         </span>
-                        <p className="font-bold text-[12px] leading-relaxed mt-0.5 text-slate-700">{cText}</p>
+                        <p className={`font-bold text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{cText}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className="bg-white border border-slate-200/75 border-l-4 border-l-blue-500 p-5 rounded-2xl text-[12px] font-bold text-slate-700 leading-relaxed flex flex-col gap-2 shadow-sm transition-all hover:scale-[1.01]">
+                <div className={`border border-l-4 border-l-blue-500 p-5 rounded-2xl text-[12px] font-bold leading-relaxed flex flex-col gap-2 shadow-sm transition-all hover:scale-[1.01] ${dk ? 'bg-[#12131a] border-slate-800 text-slate-300' : 'bg-white border-slate-200/75 text-slate-700'}`}>
                   <span className="font-black text-blue-600 uppercase text-[10px] tracking-wider block flex items-center gap-1.5 mb-0.5">
                     <ShieldCheck size={14} />
                     Garantia Regulamentar de Custódia
@@ -1278,7 +1286,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* Right detailed policy tables */}
-            <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+            <div className={`lg:col-span-7 ${cardCls}`}>
               <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-150 pb-3 mb-4 flex items-center gap-2">
                 <ShieldCheck size={14} className="text-emerald-500 animate-pulse" />
                 Estrutura de Cobertura Ativa
@@ -1344,7 +1352,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     }
 
                     return (
-                      <div key={idx} className={`border border-slate-150/60 border-l-4 ${borderLeftColor} p-5 rounded-2xl bg-white shadow-sm flex flex-col gap-3 hover:scale-[1.01] hover:border-r-slate-300 transition-all group`}>
+                      <div key={idx} className={`border border-l-4 ${borderLeftColor} p-5 rounded-2xl shadow-sm flex flex-col gap-3 hover:scale-[1.01] transition-all group ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-150/60 hover:border-r-slate-300'}`}>
                         <div className="flex justify-between items-start gap-4">
                           <div className="flex items-start gap-3">
                             <div className={`p-2 rounded-xl ${iconColorClass} flex items-center justify-center shadow-xs mt-0.5`}>
@@ -1356,7 +1364,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             </div>
                           </div>
                           <div className="text-right flex flex-col items-end gap-1.5 flex-shrink-0">
-                            <span className="font-mono font-black text-slate-950 text-base tracking-tight text-slate-900 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-lg">{formatCompact(sec.totalValue)}</span>
+                            <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCompact(sec.totalValue)}</span>
                             {sec.monthlyCost && (
                               <span className="text-[9.5px] bg-[#0054ec]/8 border border-[#0054ec]/20 text-[#0054ec] px-2 py-0.5 rounded-lg font-black uppercase tracking-wider block">
                                 Mês: {formatCompact(sec.monthlyCost)}
@@ -1372,7 +1380,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               // Calculate ratio representing its visual weight compared to the section total value
                               const subRatio = Math.min((sub.value / (sec.totalValue || 1)) * 100, 100);
                               return (
-                                <div key={sIdx} className="bg-slate-50/50 flex flex-col gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-50 shadow-xs">
+                                <div key={sIdx} className={subItemCls}>
                                   <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
                                     <span className="truncate max-w-[65%] font-extrabold text-slate-800">{sub.name}</span>
                                     <div className="flex items-center gap-3 font-mono">
@@ -1395,7 +1403,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             {sec.phases.map((pha: any, phaIdx: number) => {
                               const phaRatio = Math.min((pha.val / (sec.totalValue || 1)) * 100, 100);
                               return (
-                                <div key={phaIdx} className="bg-slate-50/50 flex flex-col gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-50 shadow-xs">
+                                <div key={phaIdx} className={subItemCls}>
                                   <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
                                     <span className="font-extrabold text-slate-800">{pha.client}</span>
                                     <div className="flex items-center gap-3 font-mono">
@@ -1470,24 +1478,24 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </div>
 
             {/* Faturas list with credit vs value highlights */}
-            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
-              <div className="flex items-center justify-between border-b border-slate-150 pb-3 mb-4">
+            <div className={`lg:col-span-8 ${cardCls}`}>
+              <div className={`flex items-center justify-between border-b pb-3 mb-4 ${divCls}`}>
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Layers size={14} className="text-[#0054ec]" />
                   Composição Financeira Detalhada
                 </h3>
                 
                 {/* Horizontal simple chart switcher representation */}
-                <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
-                  <button 
+                <div className={`flex p-1 rounded-xl gap-1 ${tabBg}`}>
+                  <button
                     onClick={() => setActiveTab('summary')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
                   >
                     Curva Fatura
                   </button>
-                  <button 
+                  <button
                     onClick={() => setActiveTab('table')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
                   >
                     Itens da Fatura
                   </button>
@@ -1511,7 +1519,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     {content.invoiceItems.map((item: any, idx: number) => {
                       const isCredit = item.isCredit;
                       return (
-                        <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all hover:bg-slate-50 ${isCredit ? 'border-emerald-100 bg-emerald-50/10' : 'border-slate-100 bg-white'}`}>
+                        <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${isCredit ? (dk ? 'border-emerald-800/40 bg-emerald-900/10 hover:bg-emerald-900/20' : 'border-emerald-100 bg-emerald-50/10 hover:bg-emerald-50/20') : (dk ? 'border-slate-800 bg-[#0d0f17] hover:bg-[#12131a]' : 'border-slate-100 bg-white hover:bg-slate-50')}`}>
                           <div className="flex flex-col gap-0.5">
                             <span className="text-xs font-black text-slate-800">{item.name}</span>
                             <span className="text-[10px] text-slate-400 font-semibold">{item.sub}</span>
