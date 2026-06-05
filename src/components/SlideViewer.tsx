@@ -1567,12 +1567,17 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               <p className="text-[10px] text-slate-500 font-semibold max-w-sm mt-0.5 leading-relaxed">{sec.desc}</p>
                             </div>
                           </div>
-                          <div className="text-right flex flex-col items-end gap-1.5 flex-shrink-0">
-                            <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCompact(sec.totalValue)}</span>
-                            {sec.monthlyCost && (
-                              <span className="text-[9.5px] bg-[#0054ec]/8 border border-[#0054ec]/20 text-[#0054ec] px-2 py-0.5 rounded-lg font-black uppercase tracking-wider block">
-                                Mês: {formatCompact(sec.monthlyCost)}
-                              </span>
+                          <div className="text-right flex flex-col items-end gap-1 flex-shrink-0">
+                            {sec.monthlyCost ? (
+                              <>
+                                <div className="flex flex-col items-end gap-0.5">
+                                  <span className="text-[8.5px] font-black uppercase tracking-widest text-[#0054ec]">Custo</span>
+                                  <span className={`font-mono font-black text-xl tracking-tight text-[#0054ec]`}>{formatCompact(sec.monthlyCost)}</span>
+                                </div>
+                                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-600' : 'text-slate-400'}`}>Patrimônio: {formatCompact(sec.totalValue)}</span>
+                              </>
+                            ) : (
+                              <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCompact(sec.totalValue)}</span>
                             )}
                           </div>
                         </div>
