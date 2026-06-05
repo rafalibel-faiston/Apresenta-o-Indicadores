@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
-  DollarSign, Package, Truck, Shield, ShieldCheck, Info, CheckCircle2, 
-  ExternalLink, Search, BarChart3, List, Layers, HelpCircle, 
+  DollarSign, Package, Truck, Shield, ShieldCheck, Info, CheckCircle2,
+  ExternalLink, Search, BarChart3, List, Layers, HelpCircle,
   Database, RefreshCw, Smartphone, Mail, Globe, Sparkles, TrendingUp,
-  Network, Cable, Server, BatteryCharging, Cpu, Wifi
+  Network, Cable, Server, BatteryCharging, Cpu, Wifi,
+  ChevronDown, ChevronUp
 } from 'lucide-react';
 import KPICard from './KPICard';
 import FaistonLogo from './FaistonLogo';
@@ -28,6 +29,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState('summary');
   const [activeStockTab, setActiveStockTab] = useState('topNf');
+  const [expandedStockGroups, setExpandedStockGroups] = useState<string[]>(['NTT']);
   const [chartDisplayType, setChartDisplayType] = useState<'bar' | 'combined'>('combined');
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [consolidatedTab, setConsolidatedTab] = useState<'chart' | 'bars'>('chart');
@@ -912,53 +914,131 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               {/* Dynamic TAB views */}
               <div className={isFullscreen ? "min-h-[35vh]" : "min-h-[190px]"}>
-                {activeStockTab === 'topNf' && (
-                  <div className="flex flex-col gap-3 animate-fadeIn">
-                    {[...content.topProjectsWithNF]
-                      .sort((a: any, b: any) => b.value - a.value)
-                      .map((proj: any, idx: number) => {
-                      const maxVal = content.topProjectsWithNF[0].value;
-                      const ratio = Math.min((proj.value / maxVal) * 100, 100);
-                      const rankColors = ['#0054ec','#2226c0','#fd11a4','#ec4899','#06b6d4','#10b981'];
-                      const rankColor = rankColors[idx % rankColors.length];
+                {activeStockTab === 'topNf' && (() => {
+                  // Group by first token (e.g. NTT, PROJETO)
+                  const getPrefix = (name: string) => {
+                    const m = name.match(/^([A-Z0-9]+)[_ -]/);
+                    return m ? m[1] : name;
+                  };
+                  const groupMap: Record<string, { prefix: string; items: any[]; totalValue: number; totalQty: number }> = {};
+                  [...content.topProjectsWithNF]
+                    .sort((a: any, b: any) => b.value - a.value)
+                    .forEach((proj: any) => {
+                      const p = getPrefix(proj.project);
+                      if (!groupMap[p]) groupMap[p] = { prefix: p, items: [], totalValue: 0, totalQty: 0 };
+                      groupMap[p].items.push(proj);
+                      groupMap[p].totalValue += proj.value;
+                      groupMap[p].totalQty += proj.itemQty;
+                    });
+                  const sortedGroups = Object.values(groupMap).sort((a, b) => b.totalValue - a.totalValue);
+                  const maxGroupVal = sortedGroups[0]?.totalValue || 1;
+                  const rankColors = ['#0054ec','#2226c0','#fd11a4','#ec4899','#06b6d4','#10b981'];
+                  const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
-                      return (
-                        <div key={idx} className={`border rounded-2xl p-4 flex items-center gap-4 group hover:shadow-md hover:scale-[1.005] transition-all ${dk ? 'bg-[#0d0f17]/60 border-slate-800/50 hover:bg-[#0d0f17]' : 'bg-white border-slate-100/80 hover:border-[#0054ec]/30'}`}>
-                          {/* Rank badge */}
-                          <div className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm" style={{ backgroundColor: rankColor }}>
-                            {idx + 1}
-                          </div>
+                  return (
+                    <div className="flex flex-col gap-2 animate-fadeIn">
+                      {sortedGroups.map((group, gIdx) => {
+                        const rankColor = rankColors[gIdx % rankColors.length];
+                        const ratio = Math.min((group.totalValue / maxGroupVal) * 100, 100);
+                        const isMulti = group.items.length > 1;
+                        const isOpen = expandedStockGroups.includes(group.prefix);
+                        const toggle = () => setExpandedStockGroups(prev =>
+                          prev.includes(group.prefix) ? prev.filter(p => p !== group.prefix) : [...prev, group.prefix]
+                        );
 
-                          {/* Project name + qty */}
-                          <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                            <span className={`font-black text-[12px] leading-snug truncate ${dk ? 'text-white' : 'text-slate-900'}`} title={proj.project}>{proj.project}</span>
-                            <span className="text-[10px] text-slate-400 font-semibold">{proj.itemQty} equipamentos</span>
-                          </div>
+                        return (
+                          <div key={group.prefix}>
+                            {/* Group header row */}
+                            <div
+                              className={`border rounded-2xl p-4 flex items-center gap-4 transition-all ${isMulti ? 'cursor-pointer' : ''} hover:shadow-md ${dk ? 'bg-[#0d0f17]/60 border-slate-800/50 hover:bg-[#0d0f17]' : 'bg-white border-slate-100/80 hover:border-[#0054ec]/30'}`}
+                              onClick={isMulti ? toggle : undefined}
+                            >
+                              {/* Rank badge */}
+                              <div className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm" style={{ backgroundColor: rankColor }}>
+                                {gIdx + 1}
+                              </div>
 
-                          {/* Progress bar */}
-                          <div className="flex-1 max-w-[140px] flex flex-col gap-1 hidden md:flex">
-                            <div className={`w-full h-2 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                              <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: `${ratio}%` }}
-                                transition={{ duration: 1.1, delay: idx * 0.06 }}
-                                className="h-full rounded-full"
-                                style={{ backgroundColor: rankColor }}
-                              />
+                              {/* Name + info */}
+                              <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                                <span className={`font-black text-[13px] leading-snug truncate ${dk ? 'text-white' : 'text-slate-900'}`}>
+                                  {isMulti ? group.prefix : group.items[0].project}
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-semibold">
+                                  {isMulti ? `${group.items.length} projetos • ${group.totalQty} equipamentos` : `${group.items[0].itemQty} equipamentos`}
+                                </span>
+                                {/* Value below name */}
+                                <span className="font-mono font-black text-[15px] mt-0.5" style={{ color: rankColor }}>
+                                  {formatCompact(group.totalValue)}
+                                  <span className={`text-[10px] font-semibold ml-2 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(group.totalValue)}</span>
+                                </span>
+                              </div>
+
+                              {/* Progress bar */}
+                              <div className="flex-1 max-w-[130px] flex flex-col gap-1 hidden md:flex">
+                                <div className={`w-full h-2 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                  <motion.div
+                                    initial={{ width: 0 }}
+                                    animate={{ width: `${ratio}%` }}
+                                    transition={{ duration: 1.1, delay: gIdx * 0.06 }}
+                                    className="h-full rounded-full"
+                                    style={{ backgroundColor: rankColor }}
+                                  />
+                                </div>
+                                <span className="text-[9px] text-slate-400 font-bold">{ratio.toFixed(0)}% do maior</span>
+                              </div>
+
+                              {/* Expand chevron */}
+                              {isMulti && (
+                                <div className={`flex-shrink-0 p-1.5 rounded-lg transition-colors ${dk ? 'text-slate-500 hover:text-slate-300 bg-slate-800/40' : 'text-slate-400 hover:text-slate-600 bg-slate-100'}`}>
+                                  {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                </div>
+                              )}
                             </div>
-                            <span className="text-[9px] text-slate-400 font-bold">{ratio.toFixed(0)}% do maior</span>
-                          </div>
 
-                          {/* Cost value — prominent */}
-                          <div className="flex-shrink-0 text-right">
-                            <span className="font-mono font-black text-lg tracking-tight" style={{ color: rankColor }}>{formatCompact(proj.value)}</span>
-                            <span className={`text-[10px] block font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(proj.value)}</span>
+                            {/* Expanded sub-items */}
+                            <AnimatePresence>
+                              {isMulti && isOpen && (
+                                <motion.div
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.25 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="flex flex-col gap-1.5 ml-12 mt-1.5">
+                                    {group.items.map((proj: any, pIdx: number) => {
+                                      const subRatio = Math.min((proj.value / group.totalValue) * 100, 100);
+                                      return (
+                                        <div key={pIdx} className={`border rounded-xl p-3 flex items-center gap-3 transition-colors ${dk ? 'bg-[#0d0f17]/40 border-slate-800/30 hover:bg-[#0d0f17]/70' : 'bg-slate-50/70 border-slate-100 hover:bg-slate-50'}`}>
+                                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: rankColor }} />
+                                          <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                                            <span className={`font-bold text-[11px] leading-snug ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={proj.project}>{proj.project}</span>
+                                            <span className="text-[9px] text-slate-400 font-semibold">{proj.itemQty} equipamentos</span>
+                                            {/* Value below sub-item name */}
+                                            <span className="font-mono font-black text-[13px]" style={{ color: rankColor }}>
+                                              {formatCompact(proj.value)}
+                                              <span className={`text-[9px] font-semibold ml-1.5 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(proj.value)}</span>
+                                            </span>
+                                          </div>
+                                          <div className={`w-16 flex flex-col gap-0.5 hidden sm:flex`}>
+                                            <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                              <div className="h-full rounded-full" style={{ width: `${subRatio}%`, backgroundColor: rankColor }} />
+                                            </div>
+                                            <span className="text-[8px] text-slate-400 font-bold">{subRatio.toFixed(0)}% do grupo</span>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                           </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                        );
+                      })}
+                    </div>
+                  );
+                })()}
 
                 {activeStockTab === 'semNf' && (
                   <div className="flex flex-col gap-4 animate-fadeIn">
