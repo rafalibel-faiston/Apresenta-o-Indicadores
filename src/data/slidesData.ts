@@ -342,25 +342,36 @@ export const slidesData: Slide[] = [
     id: "todo-gerencial",
     number: 12,
     title: "Todo Gerencial da Logística de Custos",
-    subtitle: "Resumo executivo de gastos e savings do período (MAI.26)",
+    subtitle: "Saving mensal, utilizado e projeção anual (MAI.26)",
     category: "financials",
     content: {
-      totalSpent: 61234.09,
-      totalSavings: 9280.00,
-      savingsRate: 15.2,
-      breakdown: [
-        { category: "Transportadora", spent: 33893.50, saving: 4200.00, color: "#6366f1" },
-        { category: "Correios", spent: 15118.89, saving: 1850.00, color: "#8b5cf6" },
-        { category: "Cia Aérea", spent: 4532.03, saving: 980.00, color: "#3b82f6" },
-        { category: "Dedicados", spent: 3495.00, saving: 1450.00, color: "#ec4899" },
-        { category: "Courier (Loggi)", spent: 3077.77, saving: 650.00, color: "#06b6d4" },
-        { category: "Self Storage", spent: 1116.90, saving: 150.00, color: "#10b981" }
+      totalSaving: 40470.98,
+      totalUtilizado: 11106.33,
+      saldoSaving: 29364.65,
+      savingItems: [
+        { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
+        { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
+        { item: 3, desc: "Redução Notebook Método", qty: 51, value: 5212.80, obs: "Cancelamento do seguro" },
+        { item: 4, desc: "Ajuste rateio condomínio 280", qty: null, value: 5148.99, obs: "Redução de HC — água, luz" },
+        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", qty: 137, value: 10617.85, obs: "Cancelamento do seguro" },
+        { item: 6, desc: "Venda de 5 TVs", qty: 5, value: 4000.00 },
+        { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
+        { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
+        { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 }
       ],
-      actions: [
-        { type: "saving", text: "Renegociação BESTLOG/SCALT gerou saving de R$ 4.200 em transportadoras — contrato ajustado em ABR.26." },
-        { type: "saving", text: "Otimização de rotas Dedicados (CASARINI e WASHINGTON) economizou R$ 1.450 em relação ao mês anterior." },
-        { type: "alert", text: "Cia Aérea ainda acima da meta: potencial de saving adicional de R$ 1.800 via consolidação de cargas GOL." },
-        { type: "next", text: "Próxima ação: Renegociação de contrato Self Storage PE prevista para JUN.26 com meta de redução de 12%." }
+      utilizadoItems: [
+        { desc: "Identidade Visual", value: 5217.93, obs: "Ref. itens 1 e 2" },
+        { desc: "Manutenção AR - Data center", value: 1600.00, obs: "Ref. itens 1 e 2" },
+        { desc: "Visual Set IA", value: 1200.00, obs: "Ref. itens 1 e 2" },
+        { desc: "Geladeira", value: 1788.00, obs: "Ref. itens 1 e 2" },
+        { desc: "Manutenção banheiro masculino", value: 1300.40 },
+        { desc: "Colocação de Azulejos", value: 350.00 }
+      ],
+      savingAnual: [
+        { item: 3, desc: "Redução Notebook Método", mensal: 5212.80, anual: 52128.00 },
+        { item: 4, desc: "Ajuste rateio condomínio 280", mensal: 5148.99, anual: 51489.90 },
+        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", mensal: 10617.85, anual: 95560.65 },
+        { item: 9, desc: "Renovação Tiflux", mensal: 20896.07, anual: 41792.13 }
       ]
     }
   },

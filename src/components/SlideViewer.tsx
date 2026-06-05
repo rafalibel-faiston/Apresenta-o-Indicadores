@@ -1144,98 +1144,117 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
         {/* --- TODO GERENCIAL DA LOGÍSTICA DE CUSTOS (Slide 12) --- */}
         {slide.id === 'todo-gerencial' && (
-          <div className="flex flex-col gap-6">
-            {/* Top KPI row */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className={`rounded-3xl p-5 border col-span-1 flex flex-col gap-1 bg-gradient-to-br from-[#0054ec] via-[#2226c0] to-[#fd11a4] text-white border-transparent shadow-lg`}>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#00fafb]">Total Gasto (MAI.26)</span>
-                <span className="text-3xl font-black font-sans tracking-tight">{formatCurrency(content.totalSpent)}</span>
-                <span className="text-[10px] text-white/60 font-semibold mt-1">Custo logístico consolidado</span>
+          <div className="flex flex-col gap-4">
+            {/* Top 3 KPI cards */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="rounded-2xl p-4 border flex flex-col gap-0.5 bg-gradient-to-br from-[#0054ec] via-[#2226c0] to-[#fd11a4] text-white border-transparent shadow-lg">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#00fafb]">Total Saving (MAI.26)</span>
+                <span className="text-2xl font-black font-sans tracking-tight">{formatCurrency(content.totalSaving)}</span>
+                <span className="text-[9px] text-white/60 font-semibold">Saving bruto gerado no período</span>
               </div>
-              <div className={`rounded-3xl p-5 border flex flex-col gap-1 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-500">Total Saving</span>
-                <span className="text-3xl font-black font-sans tracking-tight text-emerald-500">{formatCurrency(content.totalSavings)}</span>
-                <span className={`text-[10px] font-semibold mt-1 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Economia realizada no período</span>
+              <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Utilizado no Mês</span>
+                <span className="text-2xl font-black font-sans tracking-tight text-amber-500">{formatCurrency(content.totalUtilizado)}</span>
+                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Reinvestido em melhorias internas</span>
               </div>
-              <div className={`rounded-3xl p-5 border flex flex-col gap-1 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#0054ec]">Taxa de Saving</span>
-                <span className="text-3xl font-black font-sans tracking-tight text-[#0054ec]">{content.savingsRate}%</span>
-                <span className={`text-[10px] font-semibold mt-1 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Sobre o gasto total do mês</span>
+              <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Saldo Saving</span>
+                <span className="text-2xl font-black font-sans tracking-tight text-emerald-500">{formatCurrency(content.saldoSaving)}</span>
+                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Saldo disponível acumulado</span>
               </div>
             </div>
 
-            {/* Breakdown table */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Middle: saving items + utilizado */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+              {/* Saving items list */}
               <div className={`lg:col-span-7 ${cardCls}`}>
-                <h3 className={`text-xs font-black uppercase tracking-widest border-b pb-3 mb-4 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
-                  <DollarSign size={14} className="text-[#0054ec]" />
-                  Gasto vs. Saving por Modalidade
+                <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                  <TrendingUp size={12} className="text-[#0054ec]" />
+                  Saving Logística — Itens Mensais
                 </h3>
-                <div className="flex flex-col gap-3">
-                  {content.breakdown.map((item: any, idx: number) => {
-                    const total = item.spent + item.saving;
-                    const spentRatio = (item.spent / total) * 100;
-                    const savingRatio = (item.saving / total) * 100;
-                    return (
-                      <div key={idx} className="flex flex-col gap-1.5">
-                        <div className="flex justify-between items-center text-xs">
-                          <span className={`font-bold ${dk ? 'text-slate-200' : 'text-slate-800'}`}>{item.category}</span>
-                          <div className="flex items-center gap-3 font-mono text-[11px]">
-                            <span className={`font-black ${dk ? 'text-white' : 'text-slate-950'}`}>{formatCurrency(item.spent)}</span>
-                            <span className="text-emerald-500 font-bold">−{formatCurrency(item.saving)}</span>
-                          </div>
-                        </div>
-                        <div className={`w-full h-3 rounded-full overflow-hidden flex ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${spentRatio}%` }}
-                            transition={{ duration: 1.1, delay: idx * 0.06 }}
-                            className="h-full rounded-l-full"
-                            style={{ backgroundColor: item.color }}
-                          />
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${savingRatio}%` }}
-                            transition={{ duration: 1.1, delay: idx * 0.06 + 0.2 }}
-                            className="h-full rounded-r-full bg-emerald-400/60"
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div className="flex flex-col gap-1">
+                  {content.savingItems.map((item: any, idx: number) => (
+                    <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center font-black text-[9px] text-white ${item.utilizado ? 'bg-amber-500' : 'bg-[#0054ec]'}`}>{item.item}</div>
+                      <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
+                      {item.qty && <span className="text-[9px] text-slate-400 flex-shrink-0">{item.qty.toLocaleString('pt-BR')} un</span>}
+                      {item.obs && <span className={`text-[8.5px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0 ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
+                      {item.utilizado && <span className="text-[8.5px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-black flex-shrink-0 hidden sm:block">UTILIZADO</span>}
+                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-emerald-500">{formatCurrency(item.value)}</span>
+                    </div>
+                  ))}
+                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
+                    <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Saving</span>
+                    <span className="font-mono text-emerald-500 text-[13px]">{formatCurrency(content.totalSaving)}</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Actions / insights */}
+              {/* Utilizado items */}
               <div className={`lg:col-span-5 ${cardCls}`}>
-                <h3 className={`text-xs font-black uppercase tracking-widest border-b pb-3 mb-4 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
-                  <TrendingUp size={14} className="text-[#fd11a4]" />
-                  Ações e Insights
+                <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                  <DollarSign size={12} className="text-amber-500" />
+                  Utilizado no Mês
                 </h3>
-                <div className="flex flex-col gap-3">
-                  {content.actions.map((action: any, idx: number) => {
-                    const isSaving = action.type === 'saving';
-                    const isAlert = action.type === 'alert';
-                    const accentColor = isSaving ? '#10b981' : isAlert ? '#fd11a4' : '#0054ec';
-                    return (
-                      <div
-                        key={idx}
-                        className={commentItemCls}
-                        style={{ borderLeftColor: accentColor }}
-                      >
-                        <span
-                          className={`p-2 rounded-lg flex-shrink-0 flex items-center justify-center border transition-colors ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-150'}`}
-                          style={{ color: accentColor }}
-                        >
-                          {isSaving ? <CheckCircle2 size={13} strokeWidth={2.5} /> :
-                           isAlert ? <Info size={13} strokeWidth={2.5} /> :
-                           <TrendingUp size={13} strokeWidth={2.5} />}
-                        </span>
-                        <p className={`font-bold text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{action.text}</p>
-                      </div>
-                    );
-                  })}
+                <div className="flex flex-col gap-1">
+                  {content.utilizadoItems.map((item: any, idx: number) => (
+                    <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
+                      <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
+                      {item.obs && <span className={`text-[8px] px-1 py-0.5 rounded font-semibold flex-shrink-0 hidden sm:block ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
+                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-amber-500">{formatCurrency(item.value)}</span>
+                    </div>
+                  ))}
+                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
+                    <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Utilizado</span>
+                    <span className="font-mono text-amber-500 text-[13px]">{formatCurrency(content.utilizadoItems.reduce((s: number, i: any) => s + i.value, 0))}</span>
+                  </div>
                 </div>
+
+                {/* Saldo bar */}
+                <div className={`mt-3 pt-3 border-t ${dk ? 'border-slate-800' : 'border-slate-100'}`}>
+                  <div className="flex justify-between text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">
+                    <span>Utilizado vs. Saldo</span>
+                    <span className="text-emerald-500">{((content.saldoSaving / content.totalSaving) * 100).toFixed(0)}% disponível</span>
+                  </div>
+                  <div className={`w-full h-3 rounded-full overflow-hidden flex ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.totalUtilizado / content.totalSaving) * 100}%` }} transition={{ duration: 1 }} className="h-full bg-amber-400 rounded-l-full" />
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.saldoSaving / content.totalSaving) * 100}%` }} transition={{ duration: 1, delay: 0.3 }} className="h-full bg-emerald-400 rounded-r-full" />
+                  </div>
+                  <div className="flex gap-3 mt-1 text-[8.5px] font-semibold">
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400" />Utilizado</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400" />Saldo</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Annual saving projection */}
+            <div className={`${cardCls}`}>
+              <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center justify-between ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                <span className="flex items-center gap-2"><TrendingUp size={12} className="text-[#fd11a4]" />Projeção Saving Anual</span>
+                <span className="font-mono text-[#fd11a4] text-[11px]">{formatCurrency(content.savingAnual.reduce((s: number, i: any) => s + i.anual, 0))} / ano</span>
+              </h3>
+              <div className={`overflow-x-auto`}>
+                <table className="w-full text-left border-collapse text-[10.5px]">
+                  <thead>
+                    <tr className={`font-black text-[9px] uppercase tracking-wider border-b ${dk ? 'text-slate-500 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                      <th className="py-1.5 px-2">#</th>
+                      <th className="py-1.5 px-2">Descrição</th>
+                      <th className="py-1.5 px-2 text-right">Mensal</th>
+                      <th className="py-1.5 px-2 text-right">Projeção Anual</th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y ${dk ? 'divide-slate-800 text-slate-300' : 'divide-slate-50 text-slate-700'}`}>
+                    {content.savingAnual.map((row: any, idx: number) => (
+                      <tr key={idx} className={dk ? 'hover:bg-[#0054ec]/8' : 'hover:bg-slate-50'}>
+                        <td className={`py-1.5 px-2 font-black text-[9px] ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{row.item}</td>
+                        <td className={`py-1.5 px-2 font-semibold ${dk ? 'text-slate-200' : 'text-slate-800'}`}>{row.desc}</td>
+                        <td className="py-1.5 px-2 font-mono font-bold text-right text-emerald-500">{formatCurrency(row.mensal)}</td>
+                        <td className="py-1.5 px-2 font-mono font-black text-right text-[#fd11a4]">{formatCurrency(row.anual)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
