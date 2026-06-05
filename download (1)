@@ -46,9 +46,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
     return (
       <div className={`${sizeClass} relative flex-shrink-0 animate-pulse`}>
         {/* Layered triangle path resembling 'F' and play icon of Faiston */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-indigo-500 to-pink-500 rounded-xl rotate-12 opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#00fafb] via-[#0054ec] to-[#fd11a4] rounded-xl rotate-12 opacity-80" />
         <div className="absolute inset-1.5 bg-white rounded-lg flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current text-indigo-600" strokeWidth="2.5">
+          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current text-[#0054ec]" strokeWidth="2.5">
             <path d="M5 3h14c1.1 0 2 .9 2 2v3c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2Z" />
             <path d="M3 14h12c1.1 0 2 .9 2 2v3c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-3c0-1.1.9-2 2-2Z" />
             <path d="M12 9v5h3" />
@@ -69,10 +69,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
   // Helper to choose color themes based on section category
   const getThemeColor = () => {
     switch (category) {
-      case 'insurance': return '#3b82f6'; // Blue
-      case 'operations': return '#ec4899'; // Pink
-      case 'financials': return '#a855f7'; // Purple
-      default: return '#6366f1'; // Indigo
+      case 'insurance': return '#0054ec'; // Blue
+      case 'operations': return '#fd11a4'; // Pink
+      case 'financials': return '#2226c0'; // Purple
+      default: return '#0054ec'; // Indigo
     }
   };
 
@@ -99,7 +99,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-white border-slate-200 text-slate-850"
       }`} id="slide-cover">
         {/* Soft elegant backdrop glow points */}
-        <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-500/5'}`} />
+        <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#0054ec]/10' : 'bg-[#0054ec]/5'}`} />
         <div className={`absolute bottom-10 right-10 w-64 h-64 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-cyan-500/10' : 'bg-cyan-500/5'}`} />
         <div className={`absolute inset-0 bg-[radial-gradient(${isDarkMode ? '#1e293b' : '#e2e8f0'}_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-40`} />
 
@@ -116,9 +116,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           </div>
           
           {/* Subtle colored key line accent */}
-          <div className="w-24 h-0.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-pink-500 rounded-full opacity-70" />
+          <div className="w-24 h-0.5 bg-gradient-to-r from-[#00fafb] via-[#0054ec] to-[#fd11a4] rounded-full opacity-70" />
           
-          <h2 className={`text-xs font-black tracking-[0.2em] font-serif uppercase ${isDarkMode ? "text-indigo-400" : "text-indigo-600"}`}>
+          <h2 className={`text-xs font-black tracking-[0.2em] font-serif uppercase ${isDarkMode ? "text-[#0054ec]" : "text-[#0054ec]"}`}>
             {subtitle}
           </h2>
           
@@ -136,9 +136,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             </span>
           </div>
           <div className={`mt-2 px-3.5 py-1.5 font-mono text-[9px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
-            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-indigo-700"
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-[#0054ec]"
           }`}>
-            ABRIL
+            MAIO
           </div>
         </div>
       </div>
@@ -149,20 +149,20 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
   if (category === 'divider') {
     return (
       <div className={`flex flex-col justify-between items-center h-full min-h-[500px] text-center px-12 py-16 relative overflow-hidden rounded-2xl border transition-colors duration-300 ${
-        isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-gradient-to-r from-indigo-50 via-slate-50 to-pink-50/20 border-slate-200"
+        isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-gradient-to-r from-[#0054ec]/5 via-slate-50 to-[#fd11a4]/5 border-slate-200"
       }`} id="slide-divider">
-        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-300/15'}`} />
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#0054ec]/10' : 'bg-[#0054ec]/15'}`} />
         
         <div className="my-auto flex flex-col items-center gap-6 z-10 w-full max-w-lg">
           <div className={`p-4.5 rounded-2xl shadow-md border ${
-            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-white border-slate-100 text-indigo-600"
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-white border-slate-100 text-[#0054ec]"
           }`}>
             <Shield size={40} />
           </div>
           <h1 className={`text-4xl font-extrabold tracking-tight font-serif mt-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
             {title}
           </h1>
-          <div className="w-32 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full" />
+          <div className="w-32 h-1 bg-gradient-to-r from-[#0054ec] to-[#fd11a4] rounded-full" />
           <p className={`font-medium text-md max-w-md ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             {subtitle}
           </p>
@@ -194,12 +194,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
       <div className={`flex flex-col justify-between items-center h-full min-h-[500px] px-8 py-12 relative overflow-hidden rounded-2xl border transition-colors duration-300 ${
         isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-gradient-to-b from-white to-slate-50 border-slate-200"
       }`} id="slide-contact">
-        <div className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-100/40'}`} />
-        <div className={`absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-pink-500/10' : 'bg-pink-100/30'}`} />
+        <div className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#0054ec]/10' : 'bg-[#0054ec]/10'}`} />
+        <div className={`absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#fd11a4]/10' : 'bg-[#fd11a4]/10'}`} />
 
         <div className="my-auto text-center flex flex-col items-center gap-6 z-10 w-full max-w-lg">
           <div className={`p-4.5 rounded-full mb-2 border ${
-            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-indigo-50 text-indigo-600 border-indigo-100/50"
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-[#0054ec]/8 text-[#0054ec] border-[#0054ec]/30"
           }`}>
             <Sparkles size={32} />
           </div>
@@ -209,7 +209,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           <p className={`text-md font-medium max-w-sm mt-1 mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             {subtitle}
           </p>
-          <div className="w-16 h-1.5 bg-indigo-600 rounded-full" />
+          <div className="w-16 h-1.5 bg-[#0054ec] rounded-full" />
         </div>
 
         {/* Contact details Card */}
@@ -221,7 +221,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             isDarkMode ? "bg-[#12131a] border-slate-800 shadow-xl shadow-black/60" : "bg-white border-slate-100 shadow-lg shadow-slate-100/60"
           }`}
         >
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold text-xl mb-4 font-sans border-2 border-white shadow-md">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-[#0054ec] to-[#2226c0] text-white flex items-center justify-center font-bold text-xl mb-4 font-sans border-2 border-white shadow-md">
             BH
           </div>
           <h2 className={`text-xl font-extrabold font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{content.presenter}</h2>
@@ -232,36 +232,36 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           {/* Sorteable detailed contact fields */}
           <div className={`flex flex-col gap-4.5 w-full font-medium text-xs text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
             <a href={`tel:${content.contact.phone}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
-              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-[#0054ec]'
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
                   ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
-                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-500 group-hover:bg-indigo-50'
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Smartphone size={16} />
               </span>
               <span>{content.contact.phone}</span>
             </a>
             <a href={`mailto:${content.contact.email}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
-              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-[#0054ec]'
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
                   ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
-                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-500 group-hover:bg-indigo-50'
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Mail size={16} />
               </span>
               <span className="truncate">{content.contact.email}</span>
             </a>
             <a href={`https://${content.contact.web}`} target="_blank" rel="noreferrer" referrerPolicy="no-referrer" className={`flex items-center gap-3.5 transition-colors py-group group ${
-              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-[#0054ec]'
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
                   ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
-                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-505 group-hover:bg-indigo-50'
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Globe size={16} />
               </span>
@@ -331,8 +331,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       const accentColor = isSuccess 
                         ? '#10b981' // emerald
                         : isStats 
-                          ? '#a855f7' // purple
-                          : '#6366f1'; // indigo/theme
+                          ? '#2226c0' // purple
+                          : '#0054ec'; // indigo/theme
 
                       return (
                         <div 
@@ -364,14 +364,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
                   <button 
                     onClick={() => setActiveTab('summary')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     <BarChart3 size={12} />
                     Gráfico Comparativo
                   </button>
                   <button 
                     onClick={() => setActiveTab('table')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     <List size={12} />
                     Tabela de Dados
@@ -383,7 +383,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase">
                     {content.distribution.map((dist: any, dIdx: number) => (
                       <span key={dIdx} className="flex items-center gap-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: dIdx === 0 ? '#6366f1' : dIdx === 1 ? '#a855f7' : '#06b6d4' }} />
+                        <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: dIdx === 0 ? '#0054ec' : dIdx === 1 ? '#2226c0' : '#06b6d4' }} />
                         {dist.name}: {dist.percentage}%
                       </span>
                     ))}
@@ -401,7 +401,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     </button>
                     <button 
                       onClick={() => setChartDisplayType('combined')}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'combined' ? 'bg-pink-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-slate-600'}`}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'combined' ? 'bg-[#fd11a4] text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-slate-600'}`}
                     >
                       Misto (Barras + Linha)
                     </button>
@@ -441,7 +441,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className="font-extrabold text-slate-900 tracking-tight">{r.transportadora}</span>
                                 <div className="flex flex-wrap gap-1">
                                   {r.breakdown.map((b: any, bIdx: number) => (
-                                    <span key={bIdx} className="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-semibold">{b.project}</span>
+                                    <span key={bIdx} className="text-[9px] bg-[#0054ec]/8 text-[#0054ec] px-1.5 py-0.5 rounded font-semibold">{b.project}</span>
                                   ))}
                                 </div>
                               </div>
@@ -464,17 +464,17 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             const isSelected = activeRegion === region.uf;
                             const borderHighlight = isSelected 
                               ? region.uf === 'DF' 
-                                ? 'border-indigo-400/80 bg-indigo-50/10 ring-2 ring-indigo-100 shadow-sm'
+                                ? 'border-[#0054ec]/80 bg-[#0054ec]/5 ring-2 ring-[#0054ec]/20 shadow-sm'
                                 : region.uf === 'PR'
-                                  ? 'border-pink-400/80 bg-pink-50/10 ring-2 ring-pink-100 shadow-sm'
+                                  ? 'border-[#fd11a4]/80 bg-pink-50/10 ring-2 ring-[#fd11a4]/20 shadow-sm'
                                   : 'border-cyan-400/80 bg-cyan-50/10 ring-2 ring-cyan-100 shadow-sm'
                               : 'border-slate-100/75 hover:border-slate-200 hover:bg-slate-50/65 hover:shadow-xs';
 
                             const avatarGrad = region.uf === 'DF'
-                              ? 'from-indigo-400 to-indigo-600 shadow-indigo-100/60'
+                              ? 'from-[#0054ec] to-[#2226c0] shadow-[#0054ec]/20'
                               : region.uf === 'PR'
-                                ? 'from-pink-400 to-pink-600 shadow-pink-100/60'
-                                : 'from-cyan-400 to-cyan-600 shadow-cyan-100/60';
+                                ? 'from-[#fd11a4] to-[#960a9c] shadow-pink-100/60'
+                                : 'from-[#00fafb] to-[#0054ec] shadow-cyan-100/60';
 
                             return (
                               <div 
@@ -495,9 +495,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className={`font-mono font-black text-xs transition-colors duration-300 ${
                                   isSelected 
                                     ? region.uf === 'DF' 
-                                      ? 'text-indigo-650' 
+                                      ? 'text-[#0054ec]' 
                                       : region.uf === 'PR'
-                                        ? 'text-pink-650'
+                                        ? 'text-[#fd11a4]'
                                         : 'text-cyan-650'
                                     : 'text-slate-950'
                                 }`}>
@@ -581,7 +581,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       </thead>
                       <tbody className="divide-y divide-slate-50 text-slate-700 font-semibold">
                         {filterList(content.projects, 'project').map((p: any, idx: number) => (
-                          <tr key={idx} className="hover:bg-indigo-50/20 transition-colors">
+                          <tr key={idx} className="hover:bg-[#0054ec]/8/20 transition-colors">
                             <td className="py-2.5 px-4 font-bold text-slate-900">{p.project}</td>
                             <td className="py-2.5 px-4 font-mono text-slate-950 font-black text-right">{formatCurrency(p.cost)}</td>
                             {p.shipments !== undefined && <td className="py-2.5 px-4 font-mono text-right">{p.shipments}</td>}
@@ -606,7 +606,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               <div className="flex flex-col gap-4 text-slate-850">
                 <div className="flex justify-between items-center border-b border-slate-100 pb-2 mb-1">
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#0054ec]/80 animate-ping" />
                     Divisão por Modalidade Geral
                   </h3>
                   
@@ -614,7 +614,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-0.5 rounded-xl">
                     <button
                       onClick={() => setConsolidatedTab('chart')}
-                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-indigo-600 text-white shadow-xs font-semibold' : 'text-slate-450 hover:text-slate-600'}`}
+                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-[#0054ec] text-white shadow-xs font-semibold' : 'text-slate-450 hover:text-slate-600'}`}
                     >
                       Gráfico
                     </button>
@@ -632,8 +632,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     <DonutChart 
                       data={content.breakdown.map((item: any, index: number) => {
                         const colorPrefixes = [
-                          'stroke-indigo-500',
-                          'stroke-purple-500',
+                          'stroke-[#0054ec]',
+                          'stroke-[#fd11a4]',
                           'stroke-blue-500',
                           'stroke-pink-500',
                           'stroke-cyan-500',
@@ -678,8 +678,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               {/* Quick High level summary card */}
-              <div className="bg-indigo-50/50 border border-indigo-100/30 rounded-2xl p-4.5 mt-4 text-xs font-medium text-indigo-900 leading-relaxed">
-                As <span className="font-bold text-indigo-950">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-indigo-950">92,1%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-indigo-950">Correios</span>.
+              <div className="bg-[#0054ec]/8 border border-[#0054ec]/20 rounded-2xl p-4.5 mt-4 text-xs font-medium text-[#151720] leading-relaxed">
+                As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-[#2226c0]">92,1%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span>.
               </div>
             </div>
 
@@ -688,7 +688,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               <div>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-150 pb-3 mb-4">
                   <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                    <BarChart3 size={14} className="text-purple-500" />
+                    <BarChart3 size={14} className="text-[#fd11a4]" />
                     Principais Projetos Contratantes (Ranking Custo)
                   </h3>
 
@@ -716,7 +716,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                         <div className="w-full bg-white h-1.5 rounded-full overflow-hidden border border-slate-100/50">
                           <div 
-                            className="bg-gradient-to-r from-purple-500 to-indigo-600 h-full rounded-full" 
+                            className="bg-gradient-to-r from-[#fd11a4] to-[#2226c0] h-full rounded-full" 
                             style={{ width: `${progress}%` }}
                           />
                         </div>
@@ -740,7 +740,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-3 border-b border-slate-150 pb-3 mb-5">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black">
+                  <div className="w-9 h-9 rounded-xl bg-[#0054ec]/8 text-[#0054ec] flex items-center justify-center font-black">
                     IN
                   </div>
                   <div>
@@ -758,8 +758,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     <span className="text-[9px] font-bold text-slate-400 uppercase">Peças</span>
                     <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.entrada.equipments}</span>
                   </div>
-                  <div className="bg-indigo-50 text-indigo-950 p-2.5 rounded-2xl flex flex-col">
-                    <span className="text-[9px] font-bold text-indigo-400 uppercase">Valor</span>
+                  <div className="bg-[#0054ec]/8 text-[#2226c0] p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-[#0054ec] uppercase">Valor</span>
                     <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.entrada.value)}</span>
                   </div>
                 </div>
@@ -773,7 +773,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         <span className="text-xs font-bold text-slate-800">{item.client}</span>
                         <div className="flex items-center gap-3 text-xs font-mono">
                           <div className="w-16 bg-white border border-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
-                            <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${ratio}%` }} />
+                            <div className="bg-[#0054ec]/80 h-full rounded-full" style={{ width: `${ratio}%` }} />
                           </div>
                           <span className="font-extrabold text-slate-950">{item.qty} un</span>
                         </div>
@@ -815,7 +815,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     <span className="text-[9px] font-bold text-slate-400 uppercase">Peças</span>
                     <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.saida.equipments}</span>
                   </div>
-                  <div className="bg-pink-50 text-pink-950 p-2.5 rounded-2xl flex flex-col">
+                  <div className="bg-pink-50 text-[#151720] p-2.5 rounded-2xl flex flex-col">
                     <span className="text-[9px] font-bold text-pink-400 uppercase">Valor</span>
                     <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.saida.value)}</span>
                   </div>
@@ -858,7 +858,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-150 pb-4">
                 <div>
-                  <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
+                  <span className="text-[10px] font-black text-[#0054ec] uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
                   <p className="text-3xl font-black text-slate-900 font-sans tracking-tight mt-1">{formatCurrency(content.total)}</p>
                 </div>
                 
@@ -896,7 +896,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               <div className="flex bg-slate-100 p-1 rounded-xl self-start gap-1">
                 <button 
                   onClick={() => setActiveStockTab('topNf')}
-                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
                 >
                   <Database size={12} />
                   Top Projetos (com NF)
@@ -927,11 +927,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       const ratio = Math.min((proj.value / maxVal) * 100, 100);
                       
                       return (
-                        <div key={idx} className="border border-slate-100/60 p-4.5 rounded-2xl shadow-xs bg-gradient-to-br from-white to-slate-50/40 hover:to-indigo-50/15 hover:border-indigo-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
+                        <div key={idx} className="border border-slate-100/60 p-4.5 rounded-2xl shadow-xs bg-gradient-to-br from-white to-slate-50/40 hover:to-[#0054ec]/8 hover:border-[#0054ec]/50 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
                           <div className="flex flex-col gap-1.5">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-[9px] bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg px-2 py-0.5 font-black uppercase tracking-wider block">PROJETO PRINCIPAL</span>
-                              <Database size={13} className="text-slate-300 group-hover:text-indigo-400 transition-colors" />
+                              <span className="text-[9px] bg-[#0054ec]/8 border border-[#0054ec]/20 text-[#0054ec] rounded-lg px-2 py-0.5 font-black uppercase tracking-wider block">PROJETO PRINCIPAL</span>
+                              <Database size={13} className="text-slate-300 group-hover:text-[#0054ec] transition-colors" />
                             </div>
                             <h4 className="text-[12px] font-black text-slate-800 tracking-tight leading-snug line-clamp-2 min-h-[36px]" title={proj.project}>{proj.project}</h4>
                           </div>
@@ -939,7 +939,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/40">
                             <div className="flex justify-between items-baseline">
                               <span className="text-[10px] text-slate-400 font-bold">{proj.itemQty} equipamentos</span>
-                              <span className="font-mono font-black text-slate-950 text-base tracking-tight text-indigo-950 group-hover:text-indigo-600 transition-colors">
+                              <span className="font-mono font-black text-slate-950 text-base tracking-tight text-[#2226c0] group-hover:text-[#0054ec] transition-colors">
                                 {formatCompact(proj.value)}
                               </span>
                             </div>
@@ -949,7 +949,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 initial={{ width: 0 }}
                                 animate={{ width: `${ratio}%` }}
                                 transition={{ duration: 1.2, delay: idx * 0.05 }}
-                                className="bg-indigo-500 h-full rounded-full"
+                                className="bg-[#0054ec]/80 h-full rounded-full"
                               />
                             </div>
                           </div>
@@ -961,8 +961,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
                 {activeStockTab === 'semNf' && (
                   <div className="flex flex-col gap-4 animate-fadeIn">
-                    <div className="bg-gradient-to-r from-pink-50/60 to-purple-50/30 border border-pink-100/40 p-4 rounded-2xl text-[11.5px] font-semibold text-pink-950 leading-relaxed flex items-center gap-3">
-                      <Layers size={16} className="text-pink-500 animate-pulse flex-shrink-0" />
+                    <div className="bg-gradient-to-r from-[#fd11a4]/5 to-[#2226c0]/5 border border-[#fd11a4]/20 p-4 rounded-2xl text-[11.5px] font-semibold text-[#151720] leading-relaxed flex items-center gap-3">
+                      <Layers size={16} className="text-[#fd11a4] animate-pulse flex-shrink-0" />
                       <p>
                         O <span className="font-bold">Estoque Sem NF</span> corresponde a produtos provenientes de fluxos de troca técnica (TRAG / RMA) de clientes que encontram-se temporariamente sem nota fiscal emitida.
                       </p>
@@ -1063,7 +1063,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   value={kpi.value} 
                   type={kpi.type} 
                   isHighlight={kpi.isHighlight}
-                  borderAccent="#ec4899"
+                  borderAccent="#fd11a4"
                   isDarkMode={isDarkMode}
                 />
               ))}
@@ -1083,7 +1083,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
               <div className="flex justify-between items-center border-b border-slate-150 pb-3 mb-4">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                  <Layers size={14} className="text-pink-500" />
+                  <Layers size={14} className="text-[#fd11a4]" />
                   Destaque de Lotes Processados
                 </h3>
                 <span className="text-[10px] bg-slate-50 border border-slate-150 px-2.5 py-1 rounded-lg text-slate-500 font-extrabold uppercase tracking-tight">
@@ -1102,9 +1102,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     if (lowercase.includes('switch')) {
                       return {
                         icon: Network,
-                        colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100',
+                        colorClass: 'text-[#0054ec] bg-[#0054ec]/8 border-[#0054ec]/20',
                         badge: 'Rede & Ativos de Conectividade',
-                        gradient: 'from-indigo-500 to-blue-500'
+                        gradient: 'from-[#0054ec] to-[#2226c0]'
                       };
                     }
                     if (lowercase.includes('cable') || lowercase.includes('cabo')) {
@@ -1118,9 +1118,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     if (lowercase.includes('gabinete') || lowercase.includes('servidor')) {
                       return {
                         icon: Server,
-                        colorClass: 'text-purple-600 bg-purple-50 border-purple-100',
+                        colorClass: 'text-[#fd11a4] bg-[#fd11a4]/8 border-[#fd11a4]/20',
                         badge: 'Hardware Pesado & Carcaças',
-                        gradient: 'from-purple-500 to-indigo-500'
+                        gradient: 'from-[#fd11a4] to-[#0054ec]'
                       };
                     }
                     if (lowercase.includes('bateri')) {
@@ -1185,7 +1185,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               </span>
                             )}
                           </div>
-                          <span className="text-sm font-black text-slate-800 leading-none group-hover:text-indigo-950 transition-colors">{item.desc}</span>
+                          <span className="text-sm font-black text-slate-800 leading-none group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
                         </div>
                       </div>
@@ -1214,7 +1214,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                         <div className="flex flex-col items-end">
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
-                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-emerald-600' : 'text-indigo-950'}`}>
+                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-emerald-600' : 'text-[#2226c0]'}`}>
                             {formatCurrency(item.value)}
                           </span>
                         </div>
@@ -1256,7 +1256,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       <div 
                         key={idx} 
                         className="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-slate-200/70 border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 text-slate-700"
-                        style={{ borderLeftColor: '#3b82f6' }}
+                        style={{ borderLeftColor: '#0054ec' }}
                       >
                         <span className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-150 text-blue-600">
                           <Sparkles size={13} strokeWidth={2.5} />
@@ -1313,8 +1313,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   {content.sections.map((sec: any, idx: number) => {
                     // Match visual icon decoration based on title or context
                     let SectionIcon = Shield;
-                    let iconColorClass = "text-indigo-500 bg-indigo-50";
-                    let borderLeftColor = "border-l-indigo-500";
+                    let iconColorClass = "text-[#0054ec] bg-[#0054ec]/8";
+                    let borderLeftColor = "border-l-[#0054ec]";
                     
                     const titleLower = sec.title.toLowerCase();
                     if (titleLower.includes("extra") || titleLower.includes("trân")) {
@@ -1323,12 +1323,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       borderLeftColor = "border-l-cyan-500";
                     } else if (titleLower.includes("zamp") || titleLower.includes("servidores")) {
                       SectionIcon = Database;
-                      iconColorClass = "text-pink-500 bg-pink-50";
-                      borderLeftColor = "border-l-pink-500";
+                      iconColorClass = "text-[#fd11a4] bg-pink-50";
+                      borderLeftColor = "border-l-[#fd11a4]";
                     } else if (titleLower.includes("trag") || titleLower.includes("reversa")) {
                       SectionIcon = RefreshCw;
-                      iconColorClass = "text-purple-500 bg-purple-50";
-                      borderLeftColor = "border-l-purple-500";
+                      iconColorClass = "text-[#fd11a4] bg-[#fd11a4]/8";
+                      borderLeftColor = "border-l-[#fd11a4]";
                     } else if (titleLower.includes("arcos") || titleLower.includes("instala")) {
                       SectionIcon = ShieldCheck;
                       iconColorClass = "text-emerald-500 bg-emerald-50";
@@ -1351,14 +1351,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               <SectionIcon size={16} className="stroke-[2.5]" />
                             </div>
                             <div className="flex flex-col gap-0.5">
-                              <span className="text-xs font-black text-slate-900 group-hover:text-indigo-950 transition-colors">{sec.title}</span>
+                              <span className="text-xs font-black text-slate-900 group-hover:text-[#2226c0] transition-colors">{sec.title}</span>
                               <p className="text-[10px] text-slate-500 font-semibold max-w-sm mt-0.5 leading-relaxed">{sec.desc}</p>
                             </div>
                           </div>
                           <div className="text-right flex flex-col items-end gap-1.5 flex-shrink-0">
                             <span className="font-mono font-black text-slate-950 text-base tracking-tight text-slate-900 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-lg">{formatCompact(sec.totalValue)}</span>
                             {sec.monthlyCost && (
-                              <span className="text-[9.5px] bg-indigo-50 border border-indigo-100/60 text-indigo-700 px-2 py-0.5 rounded-lg font-black uppercase tracking-wider block">
+                              <span className="text-[9.5px] bg-[#0054ec]/8 border border-[#0054ec]/20 text-[#0054ec] px-2 py-0.5 rounded-lg font-black uppercase tracking-wider block">
                                 Mês: {formatCompact(sec.monthlyCost)}
                               </span>
                             )}
@@ -1399,12 +1399,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                   <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
                                     <span className="font-extrabold text-slate-800">{pha.client}</span>
                                     <div className="flex items-center gap-3 font-mono">
-                                      <span className="text-[9.5px] text-indigo-500 font-bold bg-indigo-50 border border-indigo-150/40 px-1.5 py-0.2 rounded">Mínimo: {formatCurrency(pha.minCost)}</span>
+                                      <span className="text-[9.5px] text-[#0054ec] font-bold bg-[#0054ec]/8 border border-[#0054ec]/20 px-1.5 py-0.2 rounded">Mínimo: {formatCurrency(pha.minCost)}</span>
                                       <span className="font-black text-slate-950">{formatCurrency(pha.val)}</span>
                                     </div>
                                   </div>
                                   <div className="w-full bg-slate-200/50 h-1 rounded-full overflow-hidden">
-                                    <div className="bg-indigo-400 h-full rounded-full" style={{ width: `${phaRatio}%` }} />
+                                    <div className="bg-[#0054ec] h-full rounded-full" style={{ width: `${phaRatio}%` }} />
                                   </div>
                                 </div>
                               );
@@ -1451,15 +1451,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 ))}
               </div>
               
-              <div className="bg-gradient-to-tr from-pink-50/70 to-purple-50/20 border border-pink-100/50 border-l-4 border-l-pink-500 p-5 rounded-2xl flex flex-col gap-3 shadow-xs hover:shadow-sm hover:scale-[1.01] transition-all">
+              <div className="bg-gradient-to-tr from-[#fd11a4]/5 to-[#2226c0]/5 border border-[#fd11a4]/20 border-l-4 border-l-[#fd11a4] p-5 rounded-2xl flex flex-col gap-3 shadow-xs hover:shadow-sm hover:scale-[1.01] transition-all">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Sparkles size={14} className="text-pink-600 animate-pulse" />
                   Observações de Conciliação
                 </h3>
-                <div className="flex flex-col gap-3 text-[11.5px] leading-relaxed text-pink-950 font-bold">
+                <div className="flex flex-col gap-3 text-[11.5px] leading-relaxed text-[#151720] font-bold">
                   {content.comments.map((comment: string, idx: number) => (
                     <div key={idx} className="flex items-start gap-2.5 p-1 bg-white/45 border border-pink-100/30 rounded-xl">
-                      <span className="p-1.5 rounded-lg flex-shrink-0 flex items-center justify-center bg-pink-500/10 text-pink-600 mt-0.5">
+                      <span className="p-1.5 rounded-lg flex-shrink-0 flex items-center justify-center bg-[#fd11a4]/10 text-pink-600 mt-0.5">
                         <CheckCircle2 size={12} strokeWidth={2.5} />
                       </span>
                       <p className="mt-0.5 leading-snug">{comment}</p>
@@ -1473,7 +1473,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
               <div className="flex items-center justify-between border-b border-slate-150 pb-3 mb-4">
                 <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                  <Layers size={14} className="text-indigo-500" />
+                  <Layers size={14} className="text-[#0054ec]" />
                   Composição Financeira Detalhada
                 </h3>
                 
@@ -1481,13 +1481,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
                   <button 
                     onClick={() => setActiveTab('summary')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     Curva Fatura
                   </button>
                   <button 
                     onClick={() => setActiveTab('table')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-[#0054ec] shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                   >
                     Itens da Fatura
                   </button>
