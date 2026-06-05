@@ -636,7 +636,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           'stroke-[#3b82f6]',
                           'stroke-[#ec4899]',
                           'stroke-[#06b6d4]',
-                          'stroke-emerald-400'
+                          'stroke-[#9b1dbf]'
                         ];
                         return {
                           label: item.category,
@@ -1156,13 +1156,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <span className="text-[9px] text-white/60 font-semibold">Saving bruto gerado no período</span>
               </div>
               <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Utilizado no Mês</span>
-                <span className="text-2xl font-black font-sans tracking-tight text-amber-500">{formatCurrency(content.totalUtilizado)}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#fd11a4]">Utilizado no Mês</span>
+                <span className="text-2xl font-black font-sans tracking-tight text-[#fd11a4]">{formatCurrency(content.totalUtilizado)}</span>
                 <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Reinvestido em melhorias internas</span>
               </div>
               <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-500">Saldo Saving</span>
-                <span className="text-2xl font-black font-sans tracking-tight text-emerald-500">{formatCurrency(content.saldoSaving)}</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0054ec]">Saldo Saving</span>
+                <span className="text-2xl font-black font-sans tracking-tight text-[#0054ec]">{formatCurrency(content.saldoSaving)}</span>
                 <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Saldo disponível acumulado</span>
               </div>
             </div>
@@ -1178,17 +1178,17 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className="flex flex-col gap-1">
                   {content.savingItems.map((item: any, idx: number) => (
                     <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
-                      <div className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center font-black text-[9px] text-white ${item.utilizado ? 'bg-amber-500' : 'bg-[#0054ec]'}`}>{item.item}</div>
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center font-black text-[9px] text-white ${item.utilizado ? 'bg-[#fd11a4]' : 'bg-[#0054ec]'}`}>{item.item}</div>
                       <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
                       {item.qty && <span className="text-[9px] text-slate-400 flex-shrink-0">{item.qty.toLocaleString('pt-BR')} un</span>}
                       {item.obs && <span className={`text-[8.5px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0 ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
-                      {item.utilizado && <span className="text-[8.5px] bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-black flex-shrink-0 hidden sm:block">UTILIZADO</span>}
-                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-emerald-500">{formatCurrency(item.value)}</span>
+                      {item.utilizado && <span className="text-[8.5px] bg-[#fd11a4]/10 text-[#fd11a4] px-1.5 py-0.5 rounded font-black flex-shrink-0 hidden sm:block">UTILIZADO</span>}
+                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-[#0054ec]">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
                   <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
                     <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Saving</span>
-                    <span className="font-mono text-emerald-500 text-[13px]">{formatCurrency(content.totalSaving)}</span>
+                    <span className="font-mono text-[#0054ec] text-[13px]">{formatCurrency(content.totalSaving)}</span>
                   </div>
                 </div>
               </div>
@@ -1196,7 +1196,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               {/* Utilizado items */}
               <div className={`lg:col-span-5 ${cardCls}`}>
                 <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
-                  <DollarSign size={12} className="text-amber-500" />
+                  <DollarSign size={12} className="text-[#fd11a4]" />
                   Utilizado no Mês
                 </h3>
                 <div className="flex flex-col gap-1">
@@ -1204,12 +1204,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
                       <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
                       {item.obs && <span className={`text-[8px] px-1 py-0.5 rounded font-semibold flex-shrink-0 hidden sm:block ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
-                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-amber-500">{formatCurrency(item.value)}</span>
+                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-[#fd11a4]">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
                   <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
                     <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Utilizado</span>
-                    <span className="font-mono text-amber-500 text-[13px]">{formatCurrency(content.utilizadoItems.reduce((s: number, i: any) => s + i.value, 0))}</span>
+                    <span className="font-mono text-[#fd11a4] text-[13px]">{formatCurrency(content.utilizadoItems.reduce((s: number, i: any) => s + i.value, 0))}</span>
                   </div>
                 </div>
 
@@ -1217,15 +1217,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className={`mt-3 pt-3 border-t ${dk ? 'border-slate-800' : 'border-slate-100'}`}>
                   <div className="flex justify-between text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">
                     <span>Utilizado vs. Saldo</span>
-                    <span className="text-emerald-500">{((content.saldoSaving / content.totalSaving) * 100).toFixed(0)}% disponível</span>
+                    <span className="text-[#0054ec]">{((content.saldoSaving / content.totalSaving) * 100).toFixed(0)}% disponível</span>
                   </div>
                   <div className={`w-full h-3 rounded-full overflow-hidden flex ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.totalUtilizado / content.totalSaving) * 100}%` }} transition={{ duration: 1 }} className="h-full bg-amber-400 rounded-l-full" />
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.saldoSaving / content.totalSaving) * 100}%` }} transition={{ duration: 1, delay: 0.3 }} className="h-full bg-emerald-400 rounded-r-full" />
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.totalUtilizado / content.totalSaving) * 100}%` }} transition={{ duration: 1 }} className="h-full bg-[#fd11a4] rounded-l-full" />
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${(content.saldoSaving / content.totalSaving) * 100}%` }} transition={{ duration: 1, delay: 0.3 }} className="h-full bg-[#0054ec] rounded-r-full" />
                   </div>
                   <div className="flex gap-3 mt-1 text-[8.5px] font-semibold">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-amber-400" />Utilizado</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-400" />Saldo</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#fd11a4]" />Utilizado</span>
+                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0054ec]" />Saldo</span>
                   </div>
                 </div>
               </div>
@@ -1252,7 +1252,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       <tr key={idx} className={dk ? 'hover:bg-[#0054ec]/8' : 'hover:bg-slate-50'}>
                         <td className={`py-1.5 px-2 font-black text-[9px] ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{row.item}</td>
                         <td className={`py-1.5 px-2 font-semibold ${dk ? 'text-slate-200' : 'text-slate-800'}`}>{row.desc}</td>
-                        <td className="py-1.5 px-2 font-mono font-bold text-right text-emerald-500">{formatCurrency(row.mensal)}</td>
+                        <td className="py-1.5 px-2 font-mono font-bold text-right text-[#9b1dbf]">{formatCurrency(row.mensal)}</td>
                         <td className="py-1.5 px-2 font-mono font-black text-right text-[#fd11a4]">{formatCurrency(row.anual)}</td>
                       </tr>
                     ))}
@@ -1280,11 +1280,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 />
               ))}
 
-              <div className="bg-emerald-50 text-emerald-950 border border-emerald-100 p-4.5 rounded-2xl flex items-start gap-3">
-                <CheckCircle2 className="text-emerald-500 mt-0.5 flex-shrink-0" size={18} />
+              <div className="bg-[#0054ec]/5 text-slate-900 border border-[#0054ec]/15 p-4.5 rounded-2xl flex items-start gap-3">
+                <CheckCircle2 className="text-[#0054ec] mt-0.5 flex-shrink-0" size={18} />
                 <div className="flex flex-col gap-1 text-xs">
-                  <span className="font-black text-emerald-900 uppercase tracking-wide">Reciclagem Ativa</span>
-                  <p className="font-medium text-emerald-800 leading-relaxed">
+                  <span className="font-black text-[#0054ec] uppercase tracking-wide">Reciclagem Ativa</span>
+                  <p className="font-medium text-slate-700 leading-relaxed">
                     Arrecadação e reciclagem direcionada de componentes sucateados, minimizando o impacto ambiental de metais pesados com rentabilização financeira de lotes descontinuados.
                   </p>
                 </div>
@@ -1426,7 +1426,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                         <div className="flex flex-col items-end">
                           <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
-                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-emerald-600' : 'text-[#2226c0]'}`}>
+                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
                             {formatCurrency(item.value)}
                           </span>
                         </div>
@@ -1492,7 +1492,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {/* Right detailed policy tables */}
             <div className={`lg:col-span-7 ${cardCls}`}>
               <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-150 pb-3 mb-4 flex items-center gap-2">
-                <ShieldCheck size={14} className="text-emerald-500 animate-pulse" />
+                <ShieldCheck size={14} className="text-[#0054ec] animate-pulse" />
                 Estrutura de Cobertura Ativa
               </h3>
 
@@ -1723,7 +1723,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     {content.invoiceItems.map((item: any, idx: number) => {
                       const isCredit = item.isCredit;
                       return (
-                        <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${isCredit ? (dk ? 'border-emerald-800/40 bg-emerald-900/10 hover:bg-emerald-900/20' : 'border-emerald-100 bg-emerald-50/10 hover:bg-emerald-50/20') : (dk ? 'border-slate-800 bg-[#0d0f17] hover:bg-[#12131a]' : 'border-slate-100 bg-white hover:bg-slate-50')}`}>
+                        <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${isCredit ? (dk ? 'border-[#0054ec]/30 bg-[#0054ec]/5 hover:bg-[#0054ec]/10' : 'border-[#0054ec]/15 bg-[#0054ec]/5 hover:bg-[#0054ec]/10') : (dk ? 'border-slate-800 bg-[#0d0f17] hover:bg-[#12131a]' : 'border-slate-100 bg-white hover:bg-slate-50')}`}>
                           <div className="flex flex-col gap-0.5">
                             <span className="text-xs font-black text-slate-800">{item.name}</span>
                             <span className="text-[10px] text-slate-400 font-semibold">{item.sub}</span>
@@ -1731,10 +1731,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           
                           {/* Credit badge vs value */}
                           <div className="text-right flex flex-col items-end gap-1 font-mono">
-                            <span className={`text-xs font-extrabold ${isCredit ? 'text-emerald-600' : 'text-slate-800'}`}>
+                            <span className={`text-xs font-extrabold ${isCredit ? 'text-[#0054ec]' : 'text-slate-800'}`}>
                               {formatCurrency(item.value)}
                             </span>
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded-lg font-bold uppercase ${isCredit ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}`}>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded-lg font-bold uppercase ${isCredit ? 'bg-[#0054ec]/10 text-[#0054ec]' : 'bg-slate-100 text-slate-500'}`}>
                               {isCredit ? 'Crédito' : 'Débito'}
                             </span>
                           </div>
