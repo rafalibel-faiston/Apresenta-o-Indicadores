@@ -1,0 +1,1544 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  DollarSign, Package, Truck, Shield, ShieldCheck, Info, CheckCircle2, 
+  ExternalLink, Search, BarChart3, List, Layers, HelpCircle, 
+  Database, RefreshCw, Smartphone, Mail, Globe, Sparkles, TrendingUp,
+  Network, Cable, Server, BatteryCharging, Cpu, Wifi
+} from 'lucide-react';
+import KPICard from './KPICard';
+import SelfStorageMap from './SelfStorageMap';
+import FaistonLogo from './FaistonLogo';
+import EntradaSaidaChart from './EntradaSaidaChart';
+import { 
+  ResponsiveBarChart, 
+  HorizontalBarChart, 
+  DonutChart, 
+  ResponsiveAreaChart,
+  formatCurrency, 
+  formatCompact 
+} from './MiniCharts';
+
+interface SlideViewerProps {
+  slide: any;
+  isFullscreen?: boolean;
+  isDarkMode?: boolean;
+}
+
+export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = false }: SlideViewerProps) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('summary');
+  const [activeStockTab, setActiveStockTab] = useState('topNf');
+  const [chartDisplayType, setChartDisplayType] = useState<'bar' | 'combined'>('combined');
+  const [activeRegion, setActiveRegion] = useState<string | null>(null);
+  const [consolidatedTab, setConsolidatedTab] = useState<'chart' | 'bars'>('chart');
+
+  useEffect(() => {
+    setChartDisplayType('combined');
+    setActiveRegion(null);
+    setConsolidatedTab('chart');
+  }, [slide]);
+
+  const { category, title, subtitle, content } = slide;
+
+  // Render a lovely geometric Faiston logo icon using styling
+  const renderFaistonLogoIcon = (sizeClass = "w-12 h-12") => {
+    return (
+      <div className={`${sizeClass} relative flex-shrink-0 animate-pulse`}>
+        {/* Layered triangle path resembling 'F' and play icon of Faiston */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400 via-indigo-500 to-pink-500 rounded-xl rotate-12 opacity-80" />
+        <div className="absolute inset-1.5 bg-white rounded-lg flex items-center justify-center">
+          <svg viewBox="0 0 24 24" className="w-6 h-6 fill-none stroke-current text-indigo-600" strokeWidth="2.5">
+            <path d="M5 3h14c1.1 0 2 .9 2 2v3c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2Z" />
+            <path d="M3 14h12c1.1 0 2 .9 2 2v3c0 1.1-.9 2-2 2H3c-1.1 0-2-.9-2-2v-3c0-1.1.9-2 2-2Z" />
+            <path d="M12 9v5h3" />
+          </svg>
+        </div>
+      </div>
+    );
+  };
+
+  // Safe search utility for tables
+  const filterList = (list: any[], key: string) => {
+    if (!searchTerm) return list;
+    return list.filter(item => 
+      String(item[key]).toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  // Helper to choose color themes based on section category
+  const getThemeColor = () => {
+    switch (category) {
+      case 'insurance': return '#3b82f6'; // Blue
+      case 'operations': return '#ec4899'; // Pink
+      case 'financials': return '#a855f7'; // Purple
+      default: return '#6366f1'; // Indigo
+    }
+  };
+
+  const getBarChartTheme = (): 'indigo' | 'purple' | 'pink' | 'cyan' | 'blue' => {
+    switch (slide?.id) {
+      case 'correios': return 'indigo';
+      case 'cia-aerea': return 'cyan';
+      case 'dedicados': return 'purple';
+      case 'self-storage': return 'pink';
+      case 'custo-fatura': return 'blue';
+      case 'seguros-sinistros': return 'purple';
+      default: {
+        const themes: ('indigo' | 'purple' | 'pink' | 'cyan' | 'blue')[] = ['indigo', 'purple', 'pink', 'cyan', 'blue'];
+        const index = slide?.number ? slide.number : 0;
+        return themes[index % themes.length];
+      }
+    }
+  };
+
+  // 1. CAPA / COVER
+  if (category === 'cover') {
+    return (
+      <div className={`flex flex-col justify-between items-center h-full min-h-[520px] text-center px-6 py-12 relative overflow-hidden rounded-2xl border transition-colors duration-300 ${
+        isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-white border-slate-200 text-slate-850"
+      }`} id="slide-cover">
+        {/* Soft elegant backdrop glow points */}
+        <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-500/5'}`} />
+        <div className={`absolute bottom-10 right-10 w-64 h-64 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-cyan-500/10' : 'bg-cyan-500/5'}`} />
+        <div className={`absolute inset-0 bg-[radial-gradient(${isDarkMode ? '#1e293b' : '#e2e8f0'}_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-40`} />
+
+        {/* Centered Main Brand Content */}
+        <div className="my-auto flex flex-col items-center gap-6 z-10 w-full max-w-lg">
+          <div className="relative flex items-center justify-center p-2">
+            <FaistonLogo 
+              className={`w-full max-w-[320px] md:max-w-[400px] h-auto transition-all ${
+                isDarkMode 
+                  ? "text-white drop-shadow-[0_0_20px_rgba(99,102,241,0.2)]" 
+                  : "text-slate-800"
+              }`}
+            />
+          </div>
+          
+          {/* Subtle colored key line accent */}
+          <div className="w-24 h-0.5 bg-gradient-to-r from-cyan-400 via-indigo-500 to-pink-500 rounded-full opacity-70" />
+          
+          <h2 className={`text-xs font-black tracking-[0.2em] font-serif uppercase ${isDarkMode ? "text-indigo-400" : "text-indigo-600"}`}>
+            {subtitle}
+          </h2>
+          
+          <p className={`text-xs font-bold leading-relaxed max-w-sm font-sans italic ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+            "{content.slogan}"
+          </p>
+        </div>
+
+        {/* Centralized Higher-Contrast Department & Month Indicator Footer */}
+        <div className={`w-full max-w-lg border-t pt-6 mt-4 z-10 flex flex-col items-center gap-2 font-sans select-none ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
+          <div className="text-center">
+            <span className={`text-[8px] font-extrabold tracking-widest uppercase font-mono block mb-1 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>DEPARTAMENTO</span>
+            <span className={`text-lg md:text-2xl font-serif font-black tracking-tight leading-tight block ${isDarkMode ? "text-white" : "text-slate-800"}`}>
+              {content.department}
+            </span>
+          </div>
+          <div className={`mt-2 px-3.5 py-1.5 font-mono text-[9px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-indigo-700"
+          }`}>
+            ABRIL
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. SEPARATOR / SECTION DIVIDER
+  if (category === 'divider') {
+    return (
+      <div className={`flex flex-col justify-between items-center h-full min-h-[500px] text-center px-12 py-16 relative overflow-hidden rounded-2xl border transition-colors duration-300 ${
+        isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-gradient-to-r from-indigo-50 via-slate-50 to-pink-50/20 border-slate-200"
+      }`} id="slide-divider">
+        <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-300/15'}`} />
+        
+        <div className="my-auto flex flex-col items-center gap-6 z-10 w-full max-w-lg">
+          <div className={`p-4.5 rounded-2xl shadow-md border ${
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-white border-slate-100 text-indigo-600"
+          }`}>
+            <Shield size={40} />
+          </div>
+          <h1 className={`text-4xl font-extrabold tracking-tight font-serif mt-2 ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            {title}
+          </h1>
+          <div className="w-32 h-1 bg-gradient-to-r from-indigo-500 to-pink-500 rounded-full" />
+          <p className={`font-medium text-md max-w-md ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+            {subtitle}
+          </p>
+        </div>
+
+        <div className={`grid grid-cols-3 gap-4 w-full max-w-xl border p-5 rounded-2xl shadow-sm z-10 transition-colors ${
+          isDarkMode ? "bg-[#12131a] border-slate-800 text-white" : "bg-white border-slate-100 text-slate-800"
+        }`}>
+          <div className="flex flex-col text-center">
+            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Valores Cobertos</span>
+            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{formatCompact(content.totalProtected)}</span>
+          </div>
+          <div className={`flex flex-col text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
+            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Custos de Fatura</span>
+            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{formatCurrency(content.monthlyBillingCost)}</span>
+          </div>
+          <div className="flex flex-col text-center">
+            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Apólices Clientes</span>
+            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{content.activePolicies} Ativas</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 3. CONTACT / AGRADECIMENTO
+  if (category === 'contact') {
+    return (
+      <div className={`flex flex-col justify-between items-center h-full min-h-[500px] px-8 py-12 relative overflow-hidden rounded-2xl border transition-colors duration-300 ${
+        isDarkMode ? "bg-[#151720] border-slate-800 text-white" : "bg-gradient-to-b from-white to-slate-50 border-slate-200"
+      }`} id="slide-contact">
+        <div className={`absolute top-0 right-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-indigo-500/10' : 'bg-indigo-100/40'}`} />
+        <div className={`absolute bottom-0 left-0 w-80 h-80 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-pink-500/10' : 'bg-pink-100/30'}`} />
+
+        <div className="my-auto text-center flex flex-col items-center gap-6 z-10 w-full max-w-lg">
+          <div className={`p-4.5 rounded-full mb-2 border ${
+            isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-indigo-50 text-indigo-600 border-indigo-100/50"
+          }`}>
+            <Sparkles size={32} />
+          </div>
+          <h1 className={`text-4xl md:text-5xl font-black font-serif tracking-tight leading-none uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+            {title}
+          </h1>
+          <p className={`text-md font-medium max-w-sm mt-1 mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+            {subtitle}
+          </p>
+          <div className="w-16 h-1.5 bg-indigo-600 rounded-full" />
+        </div>
+
+        {/* Contact details Card */}
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className={`border p-8 rounded-3xl max-w-md w-full flex flex-col items-center text-center z-10 transition-colors ${
+            isDarkMode ? "bg-[#12131a] border-slate-800 shadow-xl shadow-black/60" : "bg-white border-slate-100 shadow-lg shadow-slate-100/60"
+          }`}
+        >
+          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 text-white flex items-center justify-center font-bold text-xl mb-4 font-sans border-2 border-white shadow-md">
+            BH
+          </div>
+          <h2 className={`text-xl font-extrabold font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{content.presenter}</h2>
+          <p className={`text-xs font-semibold uppercase tracking-wider mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{content.role}</p>
+
+          <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-slate-850' : 'bg-slate-50'}`} />
+
+          {/* Sorteable detailed contact fields */}
+          <div className={`flex flex-col gap-4.5 w-full font-medium text-xs text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
+            <a href={`tel:${content.contact.phone}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+            }`}>
+              <span className={`p-2 rounded-xl transition-all border ${
+                isDarkMode 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-500 group-hover:bg-indigo-50'
+              }`}>
+                <Smartphone size={16} />
+              </span>
+              <span>{content.contact.phone}</span>
+            </a>
+            <a href={`mailto:${content.contact.email}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+            }`}>
+              <span className={`p-2 rounded-xl transition-all border ${
+                isDarkMode 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-500 group-hover:bg-indigo-50'
+              }`}>
+                <Mail size={16} />
+              </span>
+              <span className="truncate">{content.contact.email}</span>
+            </a>
+            <a href={`https://${content.contact.web}`} target="_blank" rel="noreferrer" referrerPolicy="no-referrer" className={`flex items-center gap-3.5 transition-colors py-group group ${
+              isDarkMode ? 'hover:text-cyan-400' : 'hover:text-indigo-600'
+            }`}>
+              <span className={`p-2 rounded-xl transition-all border ${
+                isDarkMode 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-indigo-505 group-hover:bg-indigo-50'
+              }`}>
+                <Globe size={16} />
+              </span>
+              <span>{content.contact.web}</span>
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Bottom credits */}
+        <div className="text-[10px] font-mono font-bold text-slate-400 z-10 tracking-wider uppercase mt-8 flex items-center gap-2">
+          <span>Faiston S.A.</span>
+          <span className="text-slate-200">•</span>
+          <span>Evoluindo junto com nossos clientes</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 4. MAIN DEFAULT SLIDE LAYOUT
+  return (
+    <div className="flex flex-col h-full bg-transparent select-text" id="slide-viewer-content">
+      {/* Slide Title with visual category indicators */}
+      <div className={`border-b pb-5 mb-5 flex flex-col md:flex-row md:items-center justify-between gap-3 transition-colors ${
+        isDarkMode ? 'border-slate-800' : 'border-slate-100'
+      }`}>
+        <div className="flex items-center gap-3.5">
+          <div>
+            <h2 className={`text-2xl font-black tracking-tight font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+              {title}
+            </h2>
+            <p className="text-slate-400 text-xs font-semibold leading-none mt-1 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColor() }} />
+              {subtitle}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Dynamic Slide Components */}
+      <div className="flex-1 overflow-y-auto pr-1">
+        {/* --- EXPEDIDORES (Correios, Transportadoras, Cia Aérea, Courier, Dedicados, Self-Storage) --- */}
+        {category === 'expeditions' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left columnar metrics */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+                 {content.kpis.map((kpi: any, idx: number) => (
+                  <KPICard 
+                    key={idx} 
+                    label={kpi.label} 
+                    value={kpi.value} 
+                    type={kpi.type} 
+                    isHighlight={kpi.isHighlight}
+                    borderAccent={getThemeColor()}
+                    isDarkMode={isDarkMode}
+                  />
+                ))}
+              </div>
+
+              {/* Comentários/Observações section */}
+              {content.commentary && (
+                <div className="bg-slate-50/50 border border-slate-150 p-5 rounded-2xl flex flex-col gap-3">
+                  <div className="flex flex-col gap-3.5">
+                    {content.commentary.map((comm: any, idx: number) => {
+                      const isSuccess = comm.type === 'success';
+                      const isStats = comm.type === 'stats' || comm.type === 'link';
+                      const accentColor = isSuccess 
+                        ? '#10b981' // emerald
+                        : isStats 
+                          ? '#a855f7' // purple
+                          : '#6366f1'; // indigo/theme
+
+                      return (
+                        <div 
+                          key={idx} 
+                          className="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-slate-200/70 border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 text-slate-700"
+                          style={{ borderLeftColor: accentColor }}
+                        >
+                          <span 
+                            className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-150 transition-colors"
+                            style={{ color: accentColor }}
+                          >
+                            {isSuccess ? <CheckCircle2 size={13} strokeWidth={2.5} /> :
+                             isStats ? <TrendingUp size={13} strokeWidth={2.5} /> :
+                             <Info size={13} strokeWidth={2.5} />}
+                          </span>
+                          <p className="font-bold text-[12px] leading-relaxed mt-0.5 text-slate-700">{comm.text}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right columnar detailed tables/charts */}
+            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+              <div className="flex items-center justify-between border-b border-slate-150 pb-3 mb-4">
+                {/* Control tabs representation */}
+                <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
+                  <button 
+                    onClick={() => setActiveTab('summary')}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    <BarChart3 size={12} />
+                    Gráfico Comparativo
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('table')}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    <List size={12} />
+                    Tabela de Dados
+                  </button>
+                </div>
+
+                {/* Direct carrier distribution for Transportadora slide */}
+                {slide.id === 'transportadoras' && activeTab === 'summary' && (
+                  <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase">
+                    {content.distribution.map((dist: any, dIdx: number) => (
+                      <span key={dIdx} className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: dIdx === 0 ? '#6366f1' : dIdx === 1 ? '#a855f7' : '#06b6d4' }} />
+                        {dist.name}: {dist.percentage}%
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                {/* Combined vs pure bar selector */}
+                {activeTab === 'summary' && !['transportadoras', 'dedicados', 'self-storage'].includes(slide.id) && content.projects && (
+                  <div className="flex bg-slate-100 p-0.5 rounded-xl gap-1 border border-slate-200/50">
+                    <button 
+                      onClick={() => setChartDisplayType('bar')}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'bar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                    >
+                      Apenas Barras
+                    </button>
+                    <button 
+                      onClick={() => setChartDisplayType('combined')}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'combined' ? 'bg-pink-600 text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-slate-600'}`}
+                    >
+                      Misto (Barras + Linha)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* TAB CONTENT 1: Summary Chart */}
+              {activeTab === 'summary' && (
+                <div className="flex-1 flex flex-col justify-center min-h-[280px]">
+                  {/* Handle customized transportadoras slide showing distribution donut + top records */}
+                  {slide.id === 'transportadoras' ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center md:text-left">Divisão por Transportadora</h4>
+                        <DonutChart 
+                          data={content.distribution.map((d: any) => ({
+                            label: d.name,
+                            value: d.value,
+                            percentage: d.percentage
+                          }))} 
+                        />
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">Ranking Custo por Projeto</h4>
+                        <HorizontalBarChart data={content.projects.slice(0, 4).map((p: any) => ({ label: p.project, value: p.cost, subValue: p.equipments }))} />
+                      </div>
+                    </div>
+                  ) : slide.id === 'dedicados' ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                      <div className="flex flex-col gap-3">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Principais Rotas Registradas</h4>
+                        <div className="flex flex-col gap-3">
+                          {content.rotas.map((r: any, rIdx: number) => (
+                            <div key={rIdx} className="bg-slate-50 border border-slate-100/50 p-3.5 rounded-2xl flex justify-between items-center text-xs">
+                              <div className="flex flex-col gap-1.5">
+                                <span className="font-extrabold text-slate-900 tracking-tight">{r.transportadora}</span>
+                                <div className="flex flex-wrap gap-1">
+                                  {r.breakdown.map((b: any, bIdx: number) => (
+                                    <span key={bIdx} className="text-[9px] bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded font-semibold">{b.project}</span>
+                                  ))}
+                                </div>
+                              </div>
+                              <span className="font-mono font-bold text-slate-950 text-right">{formatCurrency(r.total)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-2">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Ranking Volume de Custos</h4>
+                        <HorizontalBarChart data={content.projects.map((p: any) => ({ label: p.project, value: p.cost, subValue: p.equipments }))} />
+                      </div>
+                    </div>
+                  ) : slide.id === 'self-storage' ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch animate-fadeIn">
+                      <div className="lg:col-span-5 flex flex-col gap-3">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Distribuição por Região</h4>
+                        <div className="flex flex-col gap-3">
+                          {content.regions.map((region: any, regIdx: number) => {
+                            const isSelected = activeRegion === region.uf;
+                            const borderHighlight = isSelected 
+                              ? region.uf === 'DF' 
+                                ? 'border-indigo-400/80 bg-indigo-50/10 ring-2 ring-indigo-100 shadow-sm'
+                                : region.uf === 'PR'
+                                  ? 'border-pink-400/80 bg-pink-50/10 ring-2 ring-pink-100 shadow-sm'
+                                  : 'border-cyan-400/80 bg-cyan-50/10 ring-2 ring-cyan-100 shadow-sm'
+                              : 'border-slate-100/75 hover:border-slate-200 hover:bg-slate-50/65 hover:shadow-xs';
+
+                            const avatarGrad = region.uf === 'DF'
+                              ? 'from-indigo-400 to-indigo-600 shadow-indigo-100/60'
+                              : region.uf === 'PR'
+                                ? 'from-pink-400 to-pink-600 shadow-pink-100/60'
+                                : 'from-cyan-400 to-cyan-600 shadow-cyan-100/60';
+
+                            return (
+                              <div 
+                                key={regIdx} 
+                                className={`border p-4.5 rounded-2xl flex items-center justify-between cursor-pointer transition-all duration-300 ${borderHighlight}`}
+                                onMouseEnter={() => setActiveRegion(region.uf)}
+                                onMouseLeave={() => setActiveRegion(null)}
+                              >
+                                <div className="flex items-center gap-3.5">
+                                  <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGrad} text-white flex items-center justify-center font-black text-sm select-none shadow-md`}>
+                                    {region.uf}
+                                  </div>
+                                  <div className="flex flex-col gap-0.5">
+                                    <span className="font-extrabold text-slate-800 text-xs">Apoio Técnico Regional Estável</span>
+                                    <span className="text-[10px] text-slate-400 font-semibold">{region.text}</span>
+                                  </div>
+                                </div>
+                                <span className={`font-mono font-black text-xs transition-colors duration-300 ${
+                                  isSelected 
+                                    ? region.uf === 'DF' 
+                                      ? 'text-indigo-650' 
+                                      : region.uf === 'PR'
+                                        ? 'text-pink-650'
+                                        : 'text-cyan-650'
+                                    : 'text-slate-950'
+                                }`}>
+                                  {formatCurrency(region.cost)}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      
+                      <div className="lg:col-span-4 flex flex-col gap-3">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Localidades no Mapa</h4>
+                        <div className="flex-1 flex items-center justify-center">
+                          <SelfStorageMap 
+                            activeRegion={activeRegion}
+                            onHoverRegion={setActiveRegion}
+                            regions={content.regions}
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="lg:col-span-3 flex flex-col gap-3">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center lg:text-left">Participação</h4>
+                        <div className="flex-1 flex items-center justify-center min-h-[190px] w-full">
+                          <DonutChart 
+                            data={content.regions.map((r: any) => ({ label: r.uf, value: r.cost, percentage: (r.cost / 1116.9) * 100 }))} 
+                            layout="col"
+                            size="sm"
+                            showExactTotal={true}
+                            showExactLegendValues={true}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-1 flex-1">
+                      <div className={isFullscreen ? "h-96 lg:h-[45vh]" : "h-64"}>
+                        <ResponsiveBarChart 
+                          data={content.projects.slice(0, 8).map((p: any) => ({
+                            label: p.project,
+                            value: p.cost,
+                            subValue: p.equipments,
+                            meta: p.shipments !== undefined ? `${p.shipments} Embarques` : undefined
+                          }))}
+                          colorTheme={getBarChartTheme()}
+                          chartType={chartDisplayType}
+                        />
+                      </div>
+                      <span className="text-center text-[10px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Visualizando os 8 principais projetos por ordem de relevância</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* TAB CONTENT 2: Detailed Table */}
+              {activeTab === 'table' && (
+                <div className="flex-1 flex flex-col">
+                  {/* Table search filter */}
+                  <div className="flex items-center gap-2 border border-slate-100 rounded-xl px-3 py-2 text-xs bg-slate-50 mb-3 max-w-sm">
+                    <Search size={14} className="text-slate-400" />
+                    <input 
+                      type="text" 
+                      placeholder="Pesquisar projeto..." 
+                      className="bg-transparent border-none outline-none text-slate-700 w-full font-medium"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+
+                  <div className={`overflow-x-auto border border-slate-50 rounded-2xl flex-1 overflow-y-auto ${isFullscreen ? "max-h-[50vh]" : "max-h-[290px]"}`}>
+                    <table className="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr className="bg-slate-50 text-slate-400 uppercase font-bold text-[10px] border-b border-slate-100">
+                          <th className="py-2.5 px-4 font-black">Projeto</th>
+                          <th className="py-2.5 px-4 text-right font-black">Custo Total</th>
+                          {content.projects[0]?.shipments !== undefined && <th className="py-2.5 px-4 text-right font-black">Embarques</th>}
+                          {content.projects[0]?.equipments !== undefined && <th className="py-2.5 px-4 text-right font-black">Equipamentos</th>}
+                          {content.projects[0]?.averageCost !== undefined && <th className="py-2.5 px-4 text-right font-black">Custo Médio</th>}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50 text-slate-700 font-semibold">
+                        {filterList(content.projects, 'project').map((p: any, idx: number) => (
+                          <tr key={idx} className="hover:bg-indigo-50/20 transition-colors">
+                            <td className="py-2.5 px-4 font-bold text-slate-900">{p.project}</td>
+                            <td className="py-2.5 px-4 font-mono text-slate-950 font-black text-right">{formatCurrency(p.cost)}</td>
+                            {p.shipments !== undefined && <td className="py-2.5 px-4 font-mono text-right">{p.shipments}</td>}
+                            {p.equipments !== undefined && <td className="py-2.5 px-4 font-mono text-right">{p.equipments}</td>}
+                            {p.averageCost !== undefined && <td className="py-2.5 px-4 font-mono text-right text-slate-500">{formatCurrency(p.averageCost)}</td>}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* --- CUSTO CONSOLIDADO (Slide 8) --- */}
+        {slide.id === 'custo-consolidado' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left columnar breakdown bar list */}
+            <div className="lg:col-span-5 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div className="flex flex-col gap-4 text-slate-850">
+                <div className="flex justify-between items-center border-b border-slate-100 pb-2 mb-1">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 animate-ping" />
+                    Divisão por Modalidade Geral
+                  </h3>
+                  
+                  {/* Selector tabs buttons */}
+                  <div className="flex items-center gap-1 bg-slate-50 border border-slate-100 p-0.5 rounded-xl">
+                    <button
+                      onClick={() => setConsolidatedTab('chart')}
+                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-indigo-600 text-white shadow-xs font-semibold' : 'text-slate-450 hover:text-slate-600'}`}
+                    >
+                      Gráfico
+                    </button>
+                    <button
+                      onClick={() => setConsolidatedTab('bars')}
+                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'bars' ? 'bg-white text-slate-800 shadow-xs' : 'text-slate-450 hover:text-slate-600'}`}
+                    >
+                      Barras
+                    </button>
+                  </div>
+                </div>
+                
+                {consolidatedTab === 'chart' ? (
+                  <div className="py-2 flex items-center justify-center min-h-[200px]">
+                    <DonutChart 
+                      data={content.breakdown.map((item: any, index: number) => {
+                        const colorPrefixes = [
+                          'stroke-indigo-500',
+                          'stroke-purple-500',
+                          'stroke-blue-500',
+                          'stroke-pink-500',
+                          'stroke-cyan-500',
+                          'stroke-emerald-400'
+                        ];
+                        return {
+                          label: item.category,
+                          value: item.val,
+                          percentage: item.share,
+                          colorClass: colorPrefixes[index % colorPrefixes.length]
+                        };
+                      })} 
+                      layout="col"
+                      size="md"
+                      showExactTotal={true}
+                    />
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-4 py-2">
+                    {content.breakdown.map((item: any, idx: number) => (
+                      <div key={idx} className="flex flex-col gap-1">
+                        <div className="flex justify-between items-center text-xs font-semibold">
+                          <span className="text-slate-800 font-bold">{item.category}</span>
+                          <div className="font-mono">
+                            <span className="font-bold text-slate-950 mr-2">{formatCurrency(item.val)}</span>
+                            <span className="text-[10px] text-slate-400">({item.share.toFixed(1)}%)</span>
+                          </div>
+                        </div>
+                        <div className="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
+                          <motion.div 
+                            initial={{ width: 0 }}
+                            animate={{ width: `${item.share}%` }}
+                            transition={{ duration: 1.2, delay: idx * 0.05 }}
+                            className="h-full rounded-full"
+                            style={{ backgroundColor: item.color }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Quick High level summary card */}
+              <div className="bg-indigo-50/50 border border-indigo-100/30 rounded-2xl p-4.5 mt-4 text-xs font-medium text-indigo-900 leading-relaxed">
+                As <span className="font-bold text-indigo-950">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-indigo-950">92,1%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-indigo-950">Correios</span>.
+              </div>
+            </div>
+
+            {/* Right ranking projects list */}
+            <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-150 pb-3 mb-4">
+                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                    <BarChart3 size={14} className="text-purple-500" />
+                    Principais Projetos Contratantes (Ranking Custo)
+                  </h3>
+
+                  {/* Search input field */}
+                  <div className="flex items-center gap-1.5 border border-slate-100 rounded-xl px-2.5 py-1 text-[10px] bg-slate-50 max-w-[200px]">
+                    <Search size={12} className="text-slate-400" />
+                    <input 
+                      type="text" 
+                      placeholder="Pesquisar..." 
+                      className="bg-transparent border-none outline-none text-slate-700 w-full font-semibold"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className={`grid grid-cols-1 md:grid-cols-2 gap-3.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[55vh]" : "max-h-[310px]"}`}>
+                  {filterList(content.projects, 'name').map((proj: any, idx: number) => {
+                    const progress = Math.max((proj.value / 110641.69) * 100, 1);
+                    return (
+                      <div key={idx} className="bg-slate-50/70 border border-slate-100/50 p-3 rounded-xl flex flex-col gap-1 hover:bg-slate-100 transition-colors">
+                        <div className="flex justify-between items-center text-xs font-semibold">
+                          <span className="font-bold text-slate-900 truncate max-w-[70%]">{proj.name}</span>
+                          <span className="font-mono font-black text-slate-950">{formatCurrency(proj.value)}</span>
+                        </div>
+                        <div className="w-full bg-white h-1.5 rounded-full overflow-hidden border border-slate-100/50">
+                          <div 
+                            className="bg-gradient-to-r from-purple-500 to-indigo-600 h-full rounded-full" 
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase mt-4 text-center">
+                Total acumulado consolidado no período: R$ 180.257,00
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- CONSOLIDADO ENTRADA E SAÍDA (Slide 9) --- */}
+        {slide.id === 'entrada-saida' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* ENTRADA CARD */}
+            <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 border-b border-slate-150 pb-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-black">
+                    IN
+                  </div>
+                  <div>
+                    <h3 className="text-md font-extrabold text-slate-900 font-sans">{content.entrada.title}</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Entrada</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 mb-5">
+                  <div className="bg-slate-50/80 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">NF-e</span>
+                    <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.entrada.nfs}</span>
+                  </div>
+                  <div className="bg-slate-50/80 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">Peças</span>
+                    <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.entrada.equipments}</span>
+                  </div>
+                  <div className="bg-indigo-50 text-indigo-950 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-indigo-400 uppercase">Valor</span>
+                    <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.entrada.value)}</span>
+                  </div>
+                </div>
+
+                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2.5">Detalhamento por Cliente</h4>
+                <div className={`flex flex-col gap-2 overflow-y-auto ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
+                  {content.entrada.details.map((item: any, idx: number) => {
+                    const ratio = (item.qty / 122) * 100;
+                    return (
+                      <div key={idx} className="bg-slate-50 flex items-center justify-between p-3 rounded-xl border border-slate-100/50">
+                        <span className="text-xs font-bold text-slate-800">{item.client}</span>
+                        <div className="flex items-center gap-3 text-xs font-mono">
+                          <div className="w-16 bg-white border border-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
+                            <div className="bg-indigo-500 h-full rounded-full" style={{ width: `${ratio}%` }} />
+                          </div>
+                          <span className="font-extrabold text-slate-950">{item.qty} un</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-[10px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t border-slate-100 pt-3">
+                Total de peças de entrada física
+              </div>
+            </div>
+
+            {/* HIGH FIDELITY COMPARATIVE VISUAL CHART CARD */}
+            <div className="lg:col-span-4">
+              <EntradaSaidaChart entrada={content.entrada} saida={content.saida} />
+            </div>
+
+            {/* SAÍDA CARD */}
+            <div className="lg:col-span-4 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3 border-b border-slate-150 pb-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center font-black">
+                    OUT
+                  </div>
+                  <div>
+                    <h3 className="text-md font-extrabold text-slate-900 font-sans">{content.saida.title}</h3>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Saída</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 mb-5">
+                  <div className="bg-slate-50/80 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">NF-e</span>
+                    <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.saida.nfs}</span>
+                  </div>
+                  <div className="bg-slate-50/80 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-slate-400 uppercase">Peças</span>
+                    <span className="text-lg font-black text-slate-900 font-mono mt-1">{content.saida.equipments}</span>
+                  </div>
+                  <div className="bg-pink-50 text-pink-950 p-2.5 rounded-2xl flex flex-col">
+                    <span className="text-[9px] font-bold text-pink-400 uppercase">Valor</span>
+                    <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.saida.value)}</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detalhamento por Cliente</h4>
+                  <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">14 Clientes</span>
+                </div>
+                
+                <div className={`flex flex-col gap-2 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
+                  {content.saida.details.map((item: any, idx: number) => {
+                    const ratio = (item.qty / 2636) * 100;
+                    return (
+                      <div key={idx} className="bg-slate-50 flex items-center justify-between p-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-100 transition-colors">
+                        <span className="text-xs font-bold text-slate-800">{item.client}</span>
+                        <div className="flex items-center gap-3 text-xs font-mono">
+                          <div className="w-16 bg-white border border-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
+                            <div className="bg-pink-500 h-full rounded-full" style={{ width: `${ratio}%` }} />
+                          </div>
+                          <span className="font-extrabold text-slate-950">{item.qty} un</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="text-[10px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t border-slate-100 pt-3">
+                Alto volume de saída física com destino ao projeto ZAMP
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- ESTOQUE ATUAL (Slide 10) --- */}
+        {slide.id === 'estoque-atual' && (
+          <div className="flex flex-col gap-6">
+            {/* Top overview KPIs with a beautiful Segment Comparison bar */}
+            <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col gap-4">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-150 pb-4">
+                <div>
+                  <span className="text-[10px] font-black text-indigo-500 uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
+                  <p className="text-3xl font-black text-slate-900 font-sans tracking-tight mt-1">{formatCurrency(content.total)}</p>
+                </div>
+                
+                {/* Horizontal Segment Bar */}
+                <div className="flex-1 max-w-xl w-full flex flex-col gap-1.5">
+                  <div className="flex justify-between text-[11px] font-bold text-slate-400 select-none">
+                    <span>Proporções por Categoria</span>
+                    <span className="text-slate-500">100% Patrimônio Protegido</span>
+                  </div>
+                  <div className="w-full h-4.5 rounded-full overflow-hidden flex shadow-inner border border-slate-100 bg-slate-50">
+                    {content.groups.map((g: any, idx: number) => (
+                      <div 
+                        key={idx} 
+                        className={`${g.color} h-full transition-all hover:brightness-95`} 
+                        style={{ width: `${g.percentage}%` }}
+                        title={`${g.name}: ${g.percentage}%`}
+                      />
+                    ))}
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-[10px] font-bold text-slate-400 select-none">
+                    {content.groups.map((g: any, idx: number) => {
+                      const textClass = g.color.replace('bg-', 'text-');
+                      return (
+                        <span key={idx} className="flex items-center gap-1.5">
+                          <span className={`w-2.5 h-2.5 rounded-full ${g.color}`} />
+                          {g.name}: <span className={`${textClass} font-black`}>{g.percentage}%</span>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Collapsed content categories switcher */}
+              <div className="flex bg-slate-100 p-1 rounded-xl self-start gap-1">
+                <button 
+                  onClick={() => setActiveStockTab('topNf')}
+                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  <Database size={12} />
+                  Top Projetos (com NF)
+                </button>
+                <button 
+                  onClick={() => setActiveStockTab('semNf')}
+                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? 'bg-white text-pink-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  <Layers size={12} />
+                  Sem NF (Fila Reversa)
+                </button>
+                <button 
+                  onClick={() => setActiveStockTab('guarda')}
+                  className={`flex items-center gap-1.5 px-4.2 py-1.8 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? 'bg-white text-cyan-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  <ShieldCheck size={12} />
+                  Guarda de Técnico
+                </button>
+              </div>
+
+              {/* Dynamic TAB views */}
+              <div className={isFullscreen ? "min-h-[35vh]" : "min-h-[190px]"}>
+                {activeStockTab === 'topNf' && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fadeIn">
+                    {content.topProjectsWithNF.map((proj: any, idx: number) => {
+                      // Proportional bar compared to the largest project value (R$ 12.6M)
+                      const maxVal = 12600000;
+                      const ratio = Math.min((proj.value / maxVal) * 100, 100);
+                      
+                      return (
+                        <div key={idx} className="border border-slate-100/60 p-4.5 rounded-2xl shadow-xs bg-gradient-to-br from-white to-slate-50/40 hover:to-indigo-50/15 hover:border-indigo-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-[9px] bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-lg px-2 py-0.5 font-black uppercase tracking-wider block">PROJETO PRINCIPAL</span>
+                              <Database size={13} className="text-slate-300 group-hover:text-indigo-400 transition-colors" />
+                            </div>
+                            <h4 className="text-[12px] font-black text-slate-800 tracking-tight leading-snug line-clamp-2 min-h-[36px]" title={proj.project}>{proj.project}</h4>
+                          </div>
+                          
+                          <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/40">
+                            <div className="flex justify-between items-baseline">
+                              <span className="text-[10px] text-slate-400 font-bold">{proj.itemQty} equipamentos</span>
+                              <span className="font-mono font-black text-slate-950 text-base tracking-tight text-indigo-950 group-hover:text-indigo-600 transition-colors">
+                                {formatCompact(proj.value)}
+                              </span>
+                            </div>
+                            {/* Proportional visual bar */}
+                            <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                              <motion.div 
+                                initial={{ width: 0 }}
+                                animate={{ width: `${ratio}%` }}
+                                transition={{ duration: 1.2, delay: idx * 0.05 }}
+                                className="bg-indigo-500 h-full rounded-full"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {activeStockTab === 'semNf' && (
+                  <div className="flex flex-col gap-4 animate-fadeIn">
+                    <div className="bg-gradient-to-r from-pink-50/60 to-purple-50/30 border border-pink-100/40 p-4 rounded-2xl text-[11.5px] font-semibold text-pink-950 leading-relaxed flex items-center gap-3">
+                      <Layers size={16} className="text-pink-500 animate-pulse flex-shrink-0" />
+                      <p>
+                        O <span className="font-bold">Estoque Sem NF</span> corresponde a produtos provenientes de fluxos de troca técnica (TRAG / RMA) de clientes que encontram-se temporariamente sem nota fiscal emitida.
+                      </p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {content.semNf.map((item: any, idx: number) => {
+                        const ratio = Math.min((item.value / 3200000) * 100, 100); // comparison with max value client
+                        return (
+                          <div key={idx} className="border border-pink-100/30 p-4 rounded-2xl bg-gradient-to-br from-white to-pink-50/5 hover:to-pink-50/15 hover:border-pink-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[9px] bg-pink-50 text-pink-600 border border-pink-100/60 font-black px-2 py-0.5 rounded-lg tracking-wider">OPERAÇÃO DE FILA</span>
+                              <RefreshCw size={13} className="text-slate-300 group-hover:text-pink-400 transition-colors" />
+                            </div>
+                            <span className="text-[12.5px] font-extrabold text-slate-800 tracking-tight leading-snug truncate block">{item.client}</span>
+                            
+                            <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/50">
+                              <div className="flex justify-between items-baseline">
+                                <span className="text-[10px] text-slate-400 font-semibold">{item.qty} equipamentos</span>
+                                <span className="font-mono font-black text-slate-950 text-[14.5px] group-hover:text-pink-600 transition-colors">{formatCompact(item.value)}</span>
+                              </div>
+                              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${ratio}%` }}
+                                  transition={{ duration: 1.2, delay: idx * 0.05 }}
+                                  className="bg-pink-500 h-full rounded-full" 
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {activeStockTab === 'guarda' && (
+                  <div className="flex flex-col gap-4 animate-fadeIn">
+                    <div className="bg-gradient-to-r from-cyan-50/60 to-slate-50/30 border border-cyan-100/40 p-4 rounded-2xl text-[11.5px] font-semibold text-cyan-950 leading-relaxed flex items-center gap-3">
+                      <ShieldCheck size={16} className="text-cyan-500 animate-pulse flex-shrink-0" />
+                      <p>
+                        A <span className="font-bold">Guarda de Técnico</span> representa peças alocadas fisicamente com técnicos autorizados e prestadores externos sob responsabilidade direta de campo.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {content.guardaTecnica.map((item: any, idx: number) => {
+                        const ratio = Math.min((item.value / 500000) * 100, 100); // comparison with R$ 500k max
+                        return (
+                          <div key={idx} className="border border-cyan-100/30 p-4 rounded-2xl bg-gradient-to-br from-white to-cyan-50/5 hover:to-cyan-50/15 hover:border-cyan-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
+                            <div className="flex items-center gap-3">
+                              <div className="p-2.5 bg-cyan-50 rounded-xl text-cyan-600 group-hover:bg-cyan-100 transition-colors shadow-xs">
+                                <Shield size={16} className="stroke-[2.5]" />
+                              </div>
+                              <div className="flex flex-col gap-0.5 truncate flex-1">
+                                <span className="font-black text-slate-800 text-[12.5px] truncate">{item.client}</span>
+                                <span className="text-[10px] font-bold text-slate-400">{item.qty} equipamentos</span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/50">
+                              <div className="flex justify-between items-baseline font-mono">
+                                <span className="text-[9px] bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded-lg font-bold uppercase tracking-wide">Valor Guardado</span>
+                                <span className="font-black text-slate-950 text-sm group-hover:text-cyan-600 transition-colors">{formatCurrency(item.value)}</span>
+                              </div>
+                              
+                              {/* Comparative mini progress bar */}
+                              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                                <motion.div 
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${ratio}%` }}
+                                  transition={{ duration: 1.2, delay: idx * 0.05 }}
+                                  className="bg-cyan-500 h-full rounded-full" 
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- DESCARTE SUSTENTÁVEL (Slide 11) --- */}
+        {slide.id === 'descarte-sustentavel' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left KPIs and descriptive list */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              {content.kpis.map((kpi: any, idx: number) => (
+                <KPICard 
+                  key={idx} 
+                  label={kpi.label} 
+                  value={kpi.value} 
+                  type={kpi.type} 
+                  isHighlight={kpi.isHighlight}
+                  borderAccent="#ec4899"
+                  isDarkMode={isDarkMode}
+                />
+              ))}
+
+              <div className="bg-emerald-50 text-emerald-950 border border-emerald-100 p-4.5 rounded-2xl flex items-start gap-3">
+                <CheckCircle2 className="text-emerald-500 mt-0.5 flex-shrink-0" size={18} />
+                <div className="flex flex-col gap-1 text-xs">
+                  <span className="font-black text-emerald-900 uppercase tracking-wide">Reciclagem Ativa</span>
+                  <p className="font-medium text-emerald-800 leading-relaxed">
+                    Arrecadação e reciclagem direcionada de componentes sucateados, minimizando o impacto ambiental de metais pesados com rentabilização financeira de lotes descontinuados.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right lotes breakdown */}
+            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+              <div className="flex justify-between items-center border-b border-slate-150 pb-3 mb-4">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <Layers size={14} className="text-pink-500" />
+                  Destaque de Lotes Processados
+                </h3>
+                <span className="text-[10px] bg-slate-50 border border-slate-150 px-2.5 py-1 rounded-lg text-slate-500 font-extrabold uppercase tracking-tight">
+                  Reciclagem Certificada
+                </span>
+              </div>
+
+              <div className={`flex flex-col gap-3.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[58vh]" : "max-h-[320px]"}`}>
+                {content.lotes.map((item: any, idx: number) => {
+                  const valProgress = Math.max((item.value / 3000.00) * 100, 2);
+                  const isLastItem = idx === content.lotes.length - 1;
+                  
+                  // Dynamically map lote specifications based on description
+                  const getLoteSpecs = (desc: string) => {
+                    const lowercase = desc.toLowerCase();
+                    if (lowercase.includes('switch')) {
+                      return {
+                        icon: Network,
+                        colorClass: 'text-indigo-600 bg-indigo-50 border-indigo-100',
+                        badge: 'Rede & Ativos de Conectividade',
+                        gradient: 'from-indigo-500 to-blue-500'
+                      };
+                    }
+                    if (lowercase.includes('cable') || lowercase.includes('cabo')) {
+                      return {
+                        icon: Cable,
+                        colorClass: 'text-amber-600 bg-amber-50 border-amber-100/80',
+                        badge: 'Metais Mistas & Cobre',
+                        gradient: 'from-amber-500 to-orange-400'
+                      };
+                    }
+                    if (lowercase.includes('gabinete') || lowercase.includes('servidor')) {
+                      return {
+                        icon: Server,
+                        colorClass: 'text-purple-600 bg-purple-50 border-purple-100',
+                        badge: 'Hardware Pesado & Carcaças',
+                        gradient: 'from-purple-500 to-indigo-500'
+                      };
+                    }
+                    if (lowercase.includes('bateri')) {
+                      return {
+                        icon: BatteryCharging,
+                        colorClass: 'text-rose-600 bg-rose-50 border-rose-100',
+                        badge: 'Células de Chumbo/Lítio',
+                        gradient: 'from-rose-500 to-red-500'
+                      };
+                    }
+                    if (lowercase.includes('placa') || lowercase.includes('circuito')) {
+                      return {
+                        icon: Cpu,
+                        colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+                        badge: 'Placas & Componentes de Silício',
+                        gradient: 'from-emerald-500 to-teal-500'
+                      };
+                    }
+                    return {
+                      icon: Wifi,
+                      colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100',
+                      badge: 'Rede Wireless',
+                      gradient: 'from-cyan-500 to-sky-400'
+                    };
+                  };
+
+                  const specs = getLoteSpecs(item.desc);
+                  const IconComponent = specs.icon;
+
+                  const borderClass = isLastItem 
+                    ? "border-emerald-300 bg-emerald-50/10 shadow-sm shadow-emerald-100/50 ring-2 ring-emerald-500/10" 
+                    : "border-slate-200/80 bg-white/40";
+
+                  return (
+                    <div 
+                      key={idx} 
+                      className={`border p-4 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 group relative overflow-hidden ${borderClass}`}
+                    >
+                      {/* Subtle hover background ambient glow match */}
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-slate-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                      {/* Left: Icon, Batch Number, Description, and Category Badge */}
+                      <div className="flex items-center gap-3.5 min-w-[240px] relative z-10">
+                        {/* Colored icon badge wrapper */}
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border font-sans ${specs.colorClass} shadow-xs flex-shrink-0 relative`}>
+                           <IconComponent size={18} />
+                           {isLastItem && (
+                             <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                             </span>
+                           )}
+                        </div>
+                        <div className="flex flex-col gap-0.5">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-black tracking-tight text-slate-400 font-mono">
+                              {item.name}
+                            </span>
+                            {isLastItem && (
+                              <span className="bg-emerald-100 text-emerald-800 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 animate-pulse">
+                                Mais Recente
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-sm font-black text-slate-800 leading-none group-hover:text-indigo-950 transition-colors">{item.desc}</span>
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
+                        </div>
+                      </div>
+
+                      {/* Middle: Progress Bar representing efficiency or yield */}
+                      <div className="flex-1 max-w-sm flex flex-col gap-1 md:px-4">
+                        <div className="flex justify-between items-center text-[10px] font-bold text-slate-400">
+                          <span className="uppercase tracking-wide text-[8.5px] font-extrabold text-slate-450">Retorno Sustentável</span>
+                          <span className="font-mono text-slate-700 font-black text-[10.5px]">{valProgress.toFixed(0)}% do teto</span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-150 shadow-inner">
+                          <div 
+                            className={`bg-gradient-to-r ${specs.gradient} h-full rounded-full transition-all duration-500`}
+                            style={{ width: `${valProgress}%` }} 
+                          />
+                        </div>
+                      </div>
+
+                      {/* Right: Quantity and Yield Numbers */}
+                      <div className="flex items-center justify-between md:justify-end gap-6 min-w-[170px] border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 relative z-10">
+                        <div className="flex flex-col items-start md:items-end">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Quantidade</span>
+                          <span className="text-xs font-mono font-black text-slate-700">
+                            {item.qty.toLocaleString('pt-BR')} un
+                          </span>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
+                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-emerald-600' : 'text-indigo-950'}`}>
+                            {formatCurrency(item.value)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* --- INSURANCE STANDARD VIEW (Slides 13, 14, 15, 16) --- */}
+        {category === 'insurance' && slide.id !== 'custo-fatura' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch" id="insurance-display">
+            {/* Left insurance details, KPIs / commentaries */}
+            <div className="lg:col-span-5 flex flex-col gap-4">
+              {content.kpis && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                  {content.kpis.map((kpi: any, idx: number) => (
+                    <KPICard 
+                      key={idx} 
+                      label={kpi.label} 
+                      value={kpi.value} 
+                      type={kpi.type} 
+                      isHighlight={kpi.isHighlight}
+                      borderAccent="#10b981"
+                      isDarkMode={isDarkMode}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Sub-group layout if slide has nested text commentary sections */}
+              {content.comentarios ? (
+                <div className="bg-slate-50/50 border border-slate-150 p-5 rounded-2xl flex flex-col gap-3">
+                  <div className="flex flex-col gap-3.5">
+                    {content.comentarios.map((cText: string, idx: number) => (
+                      <div 
+                        key={idx} 
+                        className="flex items-start gap-3.5 p-4 rounded-xl bg-white border border-slate-200/70 border-l-4 shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all duration-200 text-slate-700"
+                        style={{ borderLeftColor: '#3b82f6' }}
+                      >
+                        <span className="p-2 rounded-lg flex-shrink-0 flex items-center justify-center bg-slate-50 border border-slate-150 text-blue-600">
+                          <Sparkles size={13} strokeWidth={2.5} />
+                        </span>
+                        <p className="font-bold text-[12px] leading-relaxed mt-0.5 text-slate-700">{cText}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-white border border-slate-200/75 border-l-4 border-l-blue-500 p-5 rounded-2xl text-[12px] font-bold text-slate-700 leading-relaxed flex flex-col gap-2 shadow-sm transition-all hover:scale-[1.01]">
+                  <span className="font-black text-blue-600 uppercase text-[10px] tracking-wider block flex items-center gap-1.5 mb-0.5">
+                    <ShieldCheck size={14} />
+                    Garantia Regulamentar de Custódia
+                  </span>
+                  Apólices formatadas sob taxa mensal simplificada visando mitigar quaisquer contingências judiciais ou perdas em transporte, postagem reversa e campo técnico avançado.
+                </div>
+              )}
+            </div>
+
+            {/* Right detailed policy tables */}
+            <div className="lg:col-span-7 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-150 pb-3 mb-4 flex items-center gap-2">
+                <ShieldCheck size={14} className="text-emerald-500 animate-pulse" />
+                Estrutura de Cobertura Ativa
+              </h3>
+
+              {/* Coberturas breakdown for Patrimonial */}
+              {slide.id === 'seguros-patrimonial' && (
+                <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2.5">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Distribuição Seguro Geral patrimonial</h4>
+                    <DonutChart data={content.coberturas.map((c: any) => ({ label: c.name, value: c.value, percentage: c.share }))} />
+                  </div>
+                  
+                  <div className="border-t border-slate-50 pt-3 flex flex-col">
+                    <h4 className="text-[10px] font-black text-slate-400 tracking-wider uppercase mb-2">Detalhamento dos Clientes Sem NF Protegidos</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {content.semNfBreakdown.map((item: any, idx: number) => (
+                        <div key={idx} className="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight block truncate" title={item.name}>{item.name}</span>
+                          <span className="font-mono font-black text-slate-900 text-xs block mt-1.5">{formatCurrency(item.value)}</span>
+                          <span className="text-[10px] text-slate-400 mt-1 block">Qtd: {item.qty} peças</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Breakdown sections for Extra / Satélites and others */}
+              {content.sections && (
+                <div className={`flex flex-col gap-5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[55vh]" : "max-h-[340px]"}`}>
+                  {content.sections.map((sec: any, idx: number) => {
+                    // Match visual icon decoration based on title or context
+                    let SectionIcon = Shield;
+                    let iconColorClass = "text-indigo-500 bg-indigo-50";
+                    let borderLeftColor = "border-l-indigo-500";
+                    
+                    const titleLower = sec.title.toLowerCase();
+                    if (titleLower.includes("extra") || titleLower.includes("trân")) {
+                      SectionIcon = Truck;
+                      iconColorClass = "text-cyan-500 bg-cyan-50";
+                      borderLeftColor = "border-l-cyan-500";
+                    } else if (titleLower.includes("zamp") || titleLower.includes("servidores")) {
+                      SectionIcon = Database;
+                      iconColorClass = "text-pink-500 bg-pink-50";
+                      borderLeftColor = "border-l-pink-500";
+                    } else if (titleLower.includes("trag") || titleLower.includes("reversa")) {
+                      SectionIcon = RefreshCw;
+                      iconColorClass = "text-purple-500 bg-purple-50";
+                      borderLeftColor = "border-l-purple-500";
+                    } else if (titleLower.includes("arcos") || titleLower.includes("instala")) {
+                      SectionIcon = ShieldCheck;
+                      iconColorClass = "text-emerald-500 bg-emerald-50";
+                      borderLeftColor = "border-l-emerald-500";
+                    } else if (titleLower.includes("starlink") || titleLower.includes("antena")) {
+                      SectionIcon = Globe;
+                      iconColorClass = "text-blue-500 bg-blue-50";
+                      borderLeftColor = "border-l-blue-500";
+                    } else if (titleLower.includes("fluke") || titleLower.includes("mediç")) {
+                      SectionIcon = Smartphone;
+                      iconColorClass = "text-amber-500 bg-amber-50";
+                      borderLeftColor = "border-l-amber-500";
+                    }
+
+                    return (
+                      <div key={idx} className={`border border-slate-150/60 border-l-4 ${borderLeftColor} p-5 rounded-2xl bg-white shadow-sm flex flex-col gap-3 hover:scale-[1.01] hover:border-r-slate-300 transition-all group`}>
+                        <div className="flex justify-between items-start gap-4">
+                          <div className="flex items-start gap-3">
+                            <div className={`p-2 rounded-xl ${iconColorClass} flex items-center justify-center shadow-xs mt-0.5`}>
+                              <SectionIcon size={16} className="stroke-[2.5]" />
+                            </div>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-xs font-black text-slate-900 group-hover:text-indigo-950 transition-colors">{sec.title}</span>
+                              <p className="text-[10px] text-slate-500 font-semibold max-w-sm mt-0.5 leading-relaxed">{sec.desc}</p>
+                            </div>
+                          </div>
+                          <div className="text-right flex flex-col items-end gap-1.5 flex-shrink-0">
+                            <span className="font-mono font-black text-slate-950 text-base tracking-tight text-slate-900 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded-lg">{formatCompact(sec.totalValue)}</span>
+                            {sec.monthlyCost && (
+                              <span className="text-[9.5px] bg-indigo-50 border border-indigo-100/60 text-indigo-700 px-2 py-0.5 rounded-lg font-black uppercase tracking-wider block">
+                                Mês: {formatCompact(sec.monthlyCost)}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Items breakdown list */}
+                        {sec.subItems && (
+                          <div className="flex flex-col gap-2 mt-1.5 pt-2 border-t border-slate-100/60">
+                            {sec.subItems.map((sub: any, sIdx: number) => {
+                              // Calculate ratio representing its visual weight compared to the section total value
+                              const subRatio = Math.min((sub.value / (sec.totalValue || 1)) * 100, 100);
+                              return (
+                                <div key={sIdx} className="bg-slate-50/50 flex flex-col gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-50 shadow-xs">
+                                  <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
+                                    <span className="truncate max-w-[65%] font-extrabold text-slate-800">{sub.name}</span>
+                                    <div className="flex items-center gap-3 font-mono">
+                                      <span className="text-[9.5px] text-slate-400 font-bold bg-white border border-slate-100 px-1.5 py-0.2 rounded">Taxa: {sub.rate}</span>
+                                      <span className="font-black text-slate-950">{formatCompact(sub.value)}</span>
+                                    </div>
+                                  </div>
+                                  <div className="w-full bg-slate-200/50 h-1 rounded-full overflow-hidden">
+                                    <div className="bg-slate-400 h-full rounded-full" style={{ width: `${subRatio}%` }} />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Phase sub-items for TRAGs */}
+                        {sec.phases && (
+                          <div className="flex flex-col gap-2 mt-1.5 pt-2 border-t border-slate-100/60">
+                            {sec.phases.map((pha: any, phaIdx: number) => {
+                              const phaRatio = Math.min((pha.val / (sec.totalValue || 1)) * 100, 100);
+                              return (
+                                <div key={phaIdx} className="bg-slate-50/50 flex flex-col gap-1.5 px-3.5 py-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-50 shadow-xs">
+                                  <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
+                                    <span className="font-extrabold text-slate-800">{pha.client}</span>
+                                    <div className="flex items-center gap-3 font-mono">
+                                      <span className="text-[9.5px] text-indigo-500 font-bold bg-indigo-50 border border-indigo-150/40 px-1.5 py-0.2 rounded">Mínimo: {formatCurrency(pha.minCost)}</span>
+                                      <span className="font-black text-slate-950">{formatCurrency(pha.val)}</span>
+                                    </div>
+                                  </div>
+                                  <div className="w-full bg-slate-200/50 h-1 rounded-full overflow-hidden">
+                                    <div className="bg-indigo-400 h-full rounded-full" style={{ width: `${phaRatio}%` }} />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Starlink customized list */}
+                        {sec.apolices && (
+                          <div className="grid grid-cols-3 gap-2.5 mt-1.5 pt-2 border-t border-slate-100/60">
+                            {sec.apolices.map((ap: any, apIdx: number) => (
+                              <div key={apIdx} className="bg-gradient-to-br from-white to-slate-50 p-2.5 rounded-xl text-[10px] border border-slate-100 shadow-xs flex flex-col gap-1 text-center font-bold">
+                                <span className="text-slate-400 uppercase tracking-wider text-[8.5px]">{ap.name}</span>
+                                <span className="text-slate-950 font-mono text-xs font-black">{formatCompact(ap.value)}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* --- COMPOSIÇÃO DE CUSTOS DE SEGURO (Slide 17) --- */}
+        {slide.id === 'custo-fatura' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Area Line Chart */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
+                {content.kpis.map((kpi: any, idx: number) => (
+                  <KPICard 
+                    key={idx} 
+                    label={kpi.label} 
+                    value={kpi.value} 
+                    type={kpi.type} 
+                    isHighlight={kpi.isHighlight}
+                    borderAccent="#db2777"
+                    isDarkMode={isDarkMode}
+                  />
+                ))}
+              </div>
+              
+              <div className="bg-gradient-to-tr from-pink-50/70 to-purple-50/20 border border-pink-100/50 border-l-4 border-l-pink-500 p-5 rounded-2xl flex flex-col gap-3 shadow-xs hover:shadow-sm hover:scale-[1.01] transition-all">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <Sparkles size={14} className="text-pink-600 animate-pulse" />
+                  Observações de Conciliação
+                </h3>
+                <div className="flex flex-col gap-3 text-[11.5px] leading-relaxed text-pink-950 font-bold">
+                  {content.comments.map((comment: string, idx: number) => (
+                    <div key={idx} className="flex items-start gap-2.5 p-1 bg-white/45 border border-pink-100/30 rounded-xl">
+                      <span className="p-1.5 rounded-lg flex-shrink-0 flex items-center justify-center bg-pink-500/10 text-pink-600 mt-0.5">
+                        <CheckCircle2 size={12} strokeWidth={2.5} />
+                      </span>
+                      <p className="mt-0.5 leading-snug">{comment}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Faturas list with credit vs value highlights */}
+            <div className="lg:col-span-8 bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col">
+              <div className="flex items-center justify-between border-b border-slate-150 pb-3 mb-4">
+                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <Layers size={14} className="text-indigo-500" />
+                  Composição Financeira Detalhada
+                </h3>
+                
+                {/* Horizontal simple chart switcher representation */}
+                <div className="flex bg-slate-50 p-1 rounded-xl gap-1">
+                  <button 
+                    onClick={() => setActiveTab('summary')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'summary' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    Curva Fatura
+                  </button>
+                  <button 
+                    onClick={() => setActiveTab('table')}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeTab === 'table' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                  >
+                    Itens da Fatura
+                  </button>
+                </div>
+              </div>
+
+              {/* TAB CONTENT 1: Curva Fatura Area Chart */}
+              {activeTab === 'summary' && (
+                <div className={`flex-1 flex flex-col justify-center ${isFullscreen ? "min-h-[45vh]" : "min-h-[290px]"}`}>
+                  <div className={isFullscreen ? "h-96 lg:h-[42vh]" : "h-60"}>
+                    <ResponsiveAreaChart data={content.invoiceItems} />
+                  </div>
+                  <span className="text-center text-[10px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Análise de conciliação de faturas de seguros processadas</span>
+                </div>
+              )}
+
+              {/* TAB CONTENT 2: Detailed list of invoice parts */}
+              {activeTab === 'table' && (
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className={`grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[45vh]" : "max-h-[260px]"}`}>
+                    {content.invoiceItems.map((item: any, idx: number) => {
+                      const isCredit = item.isCredit;
+                      return (
+                        <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all hover:bg-slate-50 ${isCredit ? 'border-emerald-100 bg-emerald-50/10' : 'border-slate-100 bg-white'}`}>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-xs font-black text-slate-800">{item.name}</span>
+                            <span className="text-[10px] text-slate-400 font-semibold">{item.sub}</span>
+                          </div>
+                          
+                          {/* Credit badge vs value */}
+                          <div className="text-right flex flex-col items-end gap-1 font-mono">
+                            <span className={`text-xs font-extrabold ${isCredit ? 'text-emerald-600' : 'text-slate-800'}`}>
+                              {formatCurrency(item.value)}
+                            </span>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded-lg font-bold uppercase ${isCredit ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-500'}`}>
+                              {isCredit ? 'Crédito' : 'Débito'}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-bold border-t border-slate-50 pt-3 mt-3 text-center uppercase tracking-wider">
+                    Total Fatura Líquida Líquida Pago: R$ 59.656,30
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
