@@ -143,7 +143,7 @@ export const slidesData: Slide[] = [
       ],
       commentary: [
         { type: "info", text: "Maior custo de rota: WASHINGTON – R$ 1.550,00" },
-        { type: "success", text: "Custo por projetistas: NTT lidera com R$ 1.520,00 (39 equipamentos)" }
+        { type: "success", text: "Custo por projetos: NTT lidera com R$ 1.520,00 (39 equipamentos)" }
       ],
       rotas: [
         { transportadora: "CASARINI", total: 1650.00, breakdown: [{ project: "NTT", val: 950.00 }, { project: "ZAMP", val: 700.00 }] },
