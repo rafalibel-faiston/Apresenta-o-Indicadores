@@ -451,7 +451,7 @@ export const slidesData: Slide[] = [
   {
     id: "seguros-trags",
     number: 16,
-    title: "Seguro TRAGs & Instalações",
+    title: "Seguro TRAGs e Arcos Dourados",
     subtitle: "Atuação em desativação e garantia de roubo local pós-entrega",
     category: "insurance",
     content: {
