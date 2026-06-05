@@ -92,18 +92,18 @@ export function ResponsiveBarChart({
   const getLineColors = () => {
     switch (colorTheme) {
       case 'purple':
-        return { glow: '#c084fc', main: '#8b5cf6', point: '#7c3aed' };
+        return { glow: '#fd5665', main: '#fd11a4', point: '#960a9c' };
       case 'cyan':
-        return { glow: '#22d3ee', main: '#0891b2', point: '#0369a1' };
+        return { glow: '#00fafb', main: '#0054ec', point: '#2226c0' };
       case 'pink':
-        return { glow: '#f472b6', main: '#db2777', point: '#be185d' };
+        return { glow: '#fd5665', main: '#fd11a4', point: '#960a9c' };
       case 'indigo':
-        return { glow: '#818cf8', main: '#4f46e5', point: '#4338ca' };
+        return { glow: '#0054ec', main: '#2226c0', point: '#151720' };
       case 'blue':
-        return { glow: '#60a5fa', main: '#2563eb', point: '#1d4ed8' };
+        return { glow: '#00fafb', main: '#0054ec', point: '#2226c0' };
       case 'mixed':
       default:
-        return { glow: '#f472b6', main: '#db2777', point: '#be185d' }; // Classic default
+        return { glow: '#fd5665', main: '#fd11a4', point: '#960a9c' };
     }
   };
 
@@ -112,24 +112,24 @@ export function ResponsiveBarChart({
       <svg width={width} height={height} className="overflow-visible select-none">
         <defs>
           <linearGradient id="purple-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#c084fc" />
-            <stop offset="100%" stopColor="#8b5cf6" />
+            <stop offset="0%" stopColor="#fd5665" />
+            <stop offset="100%" stopColor="#fd11a4" />
           </linearGradient>
           <linearGradient id="cyan-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" />
-            <stop offset="100%" stopColor="#0891b2" />
+            <stop offset="0%" stopColor="#00fafb" />
+            <stop offset="100%" stopColor="#0054ec" />
           </linearGradient>
           <linearGradient id="pink-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f472b6" />
-            <stop offset="100%" stopColor="#db2777" />
+            <stop offset="0%" stopColor="#fd5665" />
+            <stop offset="100%" stopColor="#fd11a4" />
           </linearGradient>
           <linearGradient id="indigo-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#818cf8" />
-            <stop offset="100%" stopColor="#4f46e5" />
+            <stop offset="0%" stopColor="#0054ec" />
+            <stop offset="100%" stopColor="#2226c0" />
           </linearGradient>
           <linearGradient id="blue-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#60a5fa" />
-            <stop offset="100%" stopColor="#2563eb" />
+            <stop offset="0%" stopColor="#00fafb" />
+            <stop offset="100%" stopColor="#0054ec" />
           </linearGradient>
           <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
             <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.08" />
@@ -164,7 +164,7 @@ export function ResponsiveBarChart({
                   x={paddingLeft + chartWidth + 10}
                   y={y + 4}
                   textAnchor="start"
-                  className="font-mono text-[10px] fill-pink-500 font-semibold"
+                  className="font-mono text-[10px] fill-[#fd11a4] font-semibold"
                 >
                   {Math.round(maxLineVal * ratio)}
                 </text>
@@ -180,7 +180,7 @@ export function ResponsiveBarChart({
             y1={paddingTop}
             x2={paddingLeft + chartWidth}
             y2={paddingTop + chartHeight}
-            stroke="#fbcfe8"
+            stroke="#fd11a4"
             strokeWidth="1.5"
           />
         )}
@@ -232,7 +232,7 @@ export function ResponsiveBarChart({
                 x={x + barWidth / 2}
                 y={paddingTop + chartHeight + 18}
                 textAnchor="middle"
-                className={`font-sans font-medium text-[10px] leading-tight fill-slate-500 max-w-[50px] transition-colors duration-200 ${hoveredIndex === index ? 'fill-indigo-600 font-semibold' : ''}`}
+                className={`font-sans font-medium text-[10px] leading-tight fill-slate-500 max-w-[50px] transition-colors duration-200 ${hoveredIndex === index ? 'fill-[#0054ec] font-semibold' : ''}`}
                 style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
               >
                 {item.label.length > 12 ? `${item.label.substring(0, 10)}...` : item.label}
@@ -322,7 +322,7 @@ export function ResponsiveBarChart({
               {data[hoveredIndex].label}
             </div>
             <div className="flex flex-col gap-0.5 font-mono">
-              <span className="text-indigo-600 font-bold flex justify-between gap-3">
+              <span className="text-[#0054ec] font-bold flex justify-between gap-3">
                 Custo: <span>{formatCurrency(data[hoveredIndex].value)}</span>
               </span>
               {data[hoveredIndex].subValue !== undefined && (
@@ -346,13 +346,13 @@ export function ResponsiveBarChart({
 export function HorizontalBarChart({ data, colorTheme = 'indigo' }: { data: ChartItem[], colorTheme?: string }) {
   const maxVal = Math.max(...data.map(d => Math.abs(d.value) || 1), 1);
   const colorMap: Record<string, string> = {
-    indigo: "from-indigo-500 to-indigo-600",
-    purple: "from-purple-500 to-violet-600",
-    pink: "from-pink-500 to-rose-600",
-    cyan: "from-cyan-400 to-cyan-600",
-    blue: "from-blue-500 to-blue-600",
+    indigo: "from-[#0054ec] to-[#2226c0]",
+    purple: "from-[#fd5665] to-[#fd11a4]",
+    pink: "from-[#fd5665] to-[#fd11a4]",
+    cyan: "from-[#00fafb] to-[#0054ec]",
+    blue: "from-[#0054ec] to-[#2226c0]",
   };
-  const gradient = colorMap[colorTheme] || "from-indigo-500 to-violet-500";
+  const gradient = colorMap[colorTheme] || "from-[#0054ec] to-[#2226c0]";
 
   return (
     <div className="flex flex-col gap-3.5 w-full justify-center py-2" id="horizontal-bar-chart">
@@ -401,11 +401,11 @@ export function DonutChart({
   
   // Custom colors for slices
   const indexColors = [
-    'stroke-indigo-500',
-    'stroke-purple-500',
-    'stroke-pink-500',
-    'stroke-cyan-500',
-    'stroke-blue-500',
+    'stroke-[#0054ec]',
+    'stroke-[#fd11a4]',
+    'stroke-[#fd5665]',
+    'stroke-[#2226c0]',
+    'stroke-[#00fafb]',
     'stroke-emerald-400'
   ];
 
@@ -463,11 +463,11 @@ export function DonutChart({
       <div className={`flex flex-col gap-1.5 relative flex-1 ${layout === 'col' ? 'w-full px-2' : 'min-w-[120px]'}`}>
         {data.map((item, idx) => {
           const bgColors = [
-            'bg-indigo-500',
-            'bg-purple-500',
-            'bg-pink-500',
-            'bg-cyan-500',
-            'bg-blue-500',
+            'bg-[#0054ec]',
+            'bg-[#fd11a4]',
+            'bg-[#fd5665]',
+            'bg-[#2226c0]',
+            'bg-[#00fafb]',
             'bg-emerald-400'
           ];
           const colorBg = item.colorClass ? item.colorClass.replace('stroke-', 'bg-') : bgColors[idx % bgColors.length];
@@ -530,14 +530,14 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
       <svg width={width} height={height} className="overflow-visible select-none">
         <defs>
           <linearGradient id="area-grad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#db2777" stopOpacity="0.18" />
-            <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.08" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.00" />
+            <stop offset="0%" stopColor="#fd11a4" stopOpacity="0.18" />
+            <stop offset="50%" stopColor="#2226c0" stopOpacity="0.08" />
+            <stop offset="100%" stopColor="#2226c0" stopOpacity="0.00" />
           </linearGradient>
           <linearGradient id="line-grad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#ec4899" />
-            <stop offset="50%" stopColor="#a855f7" />
-            <stop offset="100%" stopColor="#6366f1" />
+            <stop offset="0%" stopColor="#fd11a4" />
+            <stop offset="50%" stopColor="#0054ec" />
+            <stop offset="100%" stopColor="#2226c0" />
           </linearGradient>
         </defs>
 
@@ -618,7 +618,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
                 cx={cx}
                 cy={cy}
                 r={hoveredIndex === idx ? 7 : 4}
-                className={`transition-all duration-200 ${isNeutral ? 'fill-emerald-500' : 'fill-purple-500'} stroke-white stroke-2`}
+                className={`transition-all duration-200 ${isNeutral ? 'fill-emerald-500' : 'fill-[#0054ec]'} stroke-white stroke-2`}
               />
               {/* White contrast halo background for maximum legibility over colored vectors */}
               <text
@@ -637,7 +637,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
                 y={cy + labelYOffset}
                 textAnchor="middle"
                 className={`font-sans font-black text-[9.5px] pointer-events-none ${
-                  isNeutral ? 'fill-emerald-600' : 'fill-purple-600'
+                  isNeutral ? 'fill-emerald-600' : 'fill-[#0054ec]'
                 }`}
               >
                 {formatCurrency(item.value)}
@@ -661,7 +661,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
             }}
           >
             <div className="font-semibold text-slate-900 truncate max-w-[130px]">{data[hoveredIndex].label || data[hoveredIndex].name || ""}</div>
-            <div className={`font-mono font-bold mt-1 ${data[hoveredIndex].value < 0 ? 'text-emerald-600' : 'text-purple-600'}`}>
+            <div className={`font-mono font-bold mt-1 ${data[hoveredIndex].value < 0 ? 'text-emerald-600' : 'text-[#0054ec]'}`}>
               {formatCurrency(data[hoveredIndex].value)}
             </div>
           </motion.div>

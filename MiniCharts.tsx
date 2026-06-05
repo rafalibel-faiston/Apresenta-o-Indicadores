@@ -61,7 +61,7 @@ function replaceOklchInCss(css: string): string {
       }
       return oklchToRgb(l, c, h, a);
     } catch (e) {
-      return 'rgb(99, 102, 241)'; // Fallback indigo
+      return 'rgb(0, 84, 236)'; // Fallback Faiston blue
     }
   });
 }
@@ -374,11 +374,11 @@ export default function App() {
   // Category tags helper for visual colors in thumbnails
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'cover': return 'border-indigo-400 text-indigo-600 bg-indigo-50';
+      case 'cover': return 'border-[#0054ec] text-[#0054ec] bg-blue-50';
       case 'divider': return 'border-slate-300 text-slate-600 bg-slate-50';
-      case 'expeditions': return 'border-cyan-400 text-cyan-600 bg-cyan-50';
-      case 'financials': return 'border-purple-400 text-purple-600 bg-purple-50';
-      case 'operations': return 'border-pink-400 text-pink-600 bg-pink-50';
+      case 'expeditions': return 'border-[#00fafb] text-[#0054ec] bg-cyan-50';
+      case 'financials': return 'border-[#2226c0] text-[#2226c0] bg-blue-50';
+      case 'operations': return 'border-[#fd11a4] text-[#fd11a4] bg-pink-50';
       case 'insurance': return 'border-emerald-400 text-emerald-600 bg-emerald-50';
       case 'contact': return 'border-amber-400 text-amber-600 bg-amber-50';
       default: return 'border-slate-200 text-slate-500';
@@ -409,13 +409,13 @@ export default function App() {
           
           <div className="flex flex-col gap-0.5">
             <span className={`text-[10px] font-black tracking-widest uppercase flex items-center gap-1.5 leading-none ${
-              isDarkMode ? 'text-cyan-400' : 'text-indigo-650'
+              isDarkMode ? 'text-[#00fafb]' : 'text-[#0054ec]'
             }`}>
               <Sparkles size={11} className="animate-pulse" />
               Faiston Redesenho Premium
             </span>
-            <h1 className={`text-sm font-black font-sans uppercase ${isDarkMode ? 'text-white' : 'text-slate-850'}`}>
-              Apresentação de Resultados: Logística & Seguros (ABR.26)
+            <h1 className={`text-sm font-bold font-serif uppercase tracking-tight ${isDarkMode ? 'text-white' : 'text-slate-850'}`}>
+              Apresentação de Resultados: Logística & Seguros (MAI.26)
             </h1>
           </div>
         </div>
@@ -452,7 +452,7 @@ export default function App() {
             className={`flex items-center gap-1 font-extrabold px-3 py-1.8 text-xs rounded-xl transition-all border shadow-sm cursor-pointer active:scale-95 ${
               isDarkMode 
                 ? 'bg-cyan-950/40 border-cyan-800 text-cyan-400 hover:bg-cyan-900/40' 
-                : 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200 text-indigo-700'
+                : 'bg-[#0054ec]/10 hover:bg-[#0054ec]/20 border-[#0054ec]/30 text-[#0054ec]'
             }`}
             title="Baixar Slide Atual como Imagem PNG"
           >
@@ -465,8 +465,8 @@ export default function App() {
             disabled={zipProgress !== null || exportProgress !== null}
             className={`flex items-center gap-1 font-extrabold px-3 py-1.8 text-xs rounded-xl transition-all border shadow-sm cursor-pointer ${
               zipProgress !== null 
-                ? 'bg-purple-100 border-purple-200 text-purple-600 animate-pulse' 
-                : 'bg-purple-600 hover:bg-purple-700 border-purple-700 hover:border-purple-800 text-white active:scale-95'
+                ? 'bg-[#2226c0]/10 border-[#2226c0]/30 text-[#2226c0] animate-pulse'
+                : 'bg-[#2226c0] hover:bg-[#151720] border-[#2226c0] hover:border-[#151720] text-white active:scale-95'
             }`}
             title="Baixar Todos os Slides em um Arquivo ZIP de PNGs"
           >
@@ -479,8 +479,8 @@ export default function App() {
             disabled={exportProgress !== null || zipProgress !== null}
             className={`flex items-center gap-1 font-extrabold px-3 py-1.8 text-xs rounded-xl transition-all border shadow-sm cursor-pointer ${
               exportProgress !== null 
-                ? 'bg-pink-100 border-pink-200 text-pink-500 animate-pulse' 
-                : 'bg-pink-600 hover:bg-pink-700 border-pink-700 hover:border-pink-800 text-white font-extrabold active:scale-95'
+                ? 'bg-[#fd11a4]/10 border-[#fd11a4]/30 text-[#fd11a4] animate-pulse'
+                : 'bg-[#fd11a4] hover:bg-[#fd5665] border-[#fd11a4] hover:border-[#fd5665] text-white font-extrabold active:scale-95'
             }`}
             title="Exportar Apresentação Completa para PowerPoint"
           >
@@ -492,7 +492,7 @@ export default function App() {
             href="https://faiston.com" 
             target="_blank" 
             rel="noreferrer" 
-            className="hidden sm:flex items-center gap-1 bg-gradient-to-tr from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white text-xs font-extrabold px-3.5 py-1.8 rounded-xl shadow-xs transition-all hover:scale-[1.02]"
+            className="hidden sm:flex items-center gap-1 bg-gradient-to-tr from-[#0054ec] to-[#2226c0] hover:from-[#2226c0] hover:to-[#151720] text-white text-xs font-extrabold px-3.5 py-1.8 rounded-xl shadow-xs transition-all hover:scale-[1.02]"
           >
             Visitar faiston.com
           </a>
@@ -534,7 +534,7 @@ export default function App() {
                         onClick={() => selectSlide(idx)}
                         className={`w-full p-2.5 rounded-xl border text-left flex items-start gap-3.5 transition-all outline-none ${
                           isActive
-                            ? isDarkMode ? 'bg-slate-800/80 border-[#0054ec]/80 shadow-xs' : 'bg-indigo-50/50 border-indigo-400/80 shadow-xs'
+                            ? isDarkMode ? 'bg-slate-800/80 border-[#0054ec]/80 shadow-xs' : 'bg-[#0054ec]/8 border-[#0054ec]/80 shadow-xs'
                             : isDarkMode ? 'bg-transparent border-transparent hover:bg-slate-800/40' : 'bg-white border-transparent hover:bg-slate-50'
                         }`}
                       >
@@ -660,9 +660,9 @@ export default function App() {
                     className="group relative flex items-center justify-center py-1 outline-none"
                   >
                     <div className={`h-2.5 rounded-full transition-all duration-300 ${
-                      isActive 
-                        ? 'w-7 bg-indigo-600' 
-                        : 'w-2.5 bg-slate-300 hover:bg-indigo-400'
+                      isActive
+                        ? 'w-7 bg-[#0054ec]'
+                        : 'w-2.5 bg-slate-300 hover:bg-[#0054ec]'
                     }`} />
                     {/* Tooltip on dot hover */}
                     <span className="absolute bottom-5 bg-slate-900/90 backdrop-blur-xs border border-slate-800 text-white text-[9.5px] font-semibold px-2 py-1 rounded-lg pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
@@ -683,7 +683,7 @@ export default function App() {
                   className={`p-2 rounded-xl border transition-colors flex items-center justify-center ${
                     isPlaying 
                       ? 'bg-red-50 text-red-600 border-red-100 hover:bg-red-100' 
-                      : 'bg-indigo-50 text-indigo-600 border-indigo-100 hover:bg-indigo-100/85'
+                      : 'bg-[#0054ec]/10 text-[#0054ec] border-[#0054ec]/20 hover:bg-[#0054ec]/20'
                   }`}
                   title={isPlaying ? "Pausar Apresentação" : "Iniciar Auto-Apresentação"}
                 >
@@ -740,7 +740,7 @@ export default function App() {
             </button>
 
             <div className="flex items-center gap-3 border-b border-slate-100 pb-3 mb-4.5">
-              <Sparkles size={18} className="text-indigo-600" />
+              <Sparkles size={18} className="text-[#0054ec]" />
               <h3 className="text-sm font-black text-slate-900 font-sans uppercase">Atalhos de Teclado</h3>
             </div>
 
@@ -765,8 +765,8 @@ export default function App() {
 
             <button 
               onClick={() => setShowHelpModal(false)}
-              className="mt-6 w-full text-center bg-indigo-650 hover:bg-indigo-700 text-white text-xs font-bold py-2.5 rounded-xl transition-all"
-              style={{ backgroundColor: '#4f46e5' }}
+              className="mt-6 w-full text-center text-white text-xs font-bold py-2.5 rounded-xl transition-all hover:opacity-90"
+              style={{ backgroundColor: '#0054ec' }}
             >
               Compreendi!
             </button>
@@ -799,7 +799,7 @@ export default function App() {
       {exportProgress !== null && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-slate-100 flex flex-col items-center text-center gap-4 animate-in fade-in duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-pink-50 flex items-center justify-center text-pink-600 animate-bounce">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center animate-bounce" style={{ backgroundColor: '#fd11a4' + '1a', color: '#fd11a4' }}>
               <FileText size={32} />
             </div>
             <div className="flex flex-col gap-1">
@@ -809,14 +809,14 @@ export default function App() {
             
             <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mt-2 border border-slate-50 relative">
               <motion.div 
-                className="h-full bg-gradient-to-r from-pink-500 to-rose-600 rounded-full animate-pulse"
+                className="h-full rounded-full animate-pulse" style={{ background: 'linear-gradient(to right, #fd11a4, #fd5665)' }}
                 initial={{ width: 0 }}
                 animate={{ width: `${(exportProgress / slidesData.length) * 100}%` }}
                 transition={{ duration: 0.3 }}
               />
             </div>
             
-            <span className="font-mono text-xs font-bold text-pink-600 uppercase tracking-widest mt-1">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest mt-1" style={{ color: '#fd11a4' }}>
               Slide {exportProgress} de {slidesData.length}
             </span>
           </div>
@@ -827,7 +827,7 @@ export default function App() {
       {zipProgress !== null && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-white rounded-3xl p-8 max-w-sm w-full mx-4 shadow-2xl border border-slate-100 flex flex-col items-center text-center gap-4 animate-in fade-in duration-300">
-            <div className="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-purple-600 animate-bounce">
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center animate-bounce" style={{ backgroundColor: '#2226c01a', color: '#2226c0' }}>
               <Layers size={32} />
             </div>
             <div className="flex flex-col gap-1">
@@ -837,14 +837,14 @@ export default function App() {
             
             <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mt-2 border border-slate-50 relative">
               <motion.div 
-                className="h-full bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"
+                className="h-full rounded-full" style={{ background: 'linear-gradient(to right, #2226c0, #0054ec)' }}
                 initial={{ width: 0 }}
                 animate={{ width: `${(zipProgress / slidesData.length) * 100}%` }}
                 transition={{ duration: 0.3 }}
               />
             </div>
             
-            <span className="font-mono text-xs font-bold text-purple-600 uppercase tracking-widest mt-1">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest mt-1" style={{ color: '#2226c0' }}>
               Slide {zipProgress} de {slidesData.length}
             </span>
           </div>
