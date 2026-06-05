@@ -931,6 +931,16 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               {/* Dynamic TAB views */}
               <div className={isFullscreen ? "min-h-[35vh]" : ""}>
                 {activeStockTab === 'topNf' && (() => {
+                  // Smooth brand gradient: blue → indigo → purple → magenta → pink
+                  const gradientColor = (idx: number, total: number) => {
+                    const stops = ['#0054ec','#3a2fe8','#9b1dbf','#fd11a4','#fd5665'];
+                    const t = total > 1 ? idx / (total - 1) : 0;
+                    const seg = Math.min(Math.floor(t * (stops.length - 1)), stops.length - 2);
+                    const st = t * (stops.length - 1) - seg;
+                    const h = (c: string) => [parseInt(c.slice(1,3),16), parseInt(c.slice(3,5),16), parseInt(c.slice(5,7),16)];
+                    const [r1,g1,b1] = h(stops[seg]), [r2,g2,b2] = h(stops[seg+1]);
+                    return `rgb(${Math.round(r1+(r2-r1)*st)},${Math.round(g1+(g2-g1)*st)},${Math.round(b1+(b2-b1)*st)})`;
+                  };
                   // Group by first token (e.g. NTT, PROJETO)
                   const getPrefix = (name: string) => {
                     const m = name.match(/^([A-Z0-9]+)[_ -]/);
@@ -948,13 +958,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     });
                   const sortedGroups = Object.values(groupMap).sort((a, b) => b.totalValue - a.totalValue);
                   const maxGroupVal = sortedGroups[0]?.totalValue || 1;
-                  const rankColors = ['#0054ec','#2226c0','#fd11a4','#ec4899','#06b6d4','#10b981'];
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sortedGroups.map((group, gIdx) => {
-                        const rankColor = rankColors[gIdx % rankColors.length];
+                        const rankColor = gradientColor(gIdx, sortedGroups.length);
                         const ratio = Math.min((group.totalValue / maxGroupVal) * 100, 100);
                         const isMulti = group.items.length > 1;
                         const isOpen = expandedStockGroups.includes(group.prefix);
@@ -1048,15 +1057,22 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 })()}
 
                 {activeStockTab === 'semNf' && (() => {
-                  const semNfColors = ['#fd11a4','#ec4899','#2226c0'];
-                  const maxVal = Math.max(...content.semNf.map((i: any) => i.value), 1);
+                  const gradColor = (idx: number, total: number) => {
+                    const stops = ['#0054ec','#3a2fe8','#9b1dbf','#fd11a4','#fd5665'];
+                    const t = total > 1 ? idx / (total - 1) : 0;
+                    const seg = Math.min(Math.floor(t * (stops.length - 1)), stops.length - 2);
+                    const st = t * (stops.length - 1) - seg;
+                    const h = (c: string) => [parseInt(c.slice(1,3),16), parseInt(c.slice(3,5),16), parseInt(c.slice(5,7),16)];
+                    const [r1,g1,b1] = h(stops[seg]), [r2,g2,b2] = h(stops[seg+1]);
+                    return `rgb(${Math.round(r1+(r2-r1)*st)},${Math.round(g1+(g2-g1)*st)},${Math.round(b1+(b2-b1)*st)})`;
+                  };
+                  const sorted = [...content.semNf].sort((a: any, b: any) => b.value - a.value);
+                  const maxVal = sorted[0]?.value || 1;
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
-                      {[...content.semNf]
-                        .sort((a: any, b: any) => b.value - a.value)
-                        .map((item: any, idx: number) => {
-                          const color = semNfColors[idx % semNfColors.length];
+                      {sorted.map((item: any, idx: number) => {
+                          const color = gradColor(idx, sorted.length);
                           const ratio = Math.min((item.value / maxVal) * 100, 100);
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
@@ -1082,15 +1098,22 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 })()}
 
                 {activeStockTab === 'guarda' && (() => {
-                  const guardaColors = ['#06b6d4','#0284c7'];
-                  const maxVal = Math.max(...content.guardaTecnica.map((i: any) => i.value), 1);
+                  const gradColor = (idx: number, total: number) => {
+                    const stops = ['#0054ec','#3a2fe8','#9b1dbf','#fd11a4','#fd5665'];
+                    const t = total > 1 ? idx / (total - 1) : 0;
+                    const seg = Math.min(Math.floor(t * (stops.length - 1)), stops.length - 2);
+                    const st = t * (stops.length - 1) - seg;
+                    const h = (c: string) => [parseInt(c.slice(1,3),16), parseInt(c.slice(3,5),16), parseInt(c.slice(5,7),16)];
+                    const [r1,g1,b1] = h(stops[seg]), [r2,g2,b2] = h(stops[seg+1]);
+                    return `rgb(${Math.round(r1+(r2-r1)*st)},${Math.round(g1+(g2-g1)*st)},${Math.round(b1+(b2-b1)*st)})`;
+                  };
+                  const sorted = [...content.guardaTecnica].sort((a: any, b: any) => b.value - a.value);
+                  const maxVal = sorted[0]?.value || 1;
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
-                      {[...content.guardaTecnica]
-                        .sort((a: any, b: any) => b.value - a.value)
-                        .map((item: any, idx: number) => {
-                          const color = guardaColors[idx % guardaColors.length];
+                      {sorted.map((item: any, idx: number) => {
+                          const color = gradColor(idx, sorted.length);
                           const ratio = Math.min((item.value / maxVal) * 100, 100);
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
