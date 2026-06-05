@@ -285,7 +285,7 @@ export const slidesData: Slide[] = [
       ],
       topProjectsWithNF: [
         { project: "NTT_SUPORTE E MANUTENÇÃO BASE CISCO - BRADESCO", value: 12644285.31, itemQty: 334 },
-        { project: "PROJETO F240242 - Evotech Fase 2", value: 5625845.95, itemQty: 260 },
+        { project: "NTT_PROJETO F240242 - Evotech Fase 2", value: 5625845.95, itemQty: 260 },
         { project: "NTT_GESTÃO DE SPARE - IS20405", value: 3827786.71, itemQty: 155 },
         { project: "NTT - INSTALAÇÃO DE 48 SWITCHES E 180 APS", value: 3022942.04, itemQty: 488 },
         { project: "NTT_INSTALAÇÃO 614 ANTENAS - F250727", value: 2810095.19, itemQty: 443 },

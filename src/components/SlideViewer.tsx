@@ -913,7 +913,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               {/* Dynamic TAB views */}
-              <div className={isFullscreen ? "min-h-[35vh]" : "min-h-[190px]"}>
+              <div className={isFullscreen ? "min-h-[35vh]" : ""}>
                 {activeStockTab === 'topNf' && (() => {
                   // Group by first token (e.g. NTT, PROJETO)
                   const getPrefix = (name: string) => {
@@ -936,7 +936,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
 
                   return (
-                    <div className="flex flex-col gap-2 animate-fadeIn">
+                    <div className="flex flex-col gap-1 animate-fadeIn">
                       {sortedGroups.map((group, gIdx) => {
                         const rankColor = rankColors[gIdx % rankColors.length];
                         const ratio = Math.min((group.totalValue / maxGroupVal) * 100, 100);
@@ -948,49 +948,43 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
                         return (
                           <div key={group.prefix}>
-                            {/* Group header row */}
+                            {/* Compact group header row */}
                             <div
-                              className={`border rounded-2xl p-4 flex items-center gap-4 transition-all ${isMulti ? 'cursor-pointer' : ''} hover:shadow-md ${dk ? 'bg-[#0d0f17]/60 border-slate-800/50 hover:bg-[#0d0f17]' : 'bg-white border-slate-100/80 hover:border-[#0054ec]/30'}`}
+                              className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 transition-all ${isMulti ? 'cursor-pointer' : ''} ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40 hover:bg-[#0d0f17]/80' : 'bg-white border-slate-100/80 hover:border-[#0054ec]/25 hover:bg-slate-50/60'}`}
                               onClick={isMulti ? toggle : undefined}
                             >
                               {/* Rank badge */}
-                              <div className="flex-shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-black text-sm text-white shadow-sm" style={{ backgroundColor: rankColor }}>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: rankColor }}>
                                 {gIdx + 1}
                               </div>
 
-                              {/* Name + info */}
-                              <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                                <span className={`font-black text-[13px] leading-snug truncate ${dk ? 'text-white' : 'text-slate-900'}`}>
-                                  {isMulti ? group.prefix : group.items[0].project}
+                              {/* Name + meta + value all inline */}
+                              <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
+                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>
+                                  {isMulti ? group.prefix : group.items[0].project.replace(/^NTT[_ -]+/, '')}
                                 </span>
-                                <span className="text-[10px] text-slate-400 font-semibold">
-                                  {isMulti ? `${group.items.length} projetos • ${group.totalQty} equipamentos` : `${group.items[0].itemQty} equipamentos`}
-                                </span>
-                                {/* Value below name */}
-                                <span className="font-mono font-black text-[15px] mt-0.5" style={{ color: rankColor }}>
-                                  {formatCompact(group.totalValue)}
-                                  <span className={`text-[10px] font-semibold ml-2 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(group.totalValue)}</span>
+                                <span className="text-[9px] text-slate-400 font-semibold truncate">
+                                  {isMulti ? `${group.items.length} proj • ${group.totalQty} equip` : `${group.items[0].itemQty} equip`}
                                 </span>
                               </div>
 
-                              {/* Progress bar */}
-                              <div className="flex-1 max-w-[130px] flex flex-col gap-1 hidden md:flex">
-                                <div className={`w-full h-2 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                                  <motion.div
-                                    initial={{ width: 0 }}
-                                    animate={{ width: `${ratio}%` }}
-                                    transition={{ duration: 1.1, delay: gIdx * 0.06 }}
-                                    className="h-full rounded-full"
-                                    style={{ backgroundColor: rankColor }}
-                                  />
+                              {/* Inline progress bar */}
+                              <div className="w-20 hidden md:block">
+                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                  <div className="h-full rounded-full transition-all" style={{ width: `${ratio}%`, backgroundColor: rankColor }} />
                                 </div>
-                                <span className="text-[9px] text-slate-400 font-bold">{ratio.toFixed(0)}% do maior</span>
+                              </div>
+
+                              {/* Value inline */}
+                              <div className="flex-shrink-0 flex items-baseline gap-1.5">
+                                <span className="font-mono font-black text-[12px]" style={{ color: rankColor }}>{formatCompact(group.totalValue)}</span>
+                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(group.totalValue)}</span>
                               </div>
 
                               {/* Expand chevron */}
                               {isMulti && (
-                                <div className={`flex-shrink-0 p-1.5 rounded-lg transition-colors ${dk ? 'text-slate-500 hover:text-slate-300 bg-slate-800/40' : 'text-slate-400 hover:text-slate-600 bg-slate-100'}`}>
-                                  {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                                <div className={`flex-shrink-0 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>
+                                  {isOpen ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
                                 </div>
                               )}
                             </div>
@@ -1002,30 +996,27 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                   initial={{ height: 0, opacity: 0 }}
                                   animate={{ height: 'auto', opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.25 }}
+                                  transition={{ duration: 0.2 }}
                                   className="overflow-hidden"
                                 >
-                                  <div className="flex flex-col gap-1.5 ml-12 mt-1.5">
+                                  <div className="flex flex-col gap-0.5 ml-8 mt-0.5 mb-1">
                                     {group.items.map((proj: any, pIdx: number) => {
                                       const subRatio = Math.min((proj.value / group.totalValue) * 100, 100);
+                                      const shortName = proj.project.replace(/^NTT[_ -]+/, '');
                                       return (
-                                        <div key={pIdx} className={`border rounded-xl p-3 flex items-center gap-3 transition-colors ${dk ? 'bg-[#0d0f17]/40 border-slate-800/30 hover:bg-[#0d0f17]/70' : 'bg-slate-50/70 border-slate-100 hover:bg-slate-50'}`}>
-                                          <div className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: rankColor }} />
-                                          <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                                            <span className={`font-bold text-[11px] leading-snug ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={proj.project}>{proj.project}</span>
-                                            <span className="text-[9px] text-slate-400 font-semibold">{proj.itemQty} equipamentos</span>
-                                            {/* Value below sub-item name */}
-                                            <span className="font-mono font-black text-[13px]" style={{ color: rankColor }}>
-                                              {formatCompact(proj.value)}
-                                              <span className={`text-[9px] font-semibold ml-1.5 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(proj.value)}</span>
-                                            </span>
-                                          </div>
-                                          <div className={`w-16 flex flex-col gap-0.5 hidden sm:flex`}>
-                                            <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                        <div key={pIdx} className={`border rounded-lg py-1 px-2.5 flex items-center gap-2 ${dk ? 'bg-[#0d0f17]/30 border-slate-800/20' : 'bg-slate-50/60 border-slate-100/60'}`}>
+                                          <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: rankColor }} />
+                                          <span className={`flex-1 min-w-0 font-semibold text-[10px] truncate ${dk ? 'text-slate-300' : 'text-slate-700'}`} title={proj.project}>{shortName}</span>
+                                          <span className={`text-[9px] text-slate-400 flex-shrink-0`}>{proj.itemQty} eq</span>
+                                          {/* Sub progress */}
+                                          <div className="w-12 hidden sm:block">
+                                            <div className={`w-full h-1 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
                                               <div className="h-full rounded-full" style={{ width: `${subRatio}%`, backgroundColor: rankColor }} />
                                             </div>
-                                            <span className="text-[8px] text-slate-400 font-bold">{subRatio.toFixed(0)}% do grupo</span>
                                           </div>
+                                          {/* Value */}
+                                          <span className="font-mono font-black text-[10px] flex-shrink-0" style={{ color: rankColor }}>{formatCompact(proj.value)}</span>
+                                          <span className={`font-mono text-[8.5px] flex-shrink-0 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(proj.value)}</span>
                                         </div>
                                       );
                                     })}
