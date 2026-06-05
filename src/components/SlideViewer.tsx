@@ -888,29 +888,45 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               {/* Collapsed content categories switcher */}
-              <div className={`flex p-1 rounded-xl self-start gap-1 ${tabBg}`}>
-                <button
-                  onClick={() => setActiveStockTab('topNf')}
-                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? (dk ? 'bg-[#1a1c27] text-[#00fafb] shadow-sm' : 'bg-white text-[#0054ec] shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                >
-                  <Database size={12} />
-                  Top Projetos (com NF)
-                </button>
-                <button
-                  onClick={() => setActiveStockTab('semNf')}
-                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? (dk ? 'bg-[#1a1c27] text-pink-400 shadow-sm' : 'bg-white text-pink-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                >
-                  <Layers size={12} />
-                  Sem NF (Fila Reversa)
-                </button>
-                <button
-                  onClick={() => setActiveStockTab('guarda')}
-                  className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? (dk ? 'bg-[#1a1c27] text-cyan-400 shadow-sm' : 'bg-white text-cyan-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                >
-                  <ShieldCheck size={12} />
-                  Guarda de Técnico
-                </button>
-              </div>
+              {(() => {
+                const topNfTotal = content.topProjectsWithNF.reduce((s: number, p: any) => s + p.value, 0);
+                const semNfTotal = content.semNf.reduce((s: number, p: any) => s + p.value, 0);
+                const guardaTotal = content.guardaTecnica.reduce((s: number, p: any) => s + p.value, 0);
+                return (
+                  <div className={`flex p-1 rounded-xl self-start gap-1 ${tabBg}`}>
+                    <button
+                      onClick={() => setActiveStockTab('topNf')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? (dk ? 'bg-[#1a1c27] text-[#00fafb] shadow-sm' : 'bg-white text-[#0054ec] shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
+                    >
+                      <Database size={12} />
+                      <span className="flex flex-col items-start leading-tight">
+                        <span>Top Projetos (com NF)</span>
+                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'topNf' ? '' : 'opacity-60'}`}>{formatCompact(topNfTotal)}</span>
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setActiveStockTab('semNf')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? (dk ? 'bg-[#1a1c27] text-pink-400 shadow-sm' : 'bg-white text-pink-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
+                    >
+                      <Layers size={12} />
+                      <span className="flex flex-col items-start leading-tight">
+                        <span>Sem NF (Fila Reversa)</span>
+                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'semNf' ? '' : 'opacity-60'}`}>{formatCompact(semNfTotal)}</span>
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setActiveStockTab('guarda')}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? (dk ? 'bg-[#1a1c27] text-cyan-400 shadow-sm' : 'bg-white text-cyan-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
+                    >
+                      <ShieldCheck size={12} />
+                      <span className="flex flex-col items-start leading-tight">
+                        <span>Guarda de Técnico</span>
+                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'guarda' ? '' : 'opacity-60'}`}>{formatCompact(guardaTotal)}</span>
+                      </span>
+                    </button>
+                  </div>
+                );
+              })()}
 
               {/* Dynamic TAB views */}
               <div className={isFullscreen ? "min-h-[35vh]" : ""}>
@@ -1031,93 +1047,73 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   );
                 })()}
 
-                {activeStockTab === 'semNf' && (
-                  <div className="flex flex-col gap-4 animate-fadeIn">
-                    <div className="bg-gradient-to-r from-[#fd11a4]/5 to-[#2226c0]/5 border border-[#fd11a4]/20 p-4 rounded-2xl text-[11.5px] font-semibold text-[#151720] leading-relaxed flex items-center gap-3">
-                      <Layers size={16} className="text-[#fd11a4] animate-pulse flex-shrink-0" />
-                      <p>
-                        O <span className="font-bold">Estoque Sem NF</span> corresponde a produtos provenientes de fluxos de troca técnica (TRAG / RMA) de clientes que encontram-se temporariamente sem nota fiscal emitida.
-                      </p>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {content.semNf.map((item: any, idx: number) => {
-                        const ratio = Math.min((item.value / 3200000) * 100, 100); // comparison with max value client
-                        return (
-                          <div key={idx} className="border border-pink-100/30 p-4 rounded-2xl bg-gradient-to-br from-white to-pink-50/5 hover:to-pink-50/15 hover:border-pink-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[9px] bg-pink-50 text-pink-600 border border-pink-100/60 font-black px-2 py-0.5 rounded-lg tracking-wider">OPERAÇÃO DE FILA</span>
-                              <RefreshCw size={13} className="text-slate-300 group-hover:text-pink-400 transition-colors" />
-                            </div>
-                            <span className="text-[12.5px] font-extrabold text-slate-800 tracking-tight leading-snug truncate block">{item.client}</span>
-                            
-                            <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/50">
-                              <div className="flex justify-between items-baseline">
-                                <span className="text-[10px] text-slate-400 font-semibold">{item.qty} equipamentos</span>
-                                <span className="font-mono font-black text-slate-950 text-[14.5px] group-hover:text-pink-600 transition-colors">{formatCompact(item.value)}</span>
+                {activeStockTab === 'semNf' && (() => {
+                  const semNfColors = ['#fd11a4','#ec4899','#2226c0'];
+                  const maxVal = Math.max(...content.semNf.map((i: any) => i.value), 1);
+                  const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  return (
+                    <div className="flex flex-col gap-1 animate-fadeIn">
+                      {[...content.semNf]
+                        .sort((a: any, b: any) => b.value - a.value)
+                        .map((item: any, idx: number) => {
+                          const color = semNfColors[idx % semNfColors.length];
+                          const ratio = Math.min((item.value / maxVal) * 100, 100);
+                          return (
+                            <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                              <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
+                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
+                                <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                <motion.div 
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${ratio}%` }}
-                                  transition={{ duration: 1.2, delay: idx * 0.05 }}
-                                  className="bg-pink-500 h-full rounded-full" 
-                                />
+                              <div className="w-20 hidden md:block">
+                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                  <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
+                                </div>
+                              </div>
+                              <div className="flex-shrink-0 flex items-baseline gap-1.5">
+                                <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
+                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
 
-                {activeStockTab === 'guarda' && (
-                  <div className="flex flex-col gap-4 animate-fadeIn">
-                    <div className="bg-gradient-to-r from-cyan-50/60 to-slate-50/30 border border-cyan-100/40 p-4 rounded-2xl text-[11.5px] font-semibold text-cyan-950 leading-relaxed flex items-center gap-3">
-                      <ShieldCheck size={16} className="text-cyan-500 animate-pulse flex-shrink-0" />
-                      <p>
-                        A <span className="font-bold">Guarda de Técnico</span> representa peças alocadas fisicamente com técnicos autorizados e prestadores externos sob responsabilidade direta de campo.
-                      </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      {content.guardaTecnica.map((item: any, idx: number) => {
-                        const ratio = Math.min((item.value / 500000) * 100, 100); // comparison with R$ 500k max
-                        return (
-                          <div key={idx} className="border border-cyan-100/30 p-4 rounded-2xl bg-gradient-to-br from-white to-cyan-50/5 hover:to-cyan-50/15 hover:border-cyan-300 hover:shadow-md hover:scale-[1.01] transition-all flex flex-col justify-between gap-3 group">
-                            <div className="flex items-center gap-3">
-                              <div className="p-2.5 bg-cyan-50 rounded-xl text-cyan-600 group-hover:bg-cyan-100 transition-colors shadow-xs">
-                                <Shield size={16} className="stroke-[2.5]" />
+                {activeStockTab === 'guarda' && (() => {
+                  const guardaColors = ['#06b6d4','#0284c7'];
+                  const maxVal = Math.max(...content.guardaTecnica.map((i: any) => i.value), 1);
+                  const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  return (
+                    <div className="flex flex-col gap-1 animate-fadeIn">
+                      {[...content.guardaTecnica]
+                        .sort((a: any, b: any) => b.value - a.value)
+                        .map((item: any, idx: number) => {
+                          const color = guardaColors[idx % guardaColors.length];
+                          const ratio = Math.min((item.value / maxVal) * 100, 100);
+                          return (
+                            <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                              <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
+                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
+                                <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="flex flex-col gap-0.5 truncate flex-1">
-                                <span className="font-black text-slate-800 text-[12.5px] truncate">{item.client}</span>
-                                <span className="text-[10px] font-bold text-slate-400">{item.qty} equipamentos</span>
+                              <div className="w-20 hidden md:block">
+                                <div className={`w-full h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                  <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
+                                </div>
                               </div>
-                            </div>
-                            
-                            <div className="flex flex-col gap-2 pt-2 border-t border-slate-100/50">
-                              <div className="flex justify-between items-baseline font-mono">
-                                <span className="text-[9px] bg-cyan-50 text-cyan-700 px-1.5 py-0.5 rounded-lg font-bold uppercase tracking-wide">Valor Guardado</span>
-                                <span className="font-black text-slate-950 text-sm group-hover:text-cyan-600 transition-colors">{formatCurrency(item.value)}</span>
-                              </div>
-                              
-                              {/* Comparative mini progress bar */}
-                              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                                <motion.div 
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${ratio}%` }}
-                                  transition={{ duration: 1.2, delay: idx * 0.05 }}
-                                  className="bg-cyan-500 h-full rounded-full" 
-                                />
+                              <div className="flex-shrink-0 flex items-baseline gap-1.5">
+                                <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
+                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
           </div>
