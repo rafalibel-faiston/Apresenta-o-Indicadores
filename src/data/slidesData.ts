@@ -269,10 +269,10 @@ export const slidesData: Slide[] = [
     content: {
       total: 44636731.17,
       groups: [
-        { name: "Estoque com NF", value: 36348371.57, percentage: 81.4, color: "bg-indigo-500" },
-        { name: "Estoque sem NF", value: 4895800.96, percentage: 11.0, color: "bg-pink-500" },
-        { name: "Guarda de Técnico", value: 817464.02, percentage: 1.8, color: "bg-cyan-500" },
-        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.8, color: "bg-purple-500" }
+        { name: "Estoque com NF", value: 36348371.57, percentage: 81.4, color: "bg-[#0054ec]" },
+        { name: "Estoque sem NF", value: 4895800.96, percentage: 11.0, color: "bg-[#fd11a4]" },
+        { name: "Guarda de Técnico", value: 817464.02, percentage: 1.8, color: "bg-[#9b1dbf]" },
+        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.8, color: "bg-[#fd5665]" }
       ],
       guardaTecnica: [
         { client: "NTT", qty: 85, value: 449775.80 },

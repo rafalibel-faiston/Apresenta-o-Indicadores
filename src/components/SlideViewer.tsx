@@ -115,7 +115,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
       }`} id="slide-cover">
         {/* Soft elegant backdrop glow points */}
         <div className={`absolute top-10 left-10 w-48 h-48 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#0054ec]/10' : 'bg-[#0054ec]/5'}`} />
-        <div className={`absolute bottom-10 right-10 w-64 h-64 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-cyan-500/10' : 'bg-cyan-500/5'}`} />
+        <div className={`absolute bottom-10 right-10 w-64 h-64 rounded-full blur-3xl pointer-events-none ${isDarkMode ? 'bg-[#fd11a4]/10' : 'bg-[#fd11a4]/5'}`} />
         <div className={`absolute inset-0 bg-[radial-gradient(${isDarkMode ? '#1e293b' : '#e2e8f0'}_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none opacity-40`} />
 
         {/* Centered Main Brand Content */}
@@ -251,7 +251,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
-                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/10 group-hover:border-[#0054ec]/40' 
                   : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Smartphone size={16} />
@@ -263,7 +263,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
-                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/10 group-hover:border-[#0054ec]/40' 
                   : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Mail size={16} />
@@ -275,7 +275,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             }`}>
               <span className={`p-2 rounded-xl transition-all border ${
                 isDarkMode 
-                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-cyan-400 group-hover:bg-cyan-950/40 group-hover:border-cyan-800' 
+                  ? 'bg-slate-900 border-slate-800 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/10 group-hover:border-[#0054ec]/40' 
                   : 'bg-slate-50 border-slate-100 text-slate-400 group-hover:text-[#0054ec] group-hover:bg-[#0054ec]/8'
               }`}>
                 <Globe size={16} />
@@ -477,7 +477,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 ? 'border-[#0054ec]/80 bg-[#0054ec]/5 ring-2 ring-[#0054ec]/20 shadow-sm'
                                 : region.uf === 'PR'
                                   ? 'border-[#fd11a4]/80 bg-pink-50/10 ring-2 ring-[#fd11a4]/20 shadow-sm'
-                                  : 'border-cyan-400/80 bg-cyan-50/10 ring-2 ring-cyan-100 shadow-sm'
+                                  : 'border-[#9b1dbf]/60 bg-[#9b1dbf]/5 ring-2 ring-[#9b1dbf]/15 shadow-sm'
                               : (dk ? 'border-slate-800/60 hover:border-slate-700 hover:bg-[#12131a]' : 'border-slate-100/75 hover:border-slate-200 hover:bg-slate-50/65 hover:shadow-xs');
 
                             const avatarGrad = region.uf === 'DF'
@@ -1322,9 +1322,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     if (lowercase.includes('cable') || lowercase.includes('cabo')) {
                       return {
                         icon: Cable,
-                        colorClass: 'text-amber-600 bg-amber-50 border-amber-100/80',
+                        colorClass: 'text-[#9b1dbf] bg-[#9b1dbf]/8 border-[#9b1dbf]/20',
                         badge: 'Metais Mistas & Cobre',
-                        gradient: 'from-amber-500 to-orange-400'
+                        gradient: 'from-[#9b1dbf] to-[#3a2fe8]'
                       };
                     }
                     if (lowercase.includes('gabinete') || lowercase.includes('servidor')) {
@@ -1332,38 +1332,38 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         icon: Server,
                         colorClass: 'text-[#fd11a4] bg-[#fd11a4]/8 border-[#fd11a4]/20',
                         badge: 'Hardware Pesado & Carcaças',
-                        gradient: 'from-[#fd11a4] to-[#0054ec]'
+                        gradient: 'from-[#fd11a4] to-[#9b1dbf]'
                       };
                     }
                     if (lowercase.includes('bateri')) {
                       return {
                         icon: BatteryCharging,
-                        colorClass: 'text-rose-600 bg-rose-50 border-rose-100',
+                        colorClass: 'text-[#fd5665] bg-[#fd5665]/8 border-[#fd5665]/20',
                         badge: 'Células de Chumbo/Lítio',
-                        gradient: 'from-rose-500 to-red-500'
+                        gradient: 'from-[#fd5665] to-[#fd11a4]'
                       };
                     }
                     if (lowercase.includes('placa') || lowercase.includes('circuito')) {
                       return {
                         icon: Cpu,
-                        colorClass: 'text-emerald-600 bg-emerald-50 border-emerald-100',
+                        colorClass: 'text-[#3a2fe8] bg-[#3a2fe8]/8 border-[#3a2fe8]/20',
                         badge: 'Placas & Componentes de Silício',
-                        gradient: 'from-emerald-500 to-teal-500'
+                        gradient: 'from-[#3a2fe8] to-[#0054ec]'
                       };
                     }
                     return {
                       icon: Wifi,
-                      colorClass: 'text-cyan-600 bg-cyan-50 border-cyan-100',
+                      colorClass: 'text-[#0054ec] bg-[#0054ec]/8 border-[#0054ec]/20',
                       badge: 'Rede Wireless',
-                      gradient: 'from-cyan-500 to-sky-400'
+                      gradient: 'from-[#0054ec] to-[#3a2fe8]'
                     };
                   };
 
                   const specs = getLoteSpecs(item.desc);
                   const IconComponent = specs.icon;
 
-                  const borderClass = isLastItem 
-                    ? "border-emerald-300 bg-emerald-50/10 shadow-sm shadow-emerald-100/50 ring-2 ring-emerald-500/10" 
+                  const borderClass = isLastItem
+                    ? "border-[#0054ec]/40 bg-[#0054ec]/5 shadow-sm shadow-[#0054ec]/10 ring-2 ring-[#0054ec]/10"
                     : "border-slate-200/80 bg-white/40";
 
                   return (
@@ -1381,8 +1381,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                            <IconComponent size={18} />
                            {isLastItem && (
                              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0054ec] opacity-75"></span>
+                               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#0054ec]"></span>
                              </span>
                            )}
                         </div>
@@ -1392,7 +1392,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               {item.name}
                             </span>
                             {isLastItem && (
-                              <span className="bg-emerald-100 text-emerald-800 text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 animate-pulse">
+                              <span className="bg-[#0054ec]/10 text-[#0054ec] text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-[#0054ec]/20 flex items-center gap-1 animate-pulse">
                                 Mais Recente
                               </span>
                             )}
@@ -1531,11 +1531,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     const titleLower = sec.title.toLowerCase();
                     if (titleLower.includes("extra") || titleLower.includes("trân")) {
                       SectionIcon = Truck;
-                      iconColorClass = "text-cyan-500 bg-cyan-50";
-                      borderLeftColor = "border-l-cyan-500";
+                      iconColorClass = "text-[#9b1dbf] bg-[#9b1dbf]/8";
+                      borderLeftColor = "border-l-[#9b1dbf]";
                     } else if (titleLower.includes("zamp") || titleLower.includes("servidores")) {
                       SectionIcon = Database;
-                      iconColorClass = "text-[#fd11a4] bg-pink-50";
+                      iconColorClass = "text-[#fd11a4] bg-[#fd11a4]/8";
                       borderLeftColor = "border-l-[#fd11a4]";
                     } else if (titleLower.includes("trag") || titleLower.includes("reversa")) {
                       SectionIcon = RefreshCw;
@@ -1543,16 +1543,16 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       borderLeftColor = "border-l-[#fd11a4]";
                     } else if (titleLower.includes("arcos") || titleLower.includes("instala")) {
                       SectionIcon = ShieldCheck;
-                      iconColorClass = "text-emerald-500 bg-emerald-50";
-                      borderLeftColor = "border-l-emerald-500";
+                      iconColorClass = "text-[#3a2fe8] bg-[#3a2fe8]/8";
+                      borderLeftColor = "border-l-[#3a2fe8]";
                     } else if (titleLower.includes("starlink") || titleLower.includes("antena")) {
                       SectionIcon = Globe;
-                      iconColorClass = "text-blue-500 bg-blue-50";
-                      borderLeftColor = "border-l-blue-500";
+                      iconColorClass = "text-[#0054ec] bg-[#0054ec]/8";
+                      borderLeftColor = "border-l-[#0054ec]";
                     } else if (titleLower.includes("fluke") || titleLower.includes("mediç")) {
                       SectionIcon = Smartphone;
-                      iconColorClass = "text-amber-500 bg-amber-50";
-                      borderLeftColor = "border-l-amber-500";
+                      iconColorClass = "text-[#fd5665] bg-[#fd5665]/8";
+                      borderLeftColor = "border-l-[#fd5665]";
                     }
 
                     return (
