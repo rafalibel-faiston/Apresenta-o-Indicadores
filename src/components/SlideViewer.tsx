@@ -137,7 +137,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {subtitle}
           </h2>
           
-          <p className={`text-xs font-bold leading-relaxed max-w-sm font-sans italic ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+          <p className={`text-xs font-light leading-relaxed max-w-sm font-sans italic ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
             "{content.slogan}"
           </p>
         </div>
@@ -178,7 +178,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {title}
           </h1>
           <div className="w-32 h-1 bg-gradient-to-r from-[#0054ec] to-[#fd11a4] rounded-full" />
-          <p className={`font-medium text-md max-w-md ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+          <p className={`font-light font-serif text-md max-w-md ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             {subtitle}
           </p>
         </div>
@@ -190,22 +190,22 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
               <Shield size={16} />
             </div>
-            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Garantia Patrimonial</span>
-            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Cobertura de estoque e ativos</span>
+            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Garantia Patrimonial</span>
+            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Cobertura de estoque e ativos</span>
           </div>
           <div className={`flex flex-col items-center gap-2 text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#fd11a4]" : "bg-[#fd11a4]/8 text-[#fd11a4]"}`}>
               <ShieldCheck size={16} />
             </div>
-            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Gestão de Apólices</span>
-            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Controle e renovação de contratos</span>
+            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Gestão de Apólices</span>
+            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Controle e renovação de contratos</span>
           </div>
           <div className="flex flex-col items-center gap-2 text-center">
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
               <TrendingUp size={16} />
             </div>
-            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Controle de Riscos</span>
-            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Mitigação e compliance fiscal</span>
+            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Controle de Riscos</span>
+            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Mitigação e compliance fiscal</span>
           </div>
         </div>
       </div>
@@ -230,7 +230,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           <h1 className={`text-4xl md:text-5xl font-black font-serif tracking-tight leading-none uppercase ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
             {title}
           </h1>
-          <p className={`text-md font-medium max-w-sm mt-1 mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+          <p className={`text-md font-light font-serif max-w-sm mt-1 mb-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
             {subtitle}
           </p>
           <div className="w-16 h-1.5 bg-[#0054ec] rounded-full" />
@@ -249,12 +249,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             BH
           </div>
           <h2 className={`text-xl font-extrabold font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{content.presenter}</h2>
-          <p className={`text-xs font-semibold uppercase tracking-wider mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{content.role}</p>
+          <p className={`text-xs font-light uppercase tracking-wider mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{content.role}</p>
 
           <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-slate-850' : 'bg-slate-50'}`} />
 
           {/* Sorteable detailed contact fields */}
-          <div className={`flex flex-col gap-4.5 w-full font-medium text-xs text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
+          <div className={`flex flex-col gap-4.5 w-full font-light text-xs text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
             <a href={`tel:${content.contact.phone}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
               isDarkMode ? 'hover:text-cyan-400' : 'hover:text-[#0054ec]'
             }`}>
@@ -316,7 +316,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <h2 className={`text-2xl font-black tracking-tight font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               {title}
             </h2>
-            <p className="text-slate-400 text-xs font-semibold leading-none mt-1 flex items-center gap-1.5">
+            <p className="text-slate-400 text-xs font-light font-serif leading-none mt-1 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColor() }} />
               {subtitle}
             </p>
@@ -367,7 +367,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                              isStats ? <TrendingUp size={13} strokeWidth={2.5} /> :
                              <Info size={13} strokeWidth={2.5} />}
                           </span>
-                          <p className={`font-bold text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{comm.text}</p>
+                          <p className={`font-normal text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{comm.text}</p>
                         </div>
                       );
                     })}
@@ -1482,7 +1482,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         <span className={`p-2 rounded-lg flex-shrink-0 flex items-center justify-center border ${dk ? 'bg-[#0d0f17] border-slate-800 text-[#00fafb]' : 'bg-slate-50 border-slate-150 text-blue-600'}`}>
                           <Sparkles size={13} strokeWidth={2.5} />
                         </span>
-                        <p className={`font-bold text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{cText}</p>
+                        <p className={`font-normal text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{cText}</p>
                       </div>
                     ))}
                   </div>
