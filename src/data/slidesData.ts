@@ -330,12 +330,12 @@ export const slidesData: Slide[] = [
         { label: "Receita Líquida Lotes", value: 10900.00, type: "currency", isHighlight: true }
       ],
       lotes: [
-        { name: "Lote 1", qty: 420, value: 1100.00, desc: "HDS, Notebooks, Cabos, Fontes, Fãs, Fechaduras, Switch, Teclados" },
-        { name: "Lote 2", qty: 334, value: 820.00, desc: "Ventiladores, CPUs, Monitores, Placas, HDs, Teclados, Chaleira, Aspirador" },
-        { name: "Lote 3", qty: 608, value: 2300.00, desc: "Servidores, Placas, Cabos, Adaptadores, Módulos, Conectores, Baterias" },
-        { name: "Lote 4", qty: 4924, value: 2500.00, desc: "Fontes, Carcaças de SW, Cabos, Servidores, HDs, Placas, Fans" },
-        { name: "Lote 5", qty: 4085, value: 3200.00, desc: "Antenas, Roteadores, Adaptadores e Cabos, Módulos, Switches, Telefones" },
-        { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, Notebooks, HDs, Memórias, Fontes, Máquinas de Cartão, Leitores" }
+        { name: "Lote 1", qty: 420, value: 1100.00, desc: "HDs, Notebooks, Fontes, Cabos, Fãs" },
+        { name: "Lote 2", qty: 334, value: 820.00, desc: "CPUs, Monitores, Ventiladores, Placas" },
+        { name: "Lote 3", qty: 608, value: 2300.00, desc: "Servidores, Placas, Cabos, Baterias" },
+        { name: "Lote 4", qty: 4924, value: 2500.00, desc: "Fontes, Carcaças de SW, HDs, Cabos" },
+        { name: "Lote 5", qty: 4085, value: 3200.00, desc: "Roteadores, Switches, Módulos, Antenas" },
+        { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, HDs, Notebooks, Máq. de Cartão" }
       ]
     }
   },
