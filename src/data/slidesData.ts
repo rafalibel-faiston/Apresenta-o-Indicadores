@@ -278,6 +278,10 @@ export const slidesData: Slide[] = [
         { client: "NTT", qty: 85, value: 449775.80 },
         { client: "ARCOS DOURADOS", qty: 91, value: 367688.22 }
       ],
+      ativosOutros: [
+        { name: "Ativos Fixos Faiston", value: 1275094.62, desc: "Equipamentos e infraestrutura própria" },
+        { name: "Outros e Reservas", value: 1300000.00, desc: "Reservas operacionais e itens diversos" }
+      ],
       semNf: [
         { client: "NTT_TRAG", qty: 817, value: 4323139.16 },
         { client: "ARCOS DOURADOS REVERSA", qty: 432, value: 432000.00 },

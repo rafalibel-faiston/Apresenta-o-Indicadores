@@ -901,38 +901,25 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 const topNfTotal = content.topProjectsWithNF.reduce((s: number, p: any) => s + p.value, 0);
                 const semNfTotal = content.semNf.reduce((s: number, p: any) => s + p.value, 0);
                 const guardaTotal = content.guardaTecnica.reduce((s: number, p: any) => s + p.value, 0);
+                const ativosTotal = content.ativosOutros.reduce((s: number, p: any) => s + p.value, 0);
+                const tabBtn = (id: string, label: string, value: number, icon: React.ReactNode, activeColor: string) => (
+                  <button
+                    onClick={() => setActiveStockTab(id)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all ${activeStockTab === id ? (dk ? `bg-[#1a1c27] ${activeColor} shadow-sm` : `bg-white ${activeColor} shadow-sm`) : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
+                  >
+                    {icon}
+                    <span className="flex flex-col items-start leading-none gap-0.5">
+                      <span className="text-[10px]">{label}</span>
+                      <span className={`text-[13px] font-mono font-black tracking-tight ${activeStockTab === id ? '' : 'opacity-60'}`}>{formatCompact(value)}</span>
+                    </span>
+                  </button>
+                );
                 return (
-                  <div className={`flex p-1 rounded-xl self-start gap-1 ${tabBg}`}>
-                    <button
-                      onClick={() => setActiveStockTab('topNf')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'topNf' ? (dk ? 'bg-[#1a1c27] text-[#00fafb] shadow-sm' : 'bg-white text-[#0054ec] shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                    >
-                      <Database size={12} />
-                      <span className="flex flex-col items-start leading-tight">
-                        <span>Top Projetos (com NF)</span>
-                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'topNf' ? '' : 'opacity-60'}`}>{formatCompact(topNfTotal)}</span>
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => setActiveStockTab('semNf')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'semNf' ? (dk ? 'bg-[#1a1c27] text-pink-400 shadow-sm' : 'bg-white text-pink-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                    >
-                      <Layers size={12} />
-                      <span className="flex flex-col items-start leading-tight">
-                        <span>Sem NF (Fila Reversa)</span>
-                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'semNf' ? '' : 'opacity-60'}`}>{formatCompact(semNfTotal)}</span>
-                      </span>
-                    </button>
-                    <button
-                      onClick={() => setActiveStockTab('guarda')}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${activeStockTab === 'guarda' ? (dk ? 'bg-[#1a1c27] text-cyan-400 shadow-sm' : 'bg-white text-cyan-600 shadow-sm') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
-                    >
-                      <ShieldCheck size={12} />
-                      <span className="flex flex-col items-start leading-tight">
-                        <span>Guarda de Técnico</span>
-                        <span className={`text-[9px] font-mono font-black ${activeStockTab === 'guarda' ? '' : 'opacity-60'}`}>{formatCompact(guardaTotal)}</span>
-                      </span>
-                    </button>
+                  <div className={`flex flex-wrap p-1 rounded-xl self-start gap-1 ${tabBg}`}>
+                    {tabBtn('topNf', 'Top Projetos (com NF)', topNfTotal, <Database size={12} />, 'text-[#0054ec]')}
+                    {tabBtn('semNf', 'Sem NF (Fila Reversa)', semNfTotal, <Layers size={12} />, 'text-pink-600')}
+                    {tabBtn('guarda', 'Guarda de Técnico', guardaTotal, <ShieldCheck size={12} />, 'text-cyan-600')}
+                    {tabBtn('ativos', 'Ativos e Outros', ativosTotal, <Package size={12} />, 'text-orange-500')}
                   </div>
                 );
               })()}
@@ -1104,6 +1091,38 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             </div>
                           );
                         })}
+                    </div>
+                  );
+                })()}
+
+                {activeStockTab === 'ativos' && (() => {
+                  const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  const total = content.ativosOutros.reduce((s: number, p: any) => s + p.value, 0);
+                  return (
+                    <div className="flex flex-col gap-2 animate-fadeIn">
+                      {content.ativosOutros.map((item: any, idx: number) => {
+                        const color = idx === 0 ? '#f97316' : '#fb923c';
+                        const pct = (item.value / total) * 100;
+                        return (
+                          <div key={idx} className={`border rounded-xl py-3 px-4 flex items-center gap-3 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
+                            <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                            <div className="flex-1 min-w-0">
+                              <span className={`font-black text-[11px] block leading-none ${dk ? 'text-white' : 'text-slate-900'}`}>{item.name}</span>
+                              <span className={`text-[9px] font-light mt-0.5 block ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{item.desc}</span>
+                            </div>
+                            <div className="hidden md:flex items-center gap-1.5 w-28">
+                              <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                                <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
+                              </div>
+                              <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
+                            </div>
+                            <div className="flex-shrink-0 flex items-baseline gap-1.5">
+                              <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
+                              <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   );
                 })()}
