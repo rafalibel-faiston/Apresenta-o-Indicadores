@@ -990,13 +990,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 </span>
                               </div>
 
-                              {/* Inline progress bar + % label */}
-                              <div className="hidden md:flex items-center gap-1.5 w-28">
-                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                                  <div className="h-full rounded-full transition-all" style={{ width: `${ratio}%`, backgroundColor: rankColor }} />
-                                </div>
-                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color: rankColor }}>{pct.toFixed(1)}%</span>
-                              </div>
+                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color: rankColor, borderColor: rankColor + '40', backgroundColor: rankColor + '12' }}>{pct.toFixed(1)}%</span>
 
                               {/* Value inline */}
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
@@ -1080,12 +1074,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
                                 <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="hidden md:flex items-center gap-1.5 w-28">
-                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                                  <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
-                                </div>
-                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
-                              </div>
+                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
                                 <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
                                 <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
@@ -1112,12 +1101,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               <span className={`font-black text-[11px] block leading-none ${dk ? 'text-white' : 'text-slate-900'}`}>{item.name}</span>
                               <span className={`text-[9px] font-light mt-0.5 block ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{item.desc}</span>
                             </div>
-                            <div className="hidden md:flex items-center gap-1.5 w-28">
-                              <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                                <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
-                              </div>
-                              <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
-                            </div>
+                            <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                             <div className="flex-shrink-0 flex items-baseline gap-1.5">
                               <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
                               <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
@@ -1155,12 +1139,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
                                 <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <div className="hidden md:flex items-center gap-1.5 w-28">
-                                <div className={`flex-1 h-1.5 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                                  <div className="h-full rounded-full" style={{ width: `${ratio}%`, backgroundColor: color }} />
-                                </div>
-                                <span className="text-[9px] font-bold tabular-nums w-8 text-right" style={{ color }}>{pct.toFixed(1)}%</span>
-                              </div>
+                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
                                 <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
                                 <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
