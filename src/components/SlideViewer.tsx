@@ -188,15 +188,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         }`}>
           <div className="flex flex-col text-center">
             <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Valores Cobertos</span>
-            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{formatCompact(content.totalProtected)}</span>
+            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{formatCompact(content.totalProtected)}</span>
           </div>
           <div className={`flex flex-col text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
             <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Custos de Fatura</span>
-            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{formatCurrency(content.monthlyBillingCost)}</span>
+            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{formatCurrency(content.monthlyBillingCost)}</span>
           </div>
           <div className="flex flex-col text-center">
             <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Apólices Clientes</span>
-            <span className={`text-md font-bold mt-1 ${isDarkMode ? "text-white" : "text-slate-800"}`}>{content.activePolicies} Ativas</span>
+            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{content.activePolicies} Ativas</span>
           </div>
         </div>
       </div>
@@ -1453,7 +1453,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       value={kpi.value} 
                       type={kpi.type} 
                       isHighlight={kpi.isHighlight}
-                      borderAccent="#10b981"
+                      borderAccent="#0054ec"
                       isDarkMode={isDarkMode}
                     />
                   ))}
