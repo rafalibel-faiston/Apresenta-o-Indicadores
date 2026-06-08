@@ -69,7 +69,7 @@ function replaceOklchInCss(css: string): string {
 
 export default function App() {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [autoplaySpeed, setAutoplaySpeed] = useState(8000);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -377,20 +377,7 @@ export default function App() {
 
         {/* Action Controls */}
         <div className="flex items-center gap-2">
-          {/* Theme toggle */}
-          <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className={`p-2 rounded-lg border transition-all hover:scale-105 active:scale-95 ${
-              dk
-                ? 'bg-white/5 border-white/10 text-[#00fafb] hover:bg-white/10'
-                : 'bg-slate-100 border-slate-200 text-[#0054ec] hover:bg-slate-200'
-            }`}
-            title={dk ? 'Modo Claro' : 'Modo Escuro'}
-          >
-            {dk ? <Sun size={14} /> : <Moon size={14} />}
-          </button>
-
-          <div className={`h-5 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'}`} />
+          <div className="h-5 w-px bg-slate-200" />
 
           <button
             onClick={() => setShowHelpModal(true)}
