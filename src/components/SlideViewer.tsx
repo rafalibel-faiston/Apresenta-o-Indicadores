@@ -954,13 +954,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     });
                   const sortedGroups = Object.values(groupMap).sort((a, b) => b.totalValue - a.totalValue);
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  const maxGroupValue = sortedGroups[0]?.totalValue || 1;
 
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sortedGroups.map((group, gIdx) => {
                         const rankColor = gradientColor(gIdx, sortedGroups.length);
                         const pct = (group.totalValue / content.total) * 100;
-                        const ratio = Math.min(pct, 100);
+                        const ratio = (group.totalValue / maxGroupValue) * 100;
                         const isMulti = group.items.length > 1;
                         const isOpen = expandedStockGroups.includes(group.prefix);
                         const toggle = () => setExpandedStockGroups(prev =>
@@ -1065,12 +1066,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   };
                   const sorted = [...content.semNf].sort((a: any, b: any) => b.value - a.value);
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  const maxSemNf = sorted[0]?.value || 1;
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sorted.map((item: any, idx: number) => {
                           const color = gradColor(idx, sorted.length);
                           const pct = (item.value / content.total) * 100;
-                          const ratio = Math.min(pct, 100);
+                          const ratio = (item.value / maxSemNf) * 100;
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
                               <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
@@ -1139,12 +1141,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   };
                   const sorted = [...content.guardaTecnica].sort((a: any, b: any) => b.value - a.value);
                   const fmtExact = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 }).format(v);
+                  const maxGuarda = sorted[0]?.value || 1;
                   return (
                     <div className="flex flex-col gap-1 animate-fadeIn">
                       {sorted.map((item: any, idx: number) => {
                           const color = gradColor(idx, sorted.length);
                           const pct = (item.value / content.total) * 100;
-                          const ratio = Math.min(pct, 100);
+                          const ratio = (item.value / maxGuarda) * 100;
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
                               <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
