@@ -186,17 +186,26 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         <div className={`grid grid-cols-3 gap-4 w-full max-w-xl border p-5 rounded-2xl shadow-sm z-10 transition-colors ${
           isDarkMode ? "bg-[#12131a] border-slate-800 text-white" : "bg-white border-slate-100 text-slate-800"
         }`}>
-          <div className="flex flex-col text-center">
-            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Valores Cobertos</span>
-            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{formatCompact(content.totalProtected)}</span>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
+              <Shield size={16} />
+            </div>
+            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Garantia Patrimonial</span>
+            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Cobertura de estoque e ativos</span>
           </div>
-          <div className={`flex flex-col text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
-            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Custos de Fatura</span>
-            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{formatCurrency(content.monthlyBillingCost)}</span>
+          <div className={`flex flex-col items-center gap-2 text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
+            <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#fd11a4]" : "bg-[#fd11a4]/8 text-[#fd11a4]"}`}>
+              <ShieldCheck size={16} />
+            </div>
+            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Gestão de Apólices</span>
+            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Controle e renovação de contratos</span>
           </div>
-          <div className="flex flex-col text-center">
-            <span className={`text-[10px] font-bold uppercase ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>Apólices Clientes</span>
-            <span className={`text-sm font-medium mt-1 ${isDarkMode ? "text-slate-400" : "text-slate-400"}`}>{content.activePolicies} Ativas</span>
+          <div className="flex flex-col items-center gap-2 text-center">
+            <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
+              <TrendingUp size={16} />
+            </div>
+            <span className={`text-[11px] font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Controle de Riscos</span>
+            <span className={`text-[10px] leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Mitigação e compliance fiscal</span>
           </div>
         </div>
       </div>
