@@ -330,8 +330,8 @@ export const slidesData: Slide[] = [
     category: "operations",
     content: {
       kpis: [
-        { label: "Qtd. Total Descartada", value: 10485, type: "number" },
-        { label: "Receita Líquida Lotes", value: 10900.00, type: "currency", isHighlight: true }
+        { label: "Qtd. Total Descartada", value: 10685, type: "number" },
+        { label: "Receita Líquida Lotes", value: 11100.00, type: "currency", isHighlight: true }
       ],
       lotes: [
         { name: "Lote 1", qty: 420, value: 1100.00, desc: "HDs, Notebooks, Fontes, Cabos, Fãs" },
@@ -339,7 +339,8 @@ export const slidesData: Slide[] = [
         { name: "Lote 3", qty: 608, value: 2300.00, desc: "Servidores, Placas, Cabos, Baterias" },
         { name: "Lote 4", qty: 4924, value: 2500.00, desc: "Fontes, Carcaças de SW, HDs, Cabos" },
         { name: "Lote 5", qty: 4085, value: 3200.00, desc: "Roteadores, Switches, Módulos, Antenas" },
-        { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, HDs, Notebooks, Máq. de Cartão" }
+        { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, HDs, Notebooks, Máq. de Cartão" },
+        { name: "Lote 8", qty: 200, value: 200.00, desc: "Ferros" }
       ]
     }
   },
@@ -350,9 +351,9 @@ export const slidesData: Slide[] = [
     subtitle: "Saving mensal, utilizado e projeção anual (MAI.26)",
     category: "financials",
     content: {
-      totalSaving: 40470.98,
+      totalSaving: 40670.98,
       totalUtilizado: 11106.33,
-      saldoSaving: 29364.65,
+      saldoSaving: 29564.65,
       savingItems: [
         { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
         { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
@@ -362,7 +363,8 @@ export const slidesData: Slide[] = [
         { item: 6, desc: "Venda de 5 TVs", qty: 5, value: 4000.00 },
         { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
         { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
-        { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 }
+        { item: 9, desc: "Descarte sustentável - Lote 8", qty: 200, value: 200.00 },
+        { item: 10, desc: "Renovação Tiflux", qty: null, value: 1741.34 }
       ],
       utilizadoItems: [
         { desc: "Identidade Visual", value: 5217.93, obs: "Ref. itens 1 e 2" },
