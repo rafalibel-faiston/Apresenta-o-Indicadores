@@ -462,19 +462,14 @@ export function DonutChart({
       {/* Labels / Legends */}
       <div className={`flex flex-col gap-1.5 relative flex-1 ${layout === 'col' ? 'w-full px-2' : 'min-w-[120px]'}`}>
         {data.map((item, idx) => {
-          const bgColors = [
-            'bg-[#0054ec]',
-            'bg-[#fd11a4]',
-            'bg-[#fd5665]',
-            'bg-[#2226c0]',
-            'bg-[#00fafb]',
-            'bg-emerald-400'
-          ];
-          const colorBg = item.colorClass ? item.colorClass.replace('stroke-', 'bg-') : bgColors[idx % bgColors.length];
+          const fallbackColors = ['#0054ec', '#fd11a4', '#fd5665', '#2226c0', '#00fafb', '#34d399'];
+          const dotColor = item.colorClass
+            ? item.colorClass.replace(/^stroke-\[(.+)\]$/, '$1')
+            : fallbackColors[idx % fallbackColors.length];
           return (
             <div key={idx} className="flex items-center justify-between gap-3 text-xs font-sans">
               <div className="flex items-center gap-2 truncate">
-                <div className={`w-2 h-2 rounded-full ${colorBg} flex-shrink-0`} />
+                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
                 <span className="font-semibold text-slate-700 truncate max-w-[80px] sm:max-w-none">{item.label}</span>
               </div>
               <div className="flex items-center gap-1.5 font-mono">
