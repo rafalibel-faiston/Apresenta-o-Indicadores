@@ -1758,7 +1758,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     })}
                   </div>
                   <div className="text-[10px] text-slate-400 font-bold border-t border-slate-50 pt-3 mt-3 text-center uppercase tracking-wider">
-                    Total Fatura Líquida Líquida Pago: R$ 59.656,30
+                    Total Fatura Líquida Pago: R$ 67.304,05
                   </div>
                 </div>
               )}
