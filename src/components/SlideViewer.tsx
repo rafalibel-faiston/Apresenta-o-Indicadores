@@ -1640,10 +1640,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             {sec.apolices.map((ap: any, apIdx: number) => (
                               <div key={apIdx} className="bg-gradient-to-br from-white to-slate-50 p-2 rounded-xl text-[10px] border border-slate-100 shadow-xs flex flex-col gap-0.5 text-center font-bold">
                                 <span className="text-slate-400 uppercase tracking-wider text-[8px]">{ap.name}</span>
-                                <span className="text-slate-950 font-mono text-[10px] font-black">{formatCurrency(ap.value)}</span>
                                 {ap.cost !== undefined && (
-                                  <span className="text-[#0054ec] font-mono text-[9px] font-bold">{formatCurrency(ap.cost)}/mês</span>
+                                  <span className="text-[#0054ec] font-mono text-[11px] font-black">{formatCurrency(ap.cost)}</span>
                                 )}
+                                <span className="text-slate-400 font-mono text-[8.5px] font-semibold">{formatCurrency(ap.value)}</span>
                               </div>
                             ))}
                           </div>
