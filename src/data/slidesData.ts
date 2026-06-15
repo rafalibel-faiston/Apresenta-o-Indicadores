@@ -28,8 +28,7 @@ export const slidesData: Slide[] = [
       ],
       commentary: [
         { type: "info", text: "Maior custo: ZAMP – R$ 10.721,88" },
-        { type: "success", text: "Menor custo: BEMOBI / T-SYSTEMS – R$ 28,85" },
-        { type: "stats", text: "Total de embarques consolidados no período: 268" }
+        { type: "success", text: "Menor custo: BEMOBI / T-SYSTEMS – R$ 28,85" }
       ],
       projects: [
         { project: "ZAMP", cost: 10721.88, shipments: 141, equipments: 141, averageCost: 76.04 },
