@@ -294,12 +294,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           </div>
         </motion.div>
 
-        {/* Bottom credits */}
-        <div className="text-[10px] font-mono font-bold text-slate-400 z-10 tracking-wider uppercase mt-8 flex items-center gap-2">
-          <span>Faiston S.A.</span>
-          <span className="text-slate-200">•</span>
-          <span>Evoluindo junto com nossos clientes</span>
-        </div>
+
       </div>
     );
   }
