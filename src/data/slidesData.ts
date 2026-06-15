@@ -496,12 +496,23 @@ export const slidesData: Slide[] = [
       sections: [
         {
           title: "Antenas Operacionais STARLINK",
-          totalValue: 1200.00,
-          monthlyCost: 14.40,
+          totalValue: 239530.19,
+          monthlyCost: 2874.36,
           rate: "1,20% a.m",
           desc: "Cobertura física integral contra avarias climáticas ou vandalismo operacional, com participação obrigatória estabilizada de 10% sobre sinistros.",
           apolices: [
-            { name: "Apólice Dedicada", value: 1200.00 }
+            { name: "1ª Apólice", value: 82924.82, cost: 995.10 },
+            { name: "2ª Apólice", value: 126689.46, cost: 1520.27 },
+            { name: "3ª Apólice", value: 3988.64, cost: 47.86 },
+            { name: "4ª Apólice", value: 2327.48, cost: 27.93 },
+            { name: "5ª Apólice", value: 3347.99, cost: 40.18 },
+            { name: "6ª Apólice", value: 2007.92, cost: 24.10 },
+            { name: "7ª Apólice", value: 2789.82, cost: 33.48 },
+            { name: "8ª Apólice", value: 1693.11, cost: 20.32 },
+            { name: "9ª Apólice", value: 3812.39, cost: 45.75 },
+            { name: "10ª Apólice", value: 5958.74, cost: 71.50 },
+            { name: "11ª Apólice", value: 2789.82, cost: 33.48 },
+            { name: "12ª Apólice", value: 1200.00, cost: 14.40 }
           ]
         },
         {
