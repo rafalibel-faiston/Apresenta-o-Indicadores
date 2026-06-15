@@ -1577,12 +1577,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               <>
                                 <div className="flex flex-col items-end gap-0.5">
                                   <span className="text-[8.5px] font-black uppercase tracking-widest text-[#0054ec]">Custo</span>
-                                  <span className={`font-mono font-black text-xl tracking-tight text-[#0054ec]`}>{formatCompact(sec.monthlyCost)}</span>
+                                  <span className={`font-mono font-black text-xl tracking-tight text-[#0054ec]`}>{formatCurrency(sec.monthlyCost)}</span>
                                 </div>
-                                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-600' : 'text-slate-400'}`}>Patrimônio: {formatCompact(sec.totalValue)}</span>
+                                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-600' : 'text-slate-400'}`}>Patrimônio: {formatCurrency(sec.totalValue)}</span>
                               </>
                             ) : (
-                              <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCompact(sec.totalValue)}</span>
+                              <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCurrency(sec.totalValue)}</span>
                             )}
                           </div>
                         </div>
@@ -1599,7 +1599,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                     <span className="truncate max-w-[65%] font-extrabold text-slate-800">{sub.name}</span>
                                     <div className="flex items-center gap-3 font-mono">
                                       <span className="text-[9.5px] text-slate-400 font-bold bg-white border border-slate-100 px-1.5 py-0.2 rounded">Taxa: {sub.rate}</span>
-                                      <span className="font-black text-slate-950">{formatCompact(sub.value)}</span>
+                                      <span className="font-black text-slate-950">{formatCurrency(sub.value)}</span>
                                     </div>
                                   </div>
                                   <div className="w-full bg-slate-200/50 h-1 rounded-full overflow-hidden">
@@ -1640,7 +1640,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             {sec.apolices.map((ap: any, apIdx: number) => (
                               <div key={apIdx} className="bg-gradient-to-br from-white to-slate-50 p-2.5 rounded-xl text-[10px] border border-slate-100 shadow-xs flex flex-col gap-1 text-center font-bold">
                                 <span className="text-slate-400 uppercase tracking-wider text-[8.5px]">{ap.name}</span>
-                                <span className="text-slate-950 font-mono text-xs font-black">{formatCompact(ap.value)}</span>
+                                <span className="text-slate-950 font-mono text-xs font-black">{formatCurrency(ap.value)}</span>
                               </div>
                             ))}
                           </div>

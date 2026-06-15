@@ -419,7 +419,7 @@ export const slidesData: Slide[] = [
       comentarios: [
         "A apólice cobre todos os equipamentos que entraram em nosso estoque físico até a devida saída regulamentada.",
         "Destaque: NTT representa o maior volume segurado em estoque regular (projetos).",
-        "Ativos Fixos abrangem estruturas físicas corporativas: notebooks, mobiliário de escritório e técnico.",
+        "Ativos Fixos abrangem estruturas físicas corporativas: mobiliário de escritório e equipamentos técnicos.",
         "Em caso de sinistro extraordinário, as câmeras de CFTV são acionadas como exigência comprovatória contratual."
       ]
     }
@@ -489,8 +489,8 @@ export const slidesData: Slide[] = [
   {
     id: "seguros-satelite",
     number: 17,
-    title: "Seguro Starlink, Medição & Notebooks",
-    subtitle: "Antenas satelitais, calibradores e notebooks corporativos",
+    title: "Seguro Starlink & Medição",
+    subtitle: "Antenas satelitais e calibradores",
     category: "insurance",
     content: {
       sections: [
@@ -510,18 +510,6 @@ export const slidesData: Slide[] = [
           monthlyCost: 472.50,
           rate: "0,45% a.m",
           desc: "Garantia especial para calibradores condutivímetros portáteis de alta precisão cedidos sob regime de comodato ao parceiro T-Systems."
-        },
-        {
-          title: "Seguro de Notebooks Corporativos",
-          totalValue: 991595.79,
-          monthlyCost: 16163.01,
-          rate: "1,63% a.m",
-          desc: "Cobertura especial para notebooks corporativos de uso externo por consultores e técnicos das operações.",
-          apolices: [
-            { name: "ALLCARE 49 MAQUINAS", value: 94334.70 },
-            { name: "ENSONO 88 MAQUINAS", value: 590061.71 },
-            { name: "METODO 51 MAQUINAS", value: 307199.38 }
-          ]
         }
       ]
     }
