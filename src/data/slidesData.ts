@@ -549,23 +549,24 @@ export const slidesData: Slide[] = [
     id: "custo-fatura",
     number: 18,
     title: "Composição de Despesa de Faturas de Seguros",
-    subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (MAR.26)",
+    subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (JUN.26)",
     category: "financials",
     content: {
-      total: 67304.05,
+      total: 53423.07,
       kpis: [
-        { label: "Fatura Líquida Consolidada", value: 67304.05, type: "currency", isHighlight: true }
+        { label: "Fatura Líquida Consolidada", value: 53423.07, type: "currency", isHighlight: true }
       ],
       invoiceItems: [
-        { label: "Patrimonial", name: "Seguro Patrimonial", value: 32910.60, sub: "Estoque fixo" },
-        { label: "Extra", name: "Seguro Extra", value: 18117.61, sub: "Trânsito e bases satélites" },
-        { label: "TRAG", name: "Seguro TRAG 23/Fase 2", value: 11916.33, sub: "Transportes e reversas" },
-        { label: "Arcos", name: "Arcos Dourados", value: 2663.59, sub: "Instalações" },
-        { label: "Starlink", name: "Starlink", value: 1222.90, sub: "Antenas em campo" },
-        { label: "Fluke", name: "Fluke", value: 473.02, sub: "Instrumentos de medição" }
+        { label: "Patrimonial", name: "Seguro Patrimonial", value: 32910.57, sub: "Estoque fixo" },
+        { label: "Extra", name: "Seguro Extra", value: 14318.68, sub: "Trânsito e bases satélites" },
+        { label: "Arcos", name: "Arcos Dourados", value: 2415.83, sub: "Instalações" },
+        { label: "Starlink", name: "Starlink", value: 1446.95, sub: "Antenas em campo" },
+        { label: "TRAG", name: "Seguro TRAG 23/Fase 2", value: 1215.50, sub: "Transportes e reversas" },
+        { label: "Simpar", name: "Simpar", value: 684.54, sub: "Apólice dedicada Simpar" },
+        { label: "Fluke", name: "Fluke", value: 431.00, sub: "Instrumentos de medição" }
       ],
       comments: [
-        "Conciliação fechou com faturas auditadas e prêmios aplicados por categoria, acumulando R$ 67.304,05 mensais para uma proteção do patrimônio Faiston.",
+        "Conciliação fechou com faturas auditadas e prêmios aplicados por categoria, acumulando R$ 53.423,07 mensais para uma proteção do patrimônio Faiston.",
         "Diferenças identificadas entre as taxas aplicadas nas faturas físicas e as apólices digitais estão sob análise técnica."
       ]
     }
