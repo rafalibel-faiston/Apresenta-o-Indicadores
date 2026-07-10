@@ -153,7 +153,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           <div className={`mt-2 px-3.5 py-1.5 font-mono text-[9px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
             isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-[#0054ec]"
           }`}>
-            MAIO
+            JUNHO
           </div>
         </div>
       </div>
@@ -397,7 +397,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase">
                     {content.distribution.map((dist: any, dIdx: number) => (
                       <span key={dIdx} className="flex items-center gap-1">
-                        <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: dIdx === 0 ? '#0054ec' : dIdx === 1 ? '#2226c0' : '#06b6d4' }} />
+                        <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: ['#0054ec', '#2226c0', '#06b6d4', '#fd11a4'][dIdx % 4] }} />
                         {dist.name}: {dist.percentage}%
                       </span>
                     ))}
@@ -682,7 +682,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               {/* Quick High level summary card */}
               <div className="bg-[#0054ec]/8 border border-[#0054ec]/20 rounded-2xl p-4.5 mt-4 text-xs font-medium text-[#151720] leading-relaxed">
-                As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-[#2226c0]">92,1%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span>.
+                As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-[#2226c0]">66,3%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span> (14,8%).
               </div>
             </div>
 
@@ -822,7 +822,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detalhamento por Cliente</h4>
-                  <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">14 Clientes</span>
+                  <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">{content.saida.details.length} Clientes</span>
                 </div>
                 
                 <div className={`flex flex-col gap-2 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
@@ -844,7 +844,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               <div className={`text-[10px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
-                Alto volume de saída física com destino ao projeto ZAMP
+                Alto volume de saída física com destino ao cliente {content.saida.details[0]?.client}
               </div>
             </div>
           </div>
