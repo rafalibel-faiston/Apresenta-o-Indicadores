@@ -247,7 +247,9 @@ export const slidesData: Slide[] = [
         nfs: 2,
         equipments: 9,
         value: 553476.22,
-        details: []
+        details: [
+          { client: "NTT", qty: 9 }
+        ]
       },
       saida: {
         title: "NF Saída",
