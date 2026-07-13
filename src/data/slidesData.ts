@@ -406,9 +406,9 @@ export const slidesData: Slide[] = [
     subtitle: "Gestão de Riscos, Apólices e Garantia Patrimonial",
     category: "divider",
     content: {
-      totalProtected: 50282577.29,
-      monthlyBillingCost: 57616.80,
-      activePolicies: 8
+      totalProtected: 47802282.29,
+      monthlyBillingCost: 52656.22,
+      activePolicies: 7
     }
   },
   {
@@ -459,15 +459,6 @@ export const slidesData: Slide[] = [
             { name: "Guarda Técnica (Bases NTT / Arcos)", value: 3264347.93, cost: 8813.74, rate: "0,27% a.m" }
           ],
           desc: "Mitigação completa de perdas por extravio ou furto durante transferências ou estocagem temporária em hubs de terceiros."
-        },
-        {
-          title: "Seguro ZAMP (BK Servidores)",
-          totalValue: 2480295.00,
-          monthlyCost: 4960.58,
-          subItems: [
-            { name: "Equipamentos Zamp BK", value: 2480295.00, cost: 4960.58, rate: "0,20% a.m" }
-          ],
-          desc: "Apólice em conformidade com o projeto specific de hardware robusto voltado a servidores do cliente Burger King (Zamp)."
         }
       ]
     }
