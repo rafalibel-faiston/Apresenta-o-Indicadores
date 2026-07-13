@@ -1161,7 +1161,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <span className="text-[11px] text-white/60 font-semibold">Saving bruto gerado no período</span>
               </div>
               <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[12px] font-bold uppercase tracking-wider text-[#fd11a4]">Utilizado no Mês</span>
+                <span className="text-[12px] font-bold uppercase tracking-wider text-[#fd11a4]">Total Utilizado</span>
                 <span className="text-2xl font-black font-sans tracking-tight text-[#fd11a4]">{formatCurrency(content.totalUtilizado)}</span>
                 <span className={`text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Reinvestido em melhorias internas</span>
               </div>
@@ -1202,7 +1202,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               <div className={`lg:col-span-5 ${cardCls}`}>
                 <h3 className={`text-[12px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
                   <DollarSign size={12} className="text-[#fd11a4]" />
-                  Utilizado no Mês
+                  Total Utilizado
                 </h3>
                 <div className="flex flex-col gap-1">
                   {content.utilizadoItems.map((item: any, idx: number) => (
