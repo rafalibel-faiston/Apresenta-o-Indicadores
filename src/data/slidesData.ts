@@ -368,9 +368,9 @@ export const slidesData: Slide[] = [
     subtitle: "Saving mensal, utilizado e projeção anual (JUN.26)",
     category: "financials",
     content: {
-      totalSaving: 40920.98,
+      totalSaving: 41270.98,
       totalUtilizado: 19040.33,
-      saldoSaving: 21880.65,
+      saldoSaving: 22230.65,
       savingItems: [
         { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
         { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
@@ -381,7 +381,8 @@ export const slidesData: Slide[] = [
         { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
         { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
         { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 },
-        { item: 10, desc: "Descarte sustentável - Lote 9", qty: 815, value: 450.00 }
+        { item: 10, desc: "Descarte sustentável - Lote 8", qty: null, value: 350.00 },
+        { item: 11, desc: "Descarte sustentável - Lote 9", qty: 815, value: 450.00 }
       ],
       utilizadoItems: [
         { desc: "Identidade Visual", value: 5217.93, obs: "Ref. itens 1 e 2" },
