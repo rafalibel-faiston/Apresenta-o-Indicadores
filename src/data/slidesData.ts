@@ -365,12 +365,12 @@ export const slidesData: Slide[] = [
     id: "todo-gerencial",
     number: 12,
     title: "Todo Gerencial da Logística de Custos",
-    subtitle: "Saving mensal, utilizado e projeção anual (MAI.26)",
+    subtitle: "Saving mensal, utilizado e projeção anual (JUN.26)",
     category: "financials",
     content: {
-      totalSaving: 40670.98,
-      totalUtilizado: 11106.33,
-      saldoSaving: 29564.65,
+      totalSaving: 40920.98,
+      totalUtilizado: 19040.33,
+      saldoSaving: 21880.65,
       savingItems: [
         { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
         { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
@@ -380,8 +380,8 @@ export const slidesData: Slide[] = [
         { item: 6, desc: "Venda de 5 TVs", qty: 5, value: 4000.00 },
         { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
         { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
-        { item: 9, desc: "Descarte sustentável - Lote 8", qty: 200, value: 200.00 },
-        { item: 10, desc: "Renovação Tiflux", qty: null, value: 1741.34 }
+        { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 },
+        { item: 10, desc: "Descarte sustentável - Lote 9", qty: 815, value: 450.00 }
       ],
       utilizadoItems: [
         { desc: "Identidade Visual", value: 5217.93, obs: "Ref. itens 1 e 2" },
@@ -389,13 +389,16 @@ export const slidesData: Slide[] = [
         { desc: "Visual Set IA", value: 1200.00, obs: "Ref. itens 1 e 2" },
         { desc: "Geladeira", value: 1788.00, obs: "Ref. itens 1 e 2" },
         { desc: "Manutenção banheiro masculino", value: 1300.40 },
-        { desc: "Colocação de Azulejos", value: 350.00 }
+        { desc: "Colocação de Azulejos", value: 350.00 },
+        { desc: "Manutenção tomadas Financeiro", value: 55.00 },
+        { desc: "Movimentação máquina de café p/ 280", value: 80.00 },
+        { desc: "Roubo Notebook - Método", value: 7449.00 }
       ],
       savingAnual: [
         { item: 3, desc: "Redução Notebook Método", mensal: 5212.80, anual: 52128.00 },
         { item: 4, desc: "Ajuste rateio condomínio 280", mensal: 5148.99, anual: 51489.90 },
         { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", mensal: 10617.85, anual: 95560.65 },
-        { item: 9, desc: "Renovação Tiflux", mensal: 20896.07, anual: 41792.13 }
+        { item: 9, desc: "Renovação Tiflux", mensal: 20896.06, anual: 41792.13 }
       ]
     }
   },

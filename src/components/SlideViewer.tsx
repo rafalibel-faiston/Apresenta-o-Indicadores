@@ -133,11 +133,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           {/* Subtle colored key line accent */}
           <div className="w-24 h-0.5 bg-gradient-to-r from-[#00fafb] via-[#0054ec] to-[#fd11a4] rounded-full opacity-70" />
           
-          <h2 className={`text-xs font-black tracking-[0.2em] font-serif uppercase ${isDarkMode ? "text-[#0054ec]" : "text-[#0054ec]"}`}>
+          <h2 className={`text-[14px] font-black tracking-[0.2em] font-serif uppercase ${isDarkMode ? "text-[#0054ec]" : "text-[#0054ec]"}`}>
             {subtitle}
           </h2>
           
-          <p className={`text-xs font-light leading-relaxed max-w-sm font-sans italic ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
+          <p className={`text-[14px] font-light leading-relaxed max-w-sm font-sans italic ${isDarkMode ? "text-slate-400" : "text-slate-500"}`}>
             "{content.slogan}"
           </p>
         </div>
@@ -145,12 +145,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         {/* Centralized Higher-Contrast Department & Month Indicator Footer */}
         <div className={`w-full max-w-lg border-t pt-6 mt-4 z-10 flex flex-col items-center gap-2 font-sans select-none ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
           <div className="text-center">
-            <span className={`text-[8px] font-extrabold tracking-widest uppercase font-mono block mb-1 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>DEPARTAMENTO</span>
+            <span className={`text-[10px] font-extrabold tracking-widest uppercase font-mono block mb-1 ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>DEPARTAMENTO</span>
             <span className={`text-lg md:text-2xl font-serif font-black tracking-tight leading-tight block ${isDarkMode ? "text-white" : "text-slate-800"}`}>
               {content.department}
             </span>
           </div>
-          <div className={`mt-2 px-3.5 py-1.5 font-mono text-[9px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
+          <div className={`mt-2 px-3.5 py-1.5 font-mono text-[11px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
             isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-[#0054ec]"
           }`}>
             JUNHO
@@ -190,22 +190,22 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
               <Shield size={16} />
             </div>
-            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Garantia Patrimonial</span>
-            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Cobertura de estoque e ativos</span>
+            <span className={`text-[13px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Garantia Patrimonial</span>
+            <span className={`text-[12px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Cobertura de estoque e ativos</span>
           </div>
           <div className={`flex flex-col items-center gap-2 text-center border-x ${isDarkMode ? "border-slate-800" : "border-slate-100"}`}>
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#fd11a4]" : "bg-[#fd11a4]/8 text-[#fd11a4]"}`}>
               <ShieldCheck size={16} />
             </div>
-            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Gestão de Apólices</span>
-            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Controle e renovação de contratos</span>
+            <span className={`text-[13px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Gestão de Apólices</span>
+            <span className={`text-[12px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Controle e renovação de contratos</span>
           </div>
           <div className="flex flex-col items-center gap-2 text-center">
             <div className={`p-2 rounded-xl ${isDarkMode ? "bg-slate-800 text-[#0054ec]" : "bg-[#0054ec]/8 text-[#0054ec]"}`}>
               <TrendingUp size={16} />
             </div>
-            <span className={`text-[11px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Controle de Riscos</span>
-            <span className={`text-[10px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Mitigação e compliance fiscal</span>
+            <span className={`text-[13px] font-serif font-semibold leading-tight ${isDarkMode ? "text-slate-300" : "text-slate-600"}`}>Controle de Riscos</span>
+            <span className={`text-[12px] font-light leading-tight ${isDarkMode ? "text-slate-500" : "text-slate-400"}`}>Mitigação e compliance fiscal</span>
           </div>
         </div>
       </div>
@@ -249,12 +249,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             BH
           </div>
           <h2 className={`text-xl font-extrabold font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>{content.presenter}</h2>
-          <p className={`text-xs font-light uppercase tracking-wider mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{content.role}</p>
+          <p className={`text-[14px] font-light uppercase tracking-wider mt-0.5 ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>{content.role}</p>
 
           <div className={`w-full h-px my-6 ${isDarkMode ? 'bg-slate-850' : 'bg-slate-50'}`} />
 
           {/* Sorteable detailed contact fields */}
-          <div className={`flex flex-col gap-4.5 w-full font-light text-xs text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
+          <div className={`flex flex-col gap-4.5 w-full font-light text-[14px] text-left px-2 ${isDarkMode ? 'text-slate-300' : 'text-slate-705'}`}>
             <a href={`tel:${content.contact.phone}`} className={`flex items-center gap-3.5 transition-colors py-group group ${
               isDarkMode ? 'hover:text-cyan-400' : 'hover:text-[#0054ec]'
             }`}>
@@ -311,7 +311,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <h2 className={`text-2xl font-black tracking-tight font-serif ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
               {title}
             </h2>
-            <p className="text-slate-400 text-xs font-light font-serif leading-none mt-1 flex items-center gap-1.5">
+            <p className="text-slate-400 text-[14px] font-light font-serif leading-none mt-1 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColor() }} />
               {subtitle}
             </p>
@@ -362,7 +362,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                              isStats ? <TrendingUp size={13} strokeWidth={2.5} /> :
                              <Info size={13} strokeWidth={2.5} />}
                           </span>
-                          <p className={`font-normal text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{comm.text}</p>
+                          <p className={`font-normal text-[14px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{comm.text}</p>
                         </div>
                       );
                     })}
@@ -378,14 +378,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className={`flex p-1 rounded-xl gap-1 ${tabBg}`}>
                   <button
                     onClick={() => setActiveTab('summary')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
                   >
                     <BarChart3 size={12} />
                     Gráfico Comparativo
                   </button>
                   <button
                     onClick={() => setActiveTab('table')}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
                   >
                     <List size={12} />
                     Tabela de Dados
@@ -394,7 +394,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
                 {/* Direct carrier distribution for Transportadora slide */}
                 {slide.id === 'transportadoras' && activeTab === 'summary' && (
-                  <div className="flex items-center gap-3 text-[10px] font-bold text-slate-400 uppercase">
+                  <div className="flex items-center gap-3 text-[12px] font-bold text-slate-400 uppercase">
                     {content.distribution.map((dist: any, dIdx: number) => (
                       <span key={dIdx} className="flex items-center gap-1">
                         <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr" style={{ backgroundColor: ['#0054ec', '#2226c0', '#06b6d4', '#fd11a4'][dIdx % 4] }} />
@@ -409,13 +409,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className="flex bg-slate-100 p-0.5 rounded-xl gap-1 border border-slate-200/50">
                     <button 
                       onClick={() => setChartDisplayType('bar')}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'bar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                      className={`px-2.5 py-1 rounded-lg text-[12px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'bar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
                     >
                       Apenas Barras
                     </button>
                     <button 
                       onClick={() => setChartDisplayType('combined')}
-                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'combined' ? 'bg-[#fd11a4] text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-slate-600'}`}
+                      className={`px-2.5 py-1 rounded-lg text-[12px] font-bold uppercase transition-all cursor-pointer ${chartDisplayType === 'combined' ? 'bg-[#fd11a4] text-white shadow-sm font-semibold' : 'text-slate-400 hover:text-slate-600'}`}
                     >
                       Misto (Barras + Linha)
                     </button>
@@ -430,7 +430,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   {slide.id === 'transportadoras' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                       <div className="flex flex-col gap-2">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center md:text-left">Divisão por Transportadora</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest text-center md:text-left">Divisão por Transportadora</h4>
                         <DonutChart 
                           data={content.distribution.map((d: any) => ({
                             label: d.name,
@@ -440,22 +440,22 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         />
                       </div>
                       <div className="flex flex-col gap-2">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-left">Ranking Custo por Projeto</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest text-left">Ranking Custo por Projeto</h4>
                         <HorizontalBarChart data={content.projects.slice(0, 4).map((p: any) => ({ label: p.project, value: p.cost, subValue: p.equipments }))} />
                       </div>
                     </div>
                   ) : slide.id === 'dedicados' ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                       <div className="flex flex-col gap-3">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Principais Rotas Registradas</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest">Principais Rotas Registradas</h4>
                         <div className="flex flex-col gap-3">
                           {content.rotas.map((r: any, rIdx: number) => (
-                            <div key={rIdx} className="bg-slate-50 border border-slate-100/50 p-3.5 rounded-2xl flex justify-between items-center text-xs">
+                            <div key={rIdx} className="bg-slate-50 border border-slate-100/50 p-3.5 rounded-2xl flex justify-between items-center text-[14px]">
                               <div className="flex flex-col gap-1.5">
                                 <span className="font-extrabold text-slate-900 tracking-tight">{r.transportadora}</span>
                                 <div className="flex flex-wrap gap-1">
                                   {r.breakdown.map((b: any, bIdx: number) => (
-                                    <span key={bIdx} className="text-[9px] bg-[#0054ec]/8 text-[#0054ec] px-1.5 py-0.5 rounded font-semibold">{b.project}</span>
+                                    <span key={bIdx} className="text-[11px] bg-[#0054ec]/8 text-[#0054ec] px-1.5 py-0.5 rounded font-semibold">{b.project}</span>
                                   ))}
                                 </div>
                               </div>
@@ -465,14 +465,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Ranking Volume de Custos</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest">Ranking Volume de Custos</h4>
                         <HorizontalBarChart data={content.projects.map((p: any) => ({ label: p.project, value: p.cost, subValue: p.equipments }))} />
                       </div>
                     </div>
                   ) : slide.id === 'self-storage' ? (
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch animate-fadeIn">
                       <div className="lg:col-span-7 flex flex-col gap-3">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Distribuição por Região</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest">Distribuição por Região</h4>
                         <div className="flex flex-col gap-3">
                           {content.regions.map((region: any, regIdx: number) => {
                             const isSelected = activeRegion === region.uf;
@@ -498,15 +498,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                 onMouseLeave={() => setActiveRegion(null)}
                               >
                                 <div className="flex items-center gap-3.5">
-                                  <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGrad} text-white flex items-center justify-center font-black text-sm select-none shadow-md`}>
+                                  <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGrad} text-white flex items-center justify-center font-black text-[16px] select-none shadow-md`}>
                                     {region.uf}
                                   </div>
                                   <div className="flex flex-col gap-0.5">
-                                    <span className={`font-extrabold text-xs ${dk ? 'text-white' : 'text-slate-800'}`}>Self Storage {region.uf}</span>
-                                    <span className="text-[10px] text-slate-400 font-semibold">{region.text}</span>
+                                    <span className={`font-extrabold text-[14px] ${dk ? 'text-white' : 'text-slate-800'}`}>Self Storage {region.uf}</span>
+                                    <span className="text-[12px] text-slate-400 font-semibold">{region.text}</span>
                                   </div>
                                 </div>
-                                <span className={`font-mono font-black text-xs transition-colors duration-300 ${
+                                <span className={`font-mono font-black text-[14px] transition-colors duration-300 ${
                                   isSelected
                                     ? region.uf === 'DF'
                                       ? 'text-[#0054ec]'
@@ -524,7 +524,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       </div>
 
                       <div className="lg:col-span-5 flex flex-col gap-3">
-                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest text-center lg:text-left">Participação por Região</h4>
+                        <h4 className="text-[14px] font-bold text-slate-400 uppercase tracking-widest text-center lg:text-left">Participação por Região</h4>
                         <div className="flex-1 flex items-center justify-center min-h-[190px] w-full">
                           <DonutChart
                             data={content.regions.map((r: any) => ({ label: `Self Storage ${r.uf}`, value: r.cost, percentage: (r.cost / 1116.9) * 100 }))}
@@ -550,7 +550,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           chartType={chartDisplayType}
                         />
                       </div>
-                      <span className="text-center text-[10px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Visualizando os 8 principais projetos por ordem de relevância</span>
+                      <span className="text-center text-[12px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Visualizando os 8 principais projetos por ordem de relevância</span>
                     </div>
                   )}
                 </div>
@@ -560,7 +560,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               {activeTab === 'table' && (
                 <div className="flex-1 flex flex-col">
                   {/* Table search filter */}
-                  <div className={`flex items-center gap-2 border rounded-xl px-3 py-2 text-xs mb-3 max-w-sm ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                  <div className={`flex items-center gap-2 border rounded-xl px-3 py-2 text-[14px] mb-3 max-w-sm ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <Search size={14} className="text-slate-400" />
                     <input
                       type="text"
@@ -572,9 +572,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   </div>
 
                   <div className={`overflow-x-auto border rounded-2xl flex-1 overflow-y-auto ${isFullscreen ? "max-h-[50vh]" : "max-h-[290px]"} ${dk ? 'border-slate-800' : 'border-slate-50'}`}>
-                    <table className="w-full text-left border-collapse text-xs">
+                    <table className="w-full text-left border-collapse text-[14px]">
                       <thead>
-                        <tr className={`uppercase font-bold text-[10px] border-b ${dk ? 'bg-[#0d0f17] text-slate-500 border-slate-800' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
+                        <tr className={`uppercase font-bold text-[12px] border-b ${dk ? 'bg-[#0d0f17] text-slate-500 border-slate-800' : 'bg-slate-50 text-slate-400 border-slate-100'}`}>
                           <th className="py-2.5 px-4 font-black">Projeto</th>
                           <th className="py-2.5 px-4 text-right font-black">Custo Total</th>
                           {content.projects[0]?.shipments !== undefined && <th className="py-2.5 px-4 text-right font-black">Embarques</th>}
@@ -608,7 +608,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`lg:col-span-5 flex flex-col justify-between ${cardCls}`}>
               <div className={`flex flex-col gap-4 ${dk ? 'text-slate-200' : 'text-slate-850'}`}>
                 <div className={`flex justify-between items-center border-b pb-2 mb-1 ${divCls}`}>
-                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#0054ec]/80 animate-ping" />
                     Divisão por Modalidade Geral
                   </h3>
@@ -617,13 +617,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className={`flex items-center gap-1 p-0.5 rounded-xl border ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <button
                       onClick={() => setConsolidatedTab('chart')}
-                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-[#0054ec] text-white shadow-xs' : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
+                      className={`px-2 py-0.5 rounded-lg text-[11px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'chart' ? 'bg-[#0054ec] text-white shadow-xs' : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
                     >
                       Gráfico
                     </button>
                     <button
                       onClick={() => setConsolidatedTab('bars')}
-                      className={`px-2 py-0.5 rounded-lg text-[9px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'bars' ? (dk ? 'bg-[#1a1c27] text-white shadow-xs' : 'bg-white text-slate-800 shadow-xs') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
+                      className={`px-2 py-0.5 rounded-lg text-[11px] font-bold uppercase transition-all cursor-pointer ${consolidatedTab === 'bars' ? (dk ? 'bg-[#1a1c27] text-white shadow-xs' : 'bg-white text-slate-800 shadow-xs') : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-450 hover:text-slate-600')}`}
                     >
                       Barras
                     </button>
@@ -658,11 +658,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className="flex flex-col gap-4 py-2">
                     {content.breakdown.map((item: any, idx: number) => (
                       <div key={idx} className="flex flex-col gap-1">
-                        <div className="flex justify-between items-center text-xs font-semibold">
+                        <div className="flex justify-between items-center text-[14px] font-semibold">
                           <span className="text-slate-800 font-bold">{item.category}</span>
                           <div className="font-mono">
                             <span className="font-bold text-slate-950 mr-2">{formatCurrency(item.val)}</span>
-                            <span className="text-[10px] text-slate-400">({item.share.toFixed(1)}%)</span>
+                            <span className="text-[12px] text-slate-400">({item.share.toFixed(1)}%)</span>
                           </div>
                         </div>
                         <div className="w-full bg-slate-50 h-2 rounded-full overflow-hidden">
@@ -681,7 +681,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               {/* Quick High level summary card */}
-              <div className="bg-[#0054ec]/8 border border-[#0054ec]/20 rounded-2xl p-4.5 mt-4 text-xs font-medium text-[#151720] leading-relaxed">
+              <div className="bg-[#0054ec]/8 border border-[#0054ec]/20 rounded-2xl p-4.5 mt-4 text-[14px] font-medium text-[#151720] leading-relaxed">
                 As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-[#2226c0]">66,3%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span> (14,8%).
               </div>
             </div>
@@ -690,12 +690,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`lg:col-span-7 flex flex-col justify-between ${cardCls}`}>
               <div>
                 <div className={`flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-3 mb-4 ${divCls}`}>
-                  <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <BarChart3 size={14} className="text-[#fd11a4]" />
                     Principais Projetos Contratantes (Ranking Custo)
                   </h3>
 
-                  <div className={`flex items-center gap-1.5 border rounded-xl px-2.5 py-1 text-[10px] max-w-[200px] ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
+                  <div className={`flex items-center gap-1.5 border rounded-xl px-2.5 py-1 text-[12px] max-w-[200px] ${dk ? 'bg-[#0d0f17] border-slate-800' : 'bg-slate-50 border-slate-100'}`}>
                     <Search size={12} className="text-slate-400" />
                     <input
                       type="text"
@@ -712,7 +712,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     const progress = Math.max((proj.value / 110641.69) * 100, 1);
                     return (
                       <div key={idx} className={`border p-3 rounded-xl flex flex-col gap-1 transition-colors ${dk ? 'bg-[#0d0f17]/60 border-slate-800/50 hover:bg-[#0d0f17]' : 'bg-slate-50/70 border-slate-100/50 hover:bg-slate-100'}`}>
-                        <div className="flex justify-between items-center text-xs font-semibold">
+                        <div className="flex justify-between items-center text-[14px] font-semibold">
                           <span className={`font-bold truncate max-w-[70%] ${dk ? 'text-slate-200' : 'text-slate-900'}`}>{proj.name}</span>
                           <span className={`font-mono font-black ${dk ? 'text-white' : 'text-slate-950'}`}>{formatCurrency(proj.value)}</span>
                         </div>
@@ -739,38 +739,38 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`lg:col-span-4 flex flex-col justify-between ${cardCls}`}>
               <div>
                 <div className={`flex items-center gap-3 border-b pb-3 mb-5 ${divCls}`}>
-                  <div className={`px-3 py-1.5 rounded-xl text-[#0054ec] font-black text-[11px] uppercase tracking-wider border ${dk ? 'bg-[#0054ec]/10 border-[#0054ec]/20' : 'bg-[#0054ec]/8 border-[#0054ec]/20'}`}>
+                  <div className={`px-3 py-1.5 rounded-xl text-[#0054ec] font-black text-[13px] uppercase tracking-wider border ${dk ? 'bg-[#0054ec]/10 border-[#0054ec]/20' : 'bg-[#0054ec]/8 border-[#0054ec]/20'}`}>
                     Entrada
                   </div>
                   <div>
                     <h3 className={`text-md font-extrabold font-sans ${dk ? 'text-white' : 'text-slate-900'}`}>{content.entrada.title}</h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Entrada</p>
+                    <p className="text-[12px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Entrada</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 mb-5">
                   <div className={`p-2.5 rounded-2xl flex flex-col ${dk ? 'bg-[#0d0f17]/80' : 'bg-slate-50/80'}`}>
-                    <span className="text-[9px] font-bold text-slate-400 uppercase">NF-e</span>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">NF-e</span>
                     <span className={`text-lg font-black font-mono mt-1 ${dk ? 'text-white' : 'text-slate-900'}`}>{content.entrada.nfs}</span>
                   </div>
                   <div className={`p-2.5 rounded-2xl flex flex-col ${dk ? 'bg-[#0d0f17]/80' : 'bg-slate-50/80'}`}>
-                    <span className="text-[9px] font-bold text-slate-400 uppercase">Equip.</span>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">Equip.</span>
                     <span className={`text-lg font-black font-mono mt-1 ${dk ? 'text-white' : 'text-slate-900'}`}>{content.entrada.equipments}</span>
                   </div>
                   <div className="bg-[#0054ec]/8 text-[#2226c0] p-2.5 rounded-2xl flex flex-col">
-                    <span className="text-[9px] font-bold text-[#0054ec] uppercase">Valor</span>
-                    <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.entrada.value)}</span>
+                    <span className="text-[11px] font-bold text-[#0054ec] uppercase">Valor</span>
+                    <span className="text-[13px] font-black font-mono mt-1.5">{formatCompact(content.entrada.value)}</span>
                   </div>
                 </div>
 
-                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2.5">Detalhamento por Cliente</h4>
+                <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-2.5">Detalhamento por Cliente</h4>
                 <div className={`flex flex-col gap-2 overflow-y-auto ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
                   {content.entrada.details.map((item: any, idx: number) => {
                     const ratio = (item.qty / 122) * 100;
                     return (
                       <div key={idx} className="bg-slate-50 flex items-center justify-between p-3 rounded-xl border border-slate-100/50">
-                        <span className="text-xs font-bold text-slate-800">{item.client}</span>
-                        <div className="flex items-center gap-3 text-xs font-mono">
+                        <span className="text-[14px] font-bold text-slate-800">{item.client}</span>
+                        <div className="flex items-center gap-3 text-[14px] font-mono">
                           <div className="w-16 bg-white border border-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
                             <div className="bg-[#0054ec]/80 h-full rounded-full" style={{ width: `${ratio}%` }} />
                           </div>
@@ -782,7 +782,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 </div>
               </div>
 
-              <div className={`text-[10px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
+              <div className={`text-[12px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
                 Total de equipamentos de entrada física
               </div>
             </div>
@@ -796,33 +796,33 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`lg:col-span-4 flex flex-col justify-between ${cardCls}`}>
               <div>
                 <div className={`flex items-center gap-3 border-b pb-3 mb-5 ${divCls}`}>
-                  <div className={`px-3 py-1.5 rounded-xl text-pink-600 font-black text-[11px] uppercase tracking-wider border ${dk ? 'bg-pink-500/10 border-pink-500/20' : 'bg-pink-50 border-pink-100'}`}>
+                  <div className={`px-3 py-1.5 rounded-xl text-pink-600 font-black text-[13px] uppercase tracking-wider border ${dk ? 'bg-pink-500/10 border-pink-500/20' : 'bg-pink-50 border-pink-100'}`}>
                     Saída
                   </div>
                   <div>
                     <h3 className={`text-md font-extrabold font-sans ${dk ? 'text-white' : 'text-slate-900'}`}>{content.saida.title}</h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Saída</p>
+                    <p className="text-[12px] text-slate-400 font-bold uppercase tracking-wider">Lançamentos Fiscais de Saída</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 mb-5">
                   <div className={`p-2.5 rounded-2xl flex flex-col ${dk ? 'bg-[#0d0f17]/80' : 'bg-slate-50/80'}`}>
-                    <span className="text-[9px] font-bold text-slate-400 uppercase">NF-e</span>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">NF-e</span>
                     <span className={`text-lg font-black font-mono mt-1 ${dk ? 'text-white' : 'text-slate-900'}`}>{content.saida.nfs}</span>
                   </div>
                   <div className={`p-2.5 rounded-2xl flex flex-col ${dk ? 'bg-[#0d0f17]/80' : 'bg-slate-50/80'}`}>
-                    <span className="text-[9px] font-bold text-slate-400 uppercase">Equip.</span>
+                    <span className="text-[11px] font-bold text-slate-400 uppercase">Equip.</span>
                     <span className={`text-lg font-black font-mono mt-1 ${dk ? 'text-white' : 'text-slate-900'}`}>{content.saida.equipments}</span>
                   </div>
                   <div className="bg-pink-50 text-[#151720] p-2.5 rounded-2xl flex flex-col">
-                    <span className="text-[9px] font-bold text-pink-400 uppercase">Valor</span>
-                    <span className="text-[11px] font-black font-mono mt-1.5">{formatCompact(content.saida.value)}</span>
+                    <span className="text-[11px] font-bold text-pink-400 uppercase">Valor</span>
+                    <span className="text-[13px] font-black font-mono mt-1.5">{formatCompact(content.saida.value)}</span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detalhamento por Cliente</h4>
-                  <span className="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">{content.saida.details.length} Clientes</span>
+                  <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Detalhamento por Cliente</h4>
+                  <span className="text-[11px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">{content.saida.details.length} Clientes</span>
                 </div>
                 
                 <div className={`flex flex-col gap-2 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
@@ -830,8 +830,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     const ratio = (item.qty / 2636) * 100;
                     return (
                       <div key={idx} className="bg-slate-50 flex items-center justify-between p-2.5 rounded-xl border border-slate-100/50 hover:bg-slate-100 transition-colors">
-                        <span className="text-xs font-bold text-slate-800">{item.client}</span>
-                        <div className="flex items-center gap-3 text-xs font-mono">
+                        <span className="text-[14px] font-bold text-slate-800">{item.client}</span>
+                        <div className="flex items-center gap-3 text-[14px] font-mono">
                           <div className="w-16 bg-white border border-slate-100 h-1.5 rounded-full overflow-hidden hidden sm:block">
                             <div className="bg-pink-500 h-full rounded-full" style={{ width: `${ratio}%` }} />
                           </div>
@@ -843,7 +843,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 </div>
               </div>
 
-              <div className={`text-[10px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
+              <div className={`text-[12px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
                 Alto volume de saída física com destino ao cliente {content.saida.details[0]?.client}
               </div>
             </div>
@@ -857,13 +857,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className={`flex flex-col gap-4 ${cardCls}`}>
               <div className={`flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b pb-4 ${divCls}`}>
                 <div>
-                  <span className="text-[10px] font-black text-[#0054ec] uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
+                  <span className="text-[12px] font-black text-[#0054ec] uppercase tracking-widest block">Patrimônio Geral em Custódia</span>
                   <p className="text-3xl font-black text-slate-900 font-sans tracking-tight mt-1">{formatCurrency(content.total)}</p>
                 </div>
                 
                 {/* Horizontal Segment Bar */}
                 <div className="flex-1 max-w-xl w-full flex flex-col gap-1.5">
-                  <div className="flex justify-between text-[11px] font-bold text-slate-400 select-none">
+                  <div className="flex justify-between text-[13px] font-bold text-slate-400 select-none">
                     <span>Proporções por Categoria</span>
                     <span className="text-slate-500">100% Patrimônio Protegido</span>
                   </div>
@@ -877,7 +877,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       />
                     ))}
                   </div>
-                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-[10px] font-bold text-slate-400 select-none">
+                  <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1 text-[12px] font-bold text-slate-400 select-none">
                     {content.groups.map((g: any, idx: number) => {
                       const textClass = g.color.replace('bg-', 'text-');
                       return (
@@ -900,12 +900,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 const tabBtn = (id: string, label: string, value: number, icon: React.ReactNode, activeColor: string) => (
                   <button
                     onClick={() => setActiveStockTab(id)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all ${activeStockTab === id ? (dk ? `bg-[#1a1c27] ${activeColor} shadow-sm` : `bg-white ${activeColor} shadow-sm`) : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-lg text-[14px] font-bold transition-all ${activeStockTab === id ? (dk ? `bg-[#1a1c27] ${activeColor} shadow-sm` : `bg-white ${activeColor} shadow-sm`) : (dk ? 'text-slate-500 hover:text-slate-300' : 'text-slate-500 hover:text-slate-700')}`}
                   >
                     {icon}
                     <span className="flex flex-col items-start leading-none gap-0.5">
-                      <span className="text-[10px]">{label}</span>
-                      <span className={`text-[13px] font-mono font-black tracking-tight ${activeStockTab === id ? '' : 'opacity-60'}`}>{formatCompact(value)}</span>
+                      <span className="text-[12px]">{label}</span>
+                      <span className={`text-[15px] font-mono font-black tracking-tight ${activeStockTab === id ? '' : 'opacity-60'}`}>{formatCompact(value)}</span>
                     </span>
                   </button>
                 );
@@ -971,26 +971,26 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               onClick={isMulti ? toggle : undefined}
                             >
                               {/* Rank badge */}
-                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: rankColor }}>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[11px] text-white" style={{ backgroundColor: rankColor }}>
                                 {gIdx + 1}
                               </div>
 
                               {/* Name + meta + value all inline */}
                               <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
-                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>
+                                <span className={`font-black text-[13px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>
                                   {isMulti ? group.prefix : group.items[0].project.replace(/^NTT[_ -]+/, '')}
                                 </span>
-                                <span className="text-[9px] text-slate-400 font-semibold truncate">
+                                <span className="text-[11px] text-slate-400 font-semibold truncate">
                                   {isMulti ? `${group.items.length} proj • ${group.totalQty} equip` : `${group.items[0].itemQty} equip`}
                                 </span>
                               </div>
 
-                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color: rankColor, borderColor: rankColor + '40', backgroundColor: rankColor + '12' }}>{pct.toFixed(1)}%</span>
+                              <span className="hidden md:inline-flex text-[12px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color: rankColor, borderColor: rankColor + '40', backgroundColor: rankColor + '12' }}>{pct.toFixed(1)}%</span>
 
                               {/* Value inline */}
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
-                                <span className="font-mono font-black text-[12px]" style={{ color: rankColor }}>{formatCompact(group.totalValue)}</span>
-                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(group.totalValue)}</span>
+                                <span className="font-mono font-black text-[14px]" style={{ color: rankColor }}>{formatCompact(group.totalValue)}</span>
+                                <span className={`font-mono text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(group.totalValue)}</span>
                               </div>
 
                               {/* Expand chevron */}
@@ -1018,8 +1018,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                       return (
                                         <div key={pIdx} className={`border rounded-lg py-1 px-2.5 flex items-center gap-2 ${dk ? 'bg-[#0d0f17]/30 border-slate-800/20' : 'bg-slate-50/60 border-slate-100/60'}`}>
                                           <div className="w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: rankColor }} />
-                                          <span className={`flex-1 min-w-0 font-semibold text-[10px] truncate ${dk ? 'text-slate-300' : 'text-slate-700'}`} title={proj.project}>{shortName}</span>
-                                          <span className={`text-[9px] text-slate-400 flex-shrink-0`}>{proj.itemQty} eq</span>
+                                          <span className={`flex-1 min-w-0 font-semibold text-[12px] truncate ${dk ? 'text-slate-300' : 'text-slate-700'}`} title={proj.project}>{shortName}</span>
+                                          <span className={`text-[11px] text-slate-400 flex-shrink-0`}>{proj.itemQty} eq</span>
                                           {/* Sub progress */}
                                           <div className="w-12 hidden sm:block">
                                             <div className={`w-full h-1 rounded-full overflow-hidden ${dk ? 'bg-slate-800' : 'bg-slate-100'}`}>
@@ -1027,8 +1027,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                                             </div>
                                           </div>
                                           {/* Value */}
-                                          <span className="font-mono font-black text-[10px] flex-shrink-0" style={{ color: rankColor }}>{formatCompact(proj.value)}</span>
-                                          <span className={`font-mono text-[8.5px] flex-shrink-0 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(proj.value)}</span>
+                                          <span className="font-mono font-black text-[12px] flex-shrink-0" style={{ color: rankColor }}>{formatCompact(proj.value)}</span>
+                                          <span className={`font-mono text-[10.5px] flex-shrink-0 ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(proj.value)}</span>
                                         </div>
                                       );
                                     })}
@@ -1064,15 +1064,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           const ratio = 100 - (idx * 70 / Math.max(nSemNf - 1, 1));
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
-                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[11px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
                               <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
-                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
-                                <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
+                                <span className={`font-black text-[13px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
+                                <span className="text-[11px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
+                              <span className="hidden md:inline-flex text-[12px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
-                                <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
-                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
+                                <span className="font-mono font-black text-[14px]" style={{ color }}>{formatCompact(item.value)}</span>
+                                <span className={`font-mono text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
                               </div>
                             </div>
                           );
@@ -1091,15 +1091,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         const pct = (item.value / total) * 100;
                         return (
                           <div key={idx} className={`border rounded-xl py-3 px-4 flex items-center gap-3 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
-                            <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                            <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[11px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
                             <div className="flex-1 min-w-0">
-                              <span className={`font-black text-[11px] block leading-none ${dk ? 'text-white' : 'text-slate-900'}`}>{item.name}</span>
-                              <span className={`text-[9px] font-light mt-0.5 block ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{item.desc}</span>
+                              <span className={`font-black text-[13px] block leading-none ${dk ? 'text-white' : 'text-slate-900'}`}>{item.name}</span>
+                              <span className={`text-[11px] font-light mt-0.5 block ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{item.desc}</span>
                             </div>
-                            <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
+                            <span className="hidden md:inline-flex text-[12px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                             <div className="flex-shrink-0 flex items-baseline gap-1.5">
-                              <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
-                              <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
+                              <span className="font-mono font-black text-[14px]" style={{ color }}>{formatCompact(item.value)}</span>
+                              <span className={`font-mono text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
                             </div>
                           </div>
                         );
@@ -1129,15 +1129,15 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           const ratio = 100 - (idx * 70 / Math.max(nGuarda - 1, 1));
                           return (
                             <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-white border-slate-100/80'}`}>
-                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[9px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
+                              <div className="flex-shrink-0 w-5 h-5 rounded-lg flex items-center justify-center font-black text-[11px] text-white" style={{ backgroundColor: color }}>{idx + 1}</div>
                               <div className="flex-1 min-w-0 flex items-baseline gap-2 overflow-hidden">
-                                <span className={`font-black text-[11px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
-                                <span className="text-[9px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
+                                <span className={`font-black text-[13px] leading-none flex-shrink-0 ${dk ? 'text-white' : 'text-slate-900'}`}>{item.client}</span>
+                                <span className="text-[11px] text-slate-400 font-semibold truncate">{item.qty} equip</span>
                               </div>
-                              <span className="hidden md:inline-flex text-[10px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
+                              <span className="hidden md:inline-flex text-[12px] font-black tabular-nums px-2 py-0.5 rounded-full border" style={{ color, borderColor: color + '40', backgroundColor: color + '12' }}>{pct.toFixed(1)}%</span>
                               <div className="flex-shrink-0 flex items-baseline gap-1.5">
-                                <span className="font-mono font-black text-[12px]" style={{ color }}>{formatCompact(item.value)}</span>
-                                <span className={`font-mono text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
+                                <span className="font-mono font-black text-[14px]" style={{ color }}>{formatCompact(item.value)}</span>
+                                <span className={`font-mono text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{fmtExact(item.value)}</span>
                               </div>
                             </div>
                           );
@@ -1156,19 +1156,19 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {/* Top 3 KPI cards */}
             <div className="grid grid-cols-3 gap-4">
               <div className="rounded-2xl p-4 border flex flex-col gap-0.5 bg-gradient-to-br from-[#0054ec] via-[#2226c0] to-[#fd11a4] text-white border-transparent shadow-lg">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#00fafb]">Total Saving (MAI.26)</span>
+                <span className="text-[12px] font-bold uppercase tracking-wider text-[#00fafb]">Total Saving (JUN.26)</span>
                 <span className="text-2xl font-black font-sans tracking-tight">{formatCurrency(content.totalSaving)}</span>
-                <span className="text-[9px] text-white/60 font-semibold">Saving bruto gerado no período</span>
+                <span className="text-[11px] text-white/60 font-semibold">Saving bruto gerado no período</span>
               </div>
               <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#fd11a4]">Utilizado no Mês</span>
+                <span className="text-[12px] font-bold uppercase tracking-wider text-[#fd11a4]">Utilizado no Mês</span>
                 <span className="text-2xl font-black font-sans tracking-tight text-[#fd11a4]">{formatCurrency(content.totalUtilizado)}</span>
-                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Reinvestido em melhorias internas</span>
+                <span className={`text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Reinvestido em melhorias internas</span>
               </div>
               <div className={`rounded-2xl p-4 border flex flex-col gap-0.5 ${dk ? 'bg-[#12131a] border-[#1c1f2e]' : 'bg-white border-slate-200/90'}`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#0054ec]">Saldo Saving</span>
+                <span className="text-[12px] font-bold uppercase tracking-wider text-[#0054ec]">Saldo Saving</span>
                 <span className="text-2xl font-black font-sans tracking-tight text-[#0054ec]">{formatCurrency(content.saldoSaving)}</span>
-                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Saldo disponível acumulado</span>
+                <span className={`text-[11px] font-semibold ${dk ? 'text-slate-500' : 'text-slate-400'}`}>Saldo disponível acumulado</span>
               </div>
             </div>
 
@@ -1176,51 +1176,51 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
               {/* Saving items list */}
               <div className={`lg:col-span-7 ${cardCls}`}>
-                <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                <h3 className={`text-[12px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
                   <TrendingUp size={12} className="text-[#0054ec]" />
                   Saving Logística — Itens Mensais
                 </h3>
                 <div className="flex flex-col gap-1">
                   {content.savingItems.map((item: any, idx: number) => (
                     <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
-                      <div className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center font-black text-[9px] text-white ${item.utilizado ? 'bg-[#fd11a4]' : 'bg-[#0054ec]'}`}>{item.item}</div>
-                      <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
-                      {item.qty && <span className="text-[9px] text-slate-400 flex-shrink-0">{item.qty.toLocaleString('pt-BR')} un</span>}
-                      {item.obs && <span className={`text-[8.5px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0 ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
-                      {item.utilizado && <span className="text-[8.5px] bg-[#fd11a4]/10 text-[#fd11a4] px-1.5 py-0.5 rounded font-black flex-shrink-0 hidden sm:block">UTILIZADO</span>}
-                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-[#0054ec]">{formatCurrency(item.value)}</span>
+                      <div className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center font-black text-[11px] text-white ${item.utilizado ? 'bg-[#fd11a4]' : 'bg-[#0054ec]'}`}>{item.item}</div>
+                      <span className={`flex-1 min-w-0 font-semibold text-[12.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
+                      {item.qty && <span className="text-[11px] text-slate-400 flex-shrink-0">{item.qty.toLocaleString('pt-BR')} un</span>}
+                      {item.obs && <span className={`text-[10.5px] px-1.5 py-0.5 rounded font-semibold flex-shrink-0 ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
+                      {item.utilizado && <span className="text-[10.5px] bg-[#fd11a4]/10 text-[#fd11a4] px-1.5 py-0.5 rounded font-black flex-shrink-0 hidden sm:block">UTILIZADO</span>}
+                      <span className="font-mono font-black text-[13px] flex-shrink-0 text-[#0054ec]">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
-                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
-                    <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Saving</span>
-                    <span className="font-mono text-[#0054ec] text-[13px]">{formatCurrency(content.totalSaving)}</span>
+                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-[14px] font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
+                    <span className={`text-[12px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Saving</span>
+                    <span className="font-mono text-[#0054ec] text-[15px]">{formatCurrency(content.totalSaving)}</span>
                   </div>
                 </div>
               </div>
 
               {/* Utilizado items */}
               <div className={`lg:col-span-5 ${cardCls}`}>
-                <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                <h3 className={`text-[12px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center gap-2 ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
                   <DollarSign size={12} className="text-[#fd11a4]" />
                   Utilizado no Mês
                 </h3>
                 <div className="flex flex-col gap-1">
                   {content.utilizadoItems.map((item: any, idx: number) => (
                     <div key={idx} className={`border rounded-xl py-1.5 px-3 flex items-center gap-2.5 ${dk ? 'bg-[#0d0f17]/50 border-slate-800/40' : 'bg-slate-50/60 border-slate-100/80'}`}>
-                      <span className={`flex-1 min-w-0 font-semibold text-[10.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
-                      {item.obs && <span className={`text-[8px] px-1 py-0.5 rounded font-semibold flex-shrink-0 hidden sm:block ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
-                      <span className="font-mono font-black text-[11px] flex-shrink-0 text-[#fd11a4]">{formatCurrency(item.value)}</span>
+                      <span className={`flex-1 min-w-0 font-semibold text-[12.5px] truncate ${dk ? 'text-slate-200' : 'text-slate-800'}`} title={item.desc}>{item.desc}</span>
+                      {item.obs && <span className={`text-[10px] px-1 py-0.5 rounded font-semibold flex-shrink-0 hidden sm:block ${dk ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>{item.obs}</span>}
+                      <span className="font-mono font-black text-[13px] flex-shrink-0 text-[#fd11a4]">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
-                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-xs font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
-                    <span className={`text-[10px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Utilizado</span>
-                    <span className="font-mono text-[#fd11a4] text-[13px]">{formatCurrency(content.utilizadoItems.reduce((s: number, i: any) => s + i.value, 0))}</span>
+                  <div className={`border-t pt-2 mt-1 flex justify-between items-center text-[14px] font-black ${dk ? 'border-slate-800 text-white' : 'border-slate-200 text-slate-900'}`}>
+                    <span className={`text-[12px] uppercase tracking-wider ${dk ? 'text-slate-400' : 'text-slate-400'}`}>Total Utilizado</span>
+                    <span className="font-mono text-[#fd11a4] text-[15px]">{formatCurrency(content.utilizadoItems.reduce((s: number, i: any) => s + i.value, 0))}</span>
                   </div>
                 </div>
 
                 {/* Saldo bar */}
                 <div className={`mt-3 pt-3 border-t ${dk ? 'border-slate-800' : 'border-slate-100'}`}>
-                  <div className="flex justify-between text-[9px] font-bold text-slate-400 mb-1 uppercase tracking-wider">
+                  <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-1 uppercase tracking-wider">
                     <span>Utilizado vs. Saldo</span>
                     <span className="text-[#0054ec]">{((content.saldoSaving / content.totalSaving) * 100).toFixed(0)}% disponível</span>
                   </div>
@@ -1228,7 +1228,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     <motion.div initial={{ width: 0 }} animate={{ width: `${(content.totalUtilizado / content.totalSaving) * 100}%` }} transition={{ duration: 1 }} className="h-full bg-[#fd11a4] rounded-l-full" />
                     <motion.div initial={{ width: 0 }} animate={{ width: `${(content.saldoSaving / content.totalSaving) * 100}%` }} transition={{ duration: 1, delay: 0.3 }} className="h-full bg-[#0054ec] rounded-r-full" />
                   </div>
-                  <div className="flex gap-3 mt-1 text-[8.5px] font-semibold">
+                  <div className="flex gap-3 mt-1 text-[10.5px] font-semibold">
                     <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#fd11a4]" />Utilizado</span>
                     <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#0054ec]" />Saldo</span>
                   </div>
@@ -1238,14 +1238,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
             {/* Annual saving projection */}
             <div className={`${cardCls}`}>
-              <h3 className={`text-[10px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center justify-between ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+              <h3 className={`text-[12px] font-black uppercase tracking-widest border-b pb-2 mb-3 flex items-center justify-between ${dk ? 'text-slate-400 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
                 <span className="flex items-center gap-2"><TrendingUp size={12} className="text-[#fd11a4]" />Projeção Saving Anual</span>
-                <span className="font-mono text-[#fd11a4] text-[11px]">{formatCurrency(content.savingAnual.reduce((s: number, i: any) => s + i.anual, 0))} / ano</span>
+                <span className="font-mono text-[#fd11a4] text-[13px]">{formatCurrency(content.savingAnual.reduce((s: number, i: any) => s + i.anual, 0))} / ano</span>
               </h3>
               <div className={`overflow-x-auto`}>
-                <table className="w-full text-left border-collapse text-[10.5px]">
+                <table className="w-full text-left border-collapse text-[12.5px]">
                   <thead>
-                    <tr className={`font-black text-[9px] uppercase tracking-wider border-b ${dk ? 'text-slate-500 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
+                    <tr className={`font-black text-[11px] uppercase tracking-wider border-b ${dk ? 'text-slate-500 border-slate-800' : 'text-slate-400 border-slate-100'}`}>
                       <th className="py-1.5 px-2">#</th>
                       <th className="py-1.5 px-2">Descrição</th>
                       <th className="py-1.5 px-2 text-right">Mensal</th>
@@ -1255,7 +1255,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <tbody className={`divide-y ${dk ? 'divide-slate-800 text-slate-300' : 'divide-slate-50 text-slate-700'}`}>
                     {content.savingAnual.map((row: any, idx: number) => (
                       <tr key={idx} className={dk ? 'hover:bg-[#0054ec]/8' : 'hover:bg-slate-50'}>
-                        <td className={`py-1.5 px-2 font-black text-[9px] ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{row.item}</td>
+                        <td className={`py-1.5 px-2 font-black text-[11px] ${dk ? 'text-slate-500' : 'text-slate-400'}`}>{row.item}</td>
                         <td className={`py-1.5 px-2 font-semibold ${dk ? 'text-slate-200' : 'text-slate-800'}`}>{row.desc}</td>
                         <td className="py-1.5 px-2 font-mono font-bold text-right text-[#9b1dbf]">{formatCurrency(row.mensal)}</td>
                         <td className="py-1.5 px-2 font-mono font-black text-right text-[#fd11a4]">{formatCurrency(row.anual)}</td>
@@ -1287,7 +1287,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               <div className="bg-[#0054ec]/5 text-slate-900 border border-[#0054ec]/15 p-4.5 rounded-2xl flex items-start gap-3">
                 <CheckCircle2 className="text-[#0054ec] mt-0.5 flex-shrink-0" size={18} />
-                <div className="flex flex-col gap-1 text-xs">
+                <div className="flex flex-col gap-1 text-[14px]">
                   <span className="font-black text-[#0054ec] uppercase tracking-wide">Reciclagem Ativa</span>
                   <p className="font-medium text-slate-700 leading-relaxed">
                     Arrecadação e reciclagem direcionada de componentes sucateados, minimizando o impacto ambiental de metais pesados com rentabilização financeira de lotes descontinuados.
@@ -1299,11 +1299,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {/* Right lotes breakdown */}
             <div className={`lg:col-span-8 ${cardCls}`}>
               <div className="flex justify-between items-center border-b border-slate-150 pb-3 mb-4">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Layers size={14} className="text-[#fd11a4]" />
                   Destaque de Lotes Processados
                 </h3>
-                <span className="text-[10px] bg-slate-50 border border-slate-150 px-2.5 py-1 rounded-lg text-slate-500 font-extrabold uppercase tracking-tight">
+                <span className="text-[12px] bg-slate-50 border border-slate-150 px-2.5 py-1 rounded-lg text-slate-500 font-extrabold uppercase tracking-tight">
                   Reciclagem Certificada
                 </span>
               </div>
@@ -1393,25 +1393,25 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-black tracking-tight text-slate-400 font-mono">
+                            <span className="text-[13px] font-black tracking-tight text-slate-400 font-mono">
                               {item.name}
                             </span>
                             {isLastItem && (
-                              <span className="bg-[#0054ec]/10 text-[#0054ec] text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-[#0054ec]/20 flex items-center gap-1 animate-pulse">
+                              <span className="bg-[#0054ec]/10 text-[#0054ec] text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-[#0054ec]/20 flex items-center gap-1 animate-pulse">
                                 Mais Recente
                               </span>
                             )}
                           </div>
-                          <span className="text-sm font-black text-slate-800 leading-none group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
+                          <span className="text-[16px] font-black text-slate-800 leading-none group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
+                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
                         </div>
                       </div>
 
                       {/* Middle: Progress Bar representing efficiency or yield */}
                       <div className="flex-1 max-w-sm flex flex-col gap-1 md:px-4">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-slate-400">
-                          <span className="uppercase tracking-wide text-[8.5px] font-extrabold text-slate-450">Retorno Sustentável</span>
-                          <span className="font-mono text-slate-700 font-black text-[10.5px]">{valProgress.toFixed(0)}% do teto</span>
+                        <div className="flex justify-between items-center text-[12px] font-bold text-slate-400">
+                          <span className="uppercase tracking-wide text-[10.5px] font-extrabold text-slate-450">Retorno Sustentável</span>
+                          <span className="font-mono text-slate-700 font-black text-[12.5px]">{valProgress.toFixed(0)}% do teto</span>
                         </div>
                         <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-150 shadow-inner">
                           <div 
@@ -1424,14 +1424,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       {/* Right: Quantity and Yield Numbers */}
                       <div className="flex items-center justify-between md:justify-end gap-6 min-w-[170px] border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 relative z-10">
                         <div className="flex flex-col items-start md:items-end">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Quantidade</span>
-                          <span className="text-xs font-mono font-black text-slate-700">
+                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Quantidade</span>
+                          <span className="text-[14px] font-mono font-black text-slate-700">
                             {item.qty.toLocaleString('pt-BR')} un
                           </span>
                         </div>
                         <div className="flex flex-col items-end">
-                          <span className="text-[9px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
-                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
+                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
+                          <span className={`text-[16px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
                             {formatCurrency(item.value)}
                           </span>
                         </div>
@@ -1478,14 +1478,14 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         <span className={`p-2 rounded-lg flex-shrink-0 flex items-center justify-center border ${dk ? 'bg-[#0d0f17] border-slate-800 text-[#00fafb]' : 'bg-slate-50 border-slate-150 text-blue-600'}`}>
                           <Sparkles size={13} strokeWidth={2.5} />
                         </span>
-                        <p className={`font-normal text-[12px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{cText}</p>
+                        <p className={`font-normal text-[14px] leading-relaxed mt-0.5 ${dk ? 'text-slate-300' : 'text-slate-700'}`}>{cText}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               ) : (
-                <div className={`border border-l-4 border-l-blue-500 p-5 rounded-2xl text-[12px] font-bold leading-relaxed flex flex-col gap-2 shadow-sm transition-all hover:scale-[1.01] ${dk ? 'bg-[#12131a] border-slate-800 text-slate-300' : 'bg-white border-slate-200/75 text-slate-700'}`}>
-                  <span className="font-black text-blue-600 uppercase text-[10px] tracking-wider block flex items-center gap-1.5 mb-0.5">
+                <div className={`border border-l-4 border-l-blue-500 p-5 rounded-2xl text-[14px] font-bold leading-relaxed flex flex-col gap-2 shadow-sm transition-all hover:scale-[1.01] ${dk ? 'bg-[#12131a] border-slate-800 text-slate-300' : 'bg-white border-slate-200/75 text-slate-700'}`}>
+                  <span className="font-black text-blue-600 uppercase text-[12px] tracking-wider block flex items-center gap-1.5 mb-0.5">
                     <ShieldCheck size={14} />
                     Garantia Regulamentar de Custódia
                   </span>
@@ -1496,7 +1496,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
             {/* Right detailed policy tables */}
             <div className={`lg:col-span-7 ${cardCls}`}>
-              <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-150 pb-3 mb-4 flex items-center gap-2">
+              <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-150 pb-3 mb-4 flex items-center gap-2">
                 <ShieldCheck size={14} className="text-[#0054ec] animate-pulse" />
                 Estrutura de Cobertura Ativa
               </h3>
@@ -1505,18 +1505,18 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               {slide.id === 'seguros-patrimonial' && (
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-col gap-2.5">
-                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Distribuição Seguro Geral patrimonial</h4>
+                    <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-wider">Distribuição Seguro Geral patrimonial</h4>
                     <DonutChart data={content.coberturas.map((c: any) => ({ label: c.name, value: c.value, percentage: c.share }))} />
                   </div>
                   
                   <div className="border-t border-slate-50 pt-3 flex flex-col">
-                    <h4 className="text-[10px] font-black text-slate-400 tracking-wider uppercase mb-2">Detalhamento dos Clientes Sem NF Protegidos</h4>
+                    <h4 className="text-[12px] font-black text-slate-400 tracking-wider uppercase mb-2">Detalhamento dos Clientes Sem NF Protegidos</h4>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                       {content.semNfBreakdown.map((item: any, idx: number) => (
                         <div key={idx} className="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
-                          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight block truncate" title={item.name}>{item.name}</span>
-                          <span className="font-mono font-black text-slate-900 text-xs block mt-1.5">{formatCurrency(item.value)}</span>
-                          <span className="text-[10px] text-slate-400 mt-1 block">Qtd: {item.qty} peças</span>
+                          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-tight block truncate" title={item.name}>{item.name}</span>
+                          <span className="font-mono font-black text-slate-900 text-[14px] block mt-1.5">{formatCurrency(item.value)}</span>
+                          <span className="text-[12px] text-slate-400 mt-1 block">Qtd: {item.qty} peças</span>
                         </div>
                       ))}
                     </div>
@@ -1568,18 +1568,18 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               <SectionIcon size={16} className="stroke-[2.5]" />
                             </div>
                             <div className="flex flex-col gap-0.5">
-                              <span className="text-xs font-black text-slate-900 group-hover:text-[#2226c0] transition-colors">{sec.title}</span>
-                              <p className="text-[10px] text-slate-500 font-semibold max-w-sm mt-0.5 leading-relaxed">{sec.desc}</p>
+                              <span className="text-[14px] font-black text-slate-900 group-hover:text-[#2226c0] transition-colors">{sec.title}</span>
+                              <p className="text-[12px] text-slate-500 font-semibold max-w-sm mt-0.5 leading-relaxed">{sec.desc}</p>
                             </div>
                           </div>
                           <div className="text-right flex flex-col items-end gap-1 flex-shrink-0">
                             {sec.monthlyCost ? (
                               <>
                                 <div className="flex flex-col items-end gap-0.5">
-                                  <span className="text-[8.5px] font-black uppercase tracking-widest text-[#0054ec]">Custo</span>
+                                  <span className="text-[10.5px] font-black uppercase tracking-widest text-[#0054ec]">Custo</span>
                                   <span className={`font-mono font-black text-xl tracking-tight text-[#0054ec]`}>{formatCurrency(sec.monthlyCost)}</span>
                                 </div>
-                                <span className={`text-[9px] font-semibold ${dk ? 'text-slate-600' : 'text-slate-400'}`}>Patrimônio: {formatCurrency(sec.totalValue)}</span>
+                                <span className={`text-[11px] font-semibold ${dk ? 'text-slate-600' : 'text-slate-400'}`}>Patrimônio: {formatCurrency(sec.totalValue)}</span>
                               </>
                             ) : (
                               <span className={`font-mono font-black text-base tracking-tight px-2 py-0.5 rounded-lg border ${dk ? 'text-white bg-[#0d0f17] border-slate-800' : 'text-slate-900 bg-slate-50 border-slate-100'}`}>{formatCurrency(sec.totalValue)}</span>
@@ -1595,10 +1595,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               const subRatio = Math.min((sub.value / (sec.totalValue || 1)) * 100, 100);
                               return (
                                 <div key={sIdx} className={subItemCls}>
-                                  <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
+                                  <div className="flex justify-between items-center text-[13.5px] font-semibold text-slate-700">
                                     <span className="truncate max-w-[65%] font-extrabold text-slate-800">{sub.name}</span>
                                     <div className="flex items-center gap-3 font-mono">
-                                      <span className="text-[9.5px] text-slate-400 font-bold bg-white border border-slate-100 px-1.5 py-0.2 rounded">Taxa: {sub.rate}</span>
+                                      <span className="text-[11.5px] text-slate-400 font-bold bg-white border border-slate-100 px-1.5 py-0.2 rounded">Taxa: {sub.rate}</span>
                                       <span className="font-black text-slate-950">{formatCurrency(sub.value)}</span>
                                     </div>
                                   </div>
@@ -1618,10 +1618,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               const phaRatio = Math.min((pha.val / (sec.totalValue || 1)) * 100, 100);
                               return (
                                 <div key={phaIdx} className={subItemCls}>
-                                  <div className="flex justify-between items-center text-[11.5px] font-semibold text-slate-700">
+                                  <div className="flex justify-between items-center text-[13.5px] font-semibold text-slate-700">
                                     <span className="font-extrabold text-slate-800">{pha.client}</span>
                                     <div className="flex items-center gap-3 font-mono">
-                                      <span className="text-[9.5px] text-[#0054ec] font-bold bg-[#0054ec]/8 border border-[#0054ec]/20 px-1.5 py-0.2 rounded">Mínimo: {formatCurrency(pha.minCost)}</span>
+                                      <span className="text-[11.5px] text-[#0054ec] font-bold bg-[#0054ec]/8 border border-[#0054ec]/20 px-1.5 py-0.2 rounded">Mínimo: {formatCurrency(pha.minCost)}</span>
                                       <span className="font-black text-slate-950">{formatCurrency(pha.val)}</span>
                                     </div>
                                   </div>
@@ -1638,12 +1638,12 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         {sec.apolices && (
                           <div className="grid grid-cols-4 gap-2 mt-1.5 pt-2 border-t border-slate-100/60">
                             {sec.apolices.map((ap: any, apIdx: number) => (
-                              <div key={apIdx} className="bg-gradient-to-br from-white to-slate-50 p-2 rounded-xl text-[10px] border border-slate-100 shadow-xs flex flex-col gap-0.5 text-center font-bold">
-                                <span className="text-slate-400 uppercase tracking-wider text-[8px]">{ap.name}</span>
+                              <div key={apIdx} className="bg-gradient-to-br from-white to-slate-50 p-2 rounded-xl text-[12px] border border-slate-100 shadow-xs flex flex-col gap-0.5 text-center font-bold">
+                                <span className="text-slate-400 uppercase tracking-wider text-[10px]">{ap.name}</span>
                                 {ap.cost !== undefined && (
-                                  <span className="text-[#0054ec] font-mono text-[11px] font-black">{formatCurrency(ap.cost)}</span>
+                                  <span className="text-[#0054ec] font-mono text-[13px] font-black">{formatCurrency(ap.cost)}</span>
                                 )}
-                                <span className="text-slate-400 font-mono text-[8.5px] font-semibold">{formatCurrency(ap.value)}</span>
+                                <span className="text-slate-400 font-mono text-[10.5px] font-semibold">{formatCurrency(ap.value)}</span>
                               </div>
                             ))}
                           </div>
@@ -1677,11 +1677,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
               
               <div className="bg-gradient-to-tr from-[#fd11a4]/5 to-[#2226c0]/5 border border-[#fd11a4]/20 border-l-4 border-l-[#fd11a4] p-5 rounded-2xl flex flex-col gap-3 shadow-xs hover:shadow-sm hover:scale-[1.01] transition-all">
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Sparkles size={14} className="text-pink-600 animate-pulse" />
                   Observações de Conciliação
                 </h3>
-                <div className="flex flex-col gap-3 text-[11.5px] leading-relaxed text-[#151720] font-bold">
+                <div className="flex flex-col gap-3 text-[13.5px] leading-relaxed text-[#151720] font-bold">
                   {content.comments.map((comment: string, idx: number) => (
                     <div key={idx} className="flex items-start gap-2.5 p-1 bg-white/45 border border-pink-100/30 rounded-xl">
                       <span className="p-1.5 rounded-lg flex-shrink-0 flex items-center justify-center bg-[#fd11a4]/10 text-pink-600 mt-0.5">
@@ -1697,7 +1697,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {/* Faturas list with credit vs value highlights */}
             <div className={`lg:col-span-8 ${cardCls}`}>
               <div className={`flex items-center justify-between border-b pb-3 mb-4 ${divCls}`}>
-                <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
                   <Layers size={14} className="text-[#0054ec]" />
                   Composição Financeira Detalhada
                 </h3>
@@ -1706,13 +1706,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 <div className={`flex p-1 rounded-xl gap-1 ${tabBg}`}>
                   <button
                     onClick={() => setActiveTab('summary')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
+                    className={`px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all ${tabActiveCls(activeTab === 'summary')}`}
                   >
                     Curva Fatura
                   </button>
                   <button
                     onClick={() => setActiveTab('table')}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
+                    className={`px-3 py-1.5 rounded-lg text-[14px] font-bold transition-all ${tabActiveCls(activeTab === 'table')}`}
                   >
                     Itens da Fatura
                   </button>
@@ -1725,7 +1725,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   <div className={isFullscreen ? "h-96 lg:h-[42vh]" : "h-60"}>
                     <ResponsiveAreaChart data={content.invoiceItems} />
                   </div>
-                  <span className="text-center text-[10px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Análise de conciliação de faturas de seguros processadas</span>
+                  <span className="text-center text-[12px] text-slate-400 font-bold block uppercase tracking-wider mt-3">Análise de conciliação de faturas de seguros processadas</span>
                 </div>
               )}
 
@@ -1738,16 +1738,16 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       return (
                         <div key={idx} className={`p-3.5 rounded-2xl border flex items-center justify-between transition-all ${isCredit ? (dk ? 'border-[#0054ec]/30 bg-[#0054ec]/5 hover:bg-[#0054ec]/10' : 'border-[#0054ec]/15 bg-[#0054ec]/5 hover:bg-[#0054ec]/10') : (dk ? 'border-slate-800 bg-[#0d0f17] hover:bg-[#12131a]' : 'border-slate-100 bg-white hover:bg-slate-50')}`}>
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-xs font-black text-slate-800">{item.name}</span>
-                            <span className="text-[10px] text-slate-400 font-semibold">{item.sub}</span>
+                            <span className="text-[14px] font-black text-slate-800">{item.name}</span>
+                            <span className="text-[12px] text-slate-400 font-semibold">{item.sub}</span>
                           </div>
                           
                           {/* Credit badge vs value */}
                           <div className="text-right flex flex-col items-end gap-1 font-mono">
-                            <span className={`text-xs font-extrabold ${isCredit ? 'text-[#0054ec]' : 'text-slate-800'}`}>
+                            <span className={`text-[14px] font-extrabold ${isCredit ? 'text-[#0054ec]' : 'text-slate-800'}`}>
                               {formatCurrency(item.value)}
                             </span>
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded-lg font-bold uppercase ${isCredit ? 'bg-[#0054ec]/10 text-[#0054ec]' : 'bg-slate-100 text-slate-500'}`}>
+                            <span className={`text-[11px] px-1.5 py-0.5 rounded-lg font-bold uppercase ${isCredit ? 'bg-[#0054ec]/10 text-[#0054ec]' : 'bg-slate-100 text-slate-500'}`}>
                               {isCredit ? 'Crédito' : 'Débito'}
                             </span>
                           </div>
@@ -1755,7 +1755,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       );
                     })}
                   </div>
-                  <div className="text-[10px] text-slate-400 font-bold border-t border-slate-50 pt-3 mt-3 text-center uppercase tracking-wider">
+                  <div className="text-[12px] text-slate-400 font-bold border-t border-slate-50 pt-3 mt-3 text-center uppercase tracking-wider">
                     Total Fatura Líquida Pago: {formatCurrency(content.total)}
                   </div>
                 </div>

@@ -86,16 +86,16 @@ export default function SelfStorageMap({ activeRegion, onHoverRegion, regions }:
       {/* Grid operational header */}
       <div className="w-full flex items-center justify-between">
         <div className="flex flex-col gap-0.5">
-          <h5 className="font-sans font-black text-slate-800 text-xs uppercase tracking-widest flex items-center gap-2">
+          <h5 className="font-sans font-black text-slate-800 text-[14px] uppercase tracking-widest flex items-center gap-2">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0054ec] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0054ec]"></span>
             </span>
             Painel Nacional
           </h5>
-          <span className="text-[10px] text-slate-400 font-extrabold block uppercase tracking-tight">Ativos Securitários & logísticos (NTT)</span>
+          <span className="text-[12px] text-slate-400 font-extrabold block uppercase tracking-tight">Ativos Securitários & logísticos (NTT)</span>
         </div>
-        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200/80 font-mono text-[9px] font-black text-[#0054ec] shadow-inner">
+        <div className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200/80 font-mono text-[11px] font-black text-[#0054ec] shadow-inner">
           <Building size={10} className="text-[#0054ec] animate-pulse" />
           3 HUBS OPERACIONAIS
         </div>
@@ -328,8 +328,8 @@ export default function SelfStorageMap({ activeRegion, onHoverRegion, regions }:
                   textAnchor={hub.uf === 'PE' ? 'start' : 'end'}
                   className={`font-sans select-none pointer-events-none transition-all duration-300 ${
                     isSelected 
-                      ? 'fill-slate-900 font-black text-[13px] tracking-wide' 
-                      : 'fill-slate-450 font-extrabold text-[11px] tracking-wider'
+                      ? 'fill-slate-900 font-black text-[15px] tracking-wide' 
+                      : 'fill-slate-450 font-extrabold text-[13px] tracking-wider'
                   }`}
                 >
                   {hub.uf}
@@ -356,20 +356,20 @@ export default function SelfStorageMap({ activeRegion, onHoverRegion, regions }:
               <div className="absolute top-0 inset-x-0 h-1 rounded-t-2xl bg-gradient-to-r from-transparent via-current to-transparent" style={{ color: activeHubInfo.color }} />
 
               <div className="flex justify-between items-center pb-2 border-b border-white/10">
-                <span className="font-extrabold text-[12px] text-slate-100 flex items-center gap-1.5 uppercase tracking-wider">
+                <span className="font-extrabold text-[14px] text-slate-100 flex items-center gap-1.5 uppercase tracking-wider">
                   <span className="w-2 h-2 rounded-full shadow-sm animate-pulse" style={{ backgroundColor: activeHubInfo.color }} />
                   {activeHubInfo.name}
                 </span>
-                <span className="font-mono text-[12px] font-black text-amber-400">
+                <span className="font-mono text-[14px] font-black text-amber-400">
                   {formatCurrency(activeRegionData.cost)}
                 </span>
               </div>
               
               <div className="flex flex-col gap-2">
-                <p className="text-[10.5px] text-slate-300 leading-relaxed font-bold italic">
+                <p className="text-[12.5px] text-slate-300 leading-relaxed font-bold italic">
                   "{activeRegionData.text}"
                 </p>
-                <div className="flex items-center justify-between text-[8px] font-black tracking-widest uppercase text-slate-450 pt-2 border-t border-white/5">
+                <div className="flex items-center justify-between text-[10px] font-black tracking-widest uppercase text-slate-450 pt-2 border-t border-white/5">
                   <span className="flex items-center gap-1 text-slate-300"><Shield size={10} className="text-[#0054ec]" /> Operação NTT</span>
                   <span className="flex items-center gap-1 text-emerald-400">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -383,7 +383,7 @@ export default function SelfStorageMap({ activeRegion, onHoverRegion, regions }:
       </div>
 
       {/* Aesthetic operational status badge footnote */}
-      <span className="text-[9px] font-extrabold text-slate-450 tracking-widest flex items-center gap-2 text-center bg-slate-50/80 hover:bg-slate-50 hover:text-[#151720] transition-all px-4 py-2.5 rounded-xl border border-slate-150 w-full justify-center shadow-xs uppercase font-mono cursor-default">
+      <span className="text-[11px] font-extrabold text-slate-450 tracking-widest flex items-center gap-2 text-center bg-slate-50/80 hover:bg-slate-50 hover:text-[#151720] transition-all px-4 py-2.5 rounded-xl border border-slate-150 w-full justify-center shadow-xs uppercase font-mono cursor-default">
         <Sparkles size={11} className="text-[#0054ec] flex-shrink-0" />
         Sistemas Securitários & Portais Logísticos Integrados
       </span>

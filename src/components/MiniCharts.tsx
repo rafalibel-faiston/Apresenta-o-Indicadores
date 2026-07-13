@@ -155,7 +155,7 @@ export function ResponsiveBarChart({
                 x={paddingLeft - 10}
                 y={y + 4}
                 textAnchor="end"
-                className="font-mono text-[10px] fill-slate-400 font-medium"
+                className="font-mono text-[12px] fill-slate-400 font-medium"
               >
                 {yAxisFormatter(gridVal)}
               </text>
@@ -164,7 +164,7 @@ export function ResponsiveBarChart({
                   x={paddingLeft + chartWidth + 10}
                   y={y + 4}
                   textAnchor="start"
-                  className="font-mono text-[10px] fill-[#fd11a4] font-semibold"
+                  className="font-mono text-[12px] fill-[#fd11a4] font-semibold"
                 >
                   {Math.round(maxLineVal * ratio)}
                 </text>
@@ -232,7 +232,7 @@ export function ResponsiveBarChart({
                 x={x + barWidth / 2}
                 y={paddingTop + chartHeight + 18}
                 textAnchor="middle"
-                className={`font-sans font-medium text-[10px] leading-tight fill-slate-500 max-w-[50px] transition-colors duration-200 ${hoveredIndex === index ? 'fill-[#0054ec] font-semibold' : ''}`}
+                className={`font-sans font-medium text-[12px] leading-tight fill-slate-500 max-w-[50px] transition-colors duration-200 ${hoveredIndex === index ? 'fill-[#0054ec] font-semibold' : ''}`}
                 style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
               >
                 {item.label.length > 12 ? `${item.label.substring(0, 10)}...` : item.label}
@@ -312,7 +312,7 @@ export function ResponsiveBarChart({
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="absolute z-10 bg-white/95 backdrop-blur-md border border-slate-100 shadow-xl rounded-xl p-3 text-xs text-slate-800"
+            className="absolute z-10 bg-white/95 backdrop-blur-md border border-slate-100 shadow-xl rounded-xl p-3 text-[14px] text-slate-800"
             style={{
               left: `${Math.min(Math.max((paddingLeft + (hoveredIndex * (chartWidth / data.length)) + (chartWidth / data.length / 2) - 80), 10), width - 170)}px`,
               top: `${Math.max(paddingTop - 15, 5)}px`,
@@ -331,7 +331,7 @@ export function ResponsiveBarChart({
                 </span>
               )}
               {data[hoveredIndex].meta && (
-                <span className="text-slate-400 text-[10px] sm:text-xs mt-1 border-t border-slate-50 pt-0.5 flex justify-between">
+                <span className="text-slate-400 text-[12px] sm:text-[14px] mt-1 border-t border-slate-50 pt-0.5 flex justify-between">
                   <span>Embarques:</span> <span>{data[hoveredIndex].meta}</span>
                 </span>
               )}
@@ -360,12 +360,12 @@ export function HorizontalBarChart({ data, colorTheme = 'indigo' }: { data: Char
         const ratio = Math.max(item.value / maxVal, 0.02);
         return (
           <div key={index} className="flex flex-col gap-1 w-full text-slate-800">
-            <div className="flex justify-between items-center text-xs px-1">
+            <div className="flex justify-between items-center text-[14px] px-1">
               <span className="font-semibold text-slate-900 truncate max-w-[70%]">{item.label}</span>
               <div className="flex items-center gap-2 font-mono">
                 <span className="font-bold text-slate-950">{formatCurrency(item.value)}</span>
                 {item.subValue !== undefined && (
-                  <span className="text-slate-400 text-[10px] bg-slate-100 rounded px-1">{item.subValue} Itens</span>
+                  <span className="text-slate-400 text-[12px] bg-slate-100 rounded px-1">{item.subValue} Itens</span>
                 )}
               </div>
             </div>
@@ -420,8 +420,8 @@ export function DonutChart({
 
   // Size classes
   const circleSizeClass = size === 'sm' ? 'w-28 h-28' : size === 'lg' ? 'w-48 h-48' : 'w-40 h-40';
-  const totalTextClass = size === 'sm' ? 'text-[9.5px] font-black leading-none' : 'text-sm font-bold';
-  const totalLabelClass = size === 'sm' ? 'text-[8px]' : 'text-[10px]';
+  const totalTextClass = size === 'sm' ? 'text-[11.5px] font-black leading-none' : 'text-[16px] font-bold';
+  const totalLabelClass = size === 'sm' ? 'text-[10px]' : 'text-[12px]';
 
   return (
     <div className={containerClass} id="donut-chart-container">
@@ -467,14 +467,14 @@ export function DonutChart({
             ? item.colorClass.replace(/^stroke-\[(.+)\]$/, '$1')
             : fallbackColors[idx % fallbackColors.length];
           return (
-            <div key={idx} className="flex items-center justify-between gap-3 text-xs font-sans">
+            <div key={idx} className="flex items-center justify-between gap-3 text-[14px] font-sans">
               <div className="flex items-center gap-2 truncate">
                 <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: dotColor }} />
                 <span className="font-semibold text-slate-700 truncate max-w-[80px] sm:max-w-none">{item.label}</span>
               </div>
               <div className="flex items-center gap-1.5 font-mono">
                 <span className="text-slate-900 font-bold">{(item.percentage || 0).toFixed(0)}%</span>
-                <span className="text-slate-400 text-[10px]">
+                <span className="text-slate-400 text-[12px]">
                   ({showExactLegendValues ? formatCurrency(item.value) : formatCompact(item.value)})
                 </span>
               </div>
@@ -564,7 +564,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
                 x={x}
                 y={paddingTop + chartHeight + 16}
                 textAnchor="middle"
-                className="font-sans font-extrabold text-[8.5px] fill-slate-500"
+                className="font-sans font-extrabold text-[10.5px] fill-slate-500"
               >
                 {nameText}
               </text>
@@ -623,7 +623,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
                 stroke="white"
                 strokeWidth="3"
                 strokeLinejoin="round"
-                className="font-sans font-black text-[9.5px] pointer-events-none opacity-90 select-none"
+                className="font-sans font-black text-[11.5px] pointer-events-none opacity-90 select-none"
               >
                 {formatCurrency(item.value)}
               </text>
@@ -631,7 +631,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
                 x={cx}
                 y={cy + labelYOffset}
                 textAnchor="middle"
-                className={`font-sans font-black text-[9.5px] pointer-events-none ${
+                className={`font-sans font-black text-[11.5px] pointer-events-none ${
                   isNeutral ? 'fill-emerald-600' : 'fill-[#0054ec]'
                 }`}
               >
@@ -649,7 +649,7 @@ export function ResponsiveAreaChart({ data }: { data: { label?: string, name?: s
             initial={{ opacity: 0, y: -5, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute z-10 bg-white border border-slate-100 shadow-lg rounded-lg p-2.5 text-xs font-sans text-slate-800"
+            className="absolute z-10 bg-white border border-slate-100 shadow-lg rounded-lg p-2.5 text-[14px] font-sans text-slate-800"
             style={{
               left: `${Math.min(Math.max((getX(hoveredIndex) - 75), 10), width - 160)}px`,
               top: `${Math.max(getY(data[hoveredIndex].value) - 60, 5)}px`,

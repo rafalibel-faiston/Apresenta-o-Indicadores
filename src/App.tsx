@@ -576,7 +576,7 @@ export default function App() {
           <div className={`transition-colors duration-300 flex flex-col justify-between overflow-hidden relative ${
             isFullscreen
               ? `flex-1 rounded-none p-10 md:p-16 w-full h-full ${dk ? 'bg-[#151720]' : 'bg-white'}`
-              : `flex-1 border rounded-2xl p-6 md:p-9 shadow-2xl w-full max-w-6xl mx-auto my-auto min-h-[580px] max-h-[80vh] lg:max-h-[74vh] xl:max-h-[78vh] ${
+              : `flex-1 border rounded-2xl p-6 md:p-9 shadow-2xl w-full max-w-7xl mx-auto my-auto min-h-[600px] max-h-[84vh] lg:max-h-[80vh] xl:max-h-[82vh] ${
                   dk
                     ? 'bg-[#151720] border-white/10 shadow-black/60 ring-1 ring-[#0054ec]/10'
                     : 'bg-white border-slate-200 shadow-slate-300/40 ring-1 ring-[#0054ec]/5'

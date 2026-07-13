@@ -72,8 +72,8 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
             <ArrowRightLeft size={16} className="animate-pulse" />
           </div>
           <div>
-            <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider">Métricas Comparativas</h3>
-            <span className="text-[9px] text-slate-400 font-bold block uppercase tracking-tight">Equilíbrio & Proporção de Fluxo</span>
+            <h3 className="text-[14px] font-black text-slate-800 uppercase tracking-wider">Métricas Comparativas</h3>
+            <span className="text-[11px] text-slate-400 font-bold block uppercase tracking-tight">Equilíbrio & Proporção de Fluxo</span>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
               }`}
             >
               <Icon size={13} className={isActive ? metric.color : 'text-slate-400'} />
-              <span className="text-[10px] font-black tracking-tight">{metric.label}</span>
+              <span className="text-[12px] font-black tracking-tight">{metric.label}</span>
             </button>
           );
         })}
@@ -112,7 +112,7 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(entradaPct, 8)}%` }}
               transition={{ type: 'spring', stiffness: 80, damping: 15 }}
-              className="bg-[#0054ec] h-full rounded-l-xl flex items-center justify-center text-[10px] font-bold text-white shadow-sm min-w-8 relative overflow-hidden"
+              className="bg-[#0054ec] h-full rounded-l-xl flex items-center justify-center text-[12px] font-bold text-white shadow-sm min-w-8 relative overflow-hidden"
             >
               <span className="z-10">{entradaPct.toFixed(0)}%</span>
               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
@@ -127,7 +127,7 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
               initial={{ width: 0 }}
               animate={{ width: `${Math.max(saidaPct, 8)}%` }}
               transition={{ type: 'spring', stiffness: 80, damping: 15 }}
-              className="bg-[#fd11a4] h-full rounded-r-xl flex items-center justify-center text-[10px] font-bold text-white shadow-sm min-w-8 relative overflow-hidden"
+              className="bg-[#fd11a4] h-full rounded-r-xl flex items-center justify-center text-[12px] font-bold text-white shadow-sm min-w-8 relative overflow-hidden"
             >
               <span className="z-10">{saidaPct.toFixed(0)}%</span>
               <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
@@ -140,11 +140,11 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
           {/* ENTRADA VALUE CARD */}
           <div className="border border-[#0054ec]/20 bg-[#0054ec]/5 p-3.5 rounded-2xl flex flex-col gap-1 relative overflow-hidden">
             <div className="absolute top-1 right-2 font-black text-[#0054ec]/20 text-xl font-mono">IN</div>
-            <span className="text-[9px] font-bold text-[#0054ec] uppercase">Entrada física</span>
-            <span className="text-sm font-black text-[#2226c0] font-mono tracking-tight mt-0.5">
+            <span className="text-[11px] font-bold text-[#0054ec] uppercase">Entrada física</span>
+            <span className="text-[16px] font-black text-[#2226c0] font-mono tracking-tight mt-0.5">
               {currentMetric.formatter(currentMetric.entradaVal)}
             </span>
-            <span className="text-[9px] text-[#0054ec]/80 font-extrabold mt-1">
+            <span className="text-[11px] text-[#0054ec]/80 font-extrabold mt-1">
               {currentMetric.fullFormatter(currentMetric.entradaVal)}
             </span>
           </div>
@@ -152,11 +152,11 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
           {/* SAÍDA VALUE CARD */}
           <div className="border border-[#fd11a4]/20 bg-[#fd11a4]/5 p-3.5 rounded-2xl flex flex-col gap-1 relative overflow-hidden">
             <div className="absolute top-1 right-2 font-black text-[#fd11a4]/20 text-xl font-mono">OUT</div>
-            <span className="text-[9px] font-bold text-[#fd11a4] uppercase">Saída física</span>
-            <span className="text-sm font-black text-[#151720] font-mono tracking-tight mt-0.5">
+            <span className="text-[11px] font-bold text-[#fd11a4] uppercase">Saída física</span>
+            <span className="text-[16px] font-black text-[#151720] font-mono tracking-tight mt-0.5">
               {currentMetric.formatter(currentMetric.saidaVal)}
             </span>
-            <span className="text-[9px] text-[#fd11a4]/80 font-extrabold mt-1">
+            <span className="text-[11px] text-[#fd11a4]/80 font-extrabold mt-1">
               {currentMetric.fullFormatter(currentMetric.saidaVal)}
             </span>
           </div>
@@ -169,8 +169,8 @@ export default function EntradaSaidaChart({ entrada, saida }: EntradaSaidaChartP
           <TrendingUp size={12} strokeWidth={2.5} />
         </div>
         <div>
-          <span className="text-[10px] font-black text-slate-800 uppercase tracking-wide block">Relação Operacional</span>
-          <p className="text-[10px] font-bold text-slate-500 leading-normal mt-0.5">
+          <span className="text-[12px] font-black text-slate-800 uppercase tracking-wide block">Relação Operacional</span>
+          <p className="text-[12px] font-bold text-slate-500 leading-normal mt-0.5">
             A saída física representa <strong className="text-[#fd11a4] font-extrabold">{factor}x</strong> o fluxo de entrada para a categoria <strong className="text-slate-800 font-black">{currentMetric.label}</strong>.
           </p>
         </div>

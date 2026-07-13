@@ -87,7 +87,7 @@ export default function KPICard({ label, value, type = 'number', icon, isHighlig
 
       <div className="flex justify-between items-start gap-4">
         <div className="flex flex-col gap-1.5 flex-1 select-all">
-          <span className={`text-[11px] font-light uppercase tracking-wider ${isHighlight ? 'text-[#00fafb]' : 'text-slate-400'}`}>
+          <span className={`text-[13px] font-light uppercase tracking-wider ${isHighlight ? 'text-[#00fafb]' : 'text-slate-400'}`}>
             {label}
           </span>
           <span className={`text-2xl font-black font-sans tracking-tight leading-none ${isHighlight ? 'text-white' : isDarkMode ? 'text-white' : 'text-slate-900'}`}>
