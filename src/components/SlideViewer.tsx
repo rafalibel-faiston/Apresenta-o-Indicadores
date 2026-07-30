@@ -153,7 +153,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           <div className={`mt-2 px-3.5 py-1.5 font-mono text-[11px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
             isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-[#0054ec]"
           }`}>
-            JUNHO
+            {content.mes || 'JUNHO'}
           </div>
         </div>
       </div>

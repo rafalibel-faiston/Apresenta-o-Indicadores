@@ -1,0 +1,35 @@
+// Names of the tabs (sheets) expected inside the Google Sheets workbook.
+// Keep this in sync with PLANILHA.md — that file documents the exact columns per tab.
+export const TABS = {
+  META: 'Meta',
+  SLIDES: 'Slides',
+  KPIS: 'KPIs',
+  COMMENTARY: 'Commentary',
+  PROJECTS: 'Projects',
+  DISTRIBUTION: 'Distribution',
+  ROTAS: 'Rotas',
+  ROTAS_BREAKDOWN: 'RotasBreakdown',
+  REGIONS: 'Regions',
+  CONSOLIDADO_BREAKDOWN: 'ConsolidadoBreakdown',
+  CONSOLIDADO_PROJECTS: 'ConsolidadoProjects',
+  ENTRADA_SAIDA: 'EntradaSaida',
+  ENTRADA_SAIDA_DETAILS: 'EntradaSaidaDetails',
+  ESTOQUE_GROUPS: 'EstoqueGroups',
+  ESTOQUE_GUARDA_TECNICA: 'EstoqueGuardaTecnica',
+  ESTOQUE_ATIVOS_OUTROS: 'EstoqueAtivosOutros',
+  ESTOQUE_SEM_NF: 'EstoqueSemNf',
+  ESTOQUE_TOP_PROJETOS: 'EstoqueTopProjetos',
+  DESCARTE_LOTES: 'DescarteLotes',
+  TODO_SAVING_ITEMS: 'TodoSavingItems',
+  TODO_UTILIZADO_ITEMS: 'TodoUtilizadoItems',
+  TODO_SAVING_ANUAL: 'TodoSavingAnual',
+  SEGUROS_COBERTURAS: 'SegurosCoberturas',
+  SEGUROS_SEM_NF_BREAKDOWN: 'SegurosSemNfBreakdown',
+  SEGUROS_SECTIONS: 'SegurosSections',
+  SEGUROS_SUB_ITEMS: 'SegurosSubItems',
+  SEGUROS_PHASES: 'SegurosPhases',
+  SEGUROS_APOLICES: 'SegurosApolices',
+  FATURA_INVOICE_ITEMS: 'FaturaInvoiceItems',
+} as const;
+
+export const ALL_TABS: string[] = Object.values(TABS);
