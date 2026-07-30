@@ -1,3 +1,3 @@
-import { SheetRow } from './csv';
+import { SheetRow } from './rows';
 
 export type SheetData = Record<string, SheetRow[]>;

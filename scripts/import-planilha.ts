@@ -1,23 +1,25 @@
-// Importa a planilha do Google Sheets e regenera `src/data/slidesData.ts`.
+// Importa uma planilha Excel (.xlsx) e regenera `src/data/slidesData.ts`.
 //
 // Antes de sobrescrever, arquiva o mês atualmente salvo em `src/data/history/`
 // (um snapshot em JSON por mês), para que os dados de meses anteriores nunca se
 // percam quando a planilha do mês novo for importada.
 //
+// A planilha precisa ter uma aba (guia) para cada tipo de informação, com os
+// nomes e colunas exatamente como documentado em PLANILHA.md.
+//
 // Uso:
-//   npm run importar-planilha                       (usa VITE_GOOGLE_SHEET_ID do .env)
-//   npm run importar-planilha -- <ID_DA_PLANILHA>    (ou passa o ID direto)
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+//   npm run importar-planilha -- caminho/para/arquivo.xlsx
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import readExcelFile from 'read-excel-file/node';
 
 import { slidesData as currentSlides } from '../src/data/slidesData';
 import { currentMesAbrev } from '../src/data/meta';
 import { ALL_TABS, TABS } from '../src/data/sheet/schema';
-import { fetchSheetTab } from '../src/data/sheet/googleSheets';
 import { buildSlides } from '../src/data/sheet/transform';
 import { SheetData } from '../src/data/sheet/types';
-import { SheetRow } from '../src/data/sheet/csv';
+import { rowsFromMatrix } from '../src/data/sheet/rows';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -46,26 +48,34 @@ function serializeSlidesData(slides: unknown): string {
 }
 
 async function main() {
-  const sheetId = process.argv[2] || process.env.VITE_GOOGLE_SHEET_ID;
-  if (!sheetId) {
+  const filePath = process.argv[2];
+  if (!filePath) {
     console.error(
-      '[importar-planilha] Nenhum ID de planilha informado. Configure VITE_GOOGLE_SHEET_ID no .env ou passe como argumento:\n' +
-      '  npm run importar-planilha -- <ID_DA_PLANILHA>'
+      '[importar-planilha] Nenhum arquivo informado. Uso:\n' +
+      '  npm run importar-planilha -- caminho/para/arquivo.xlsx'
     );
     process.exit(1);
   }
 
-  console.log(`[importar-planilha] Buscando abas da planilha ${sheetId}...`);
-  const entries = await Promise.all(
-    ALL_TABS.map(async (tab): Promise<[string, SheetRow[]]> => {
-      try {
-        return [tab, await fetchSheetTab(sheetId, tab)];
-      } catch (err) {
-        console.warn(`[importar-planilha] Não foi possível carregar a aba "${tab}": ${(err as Error).message}`);
-        return [tab, []];
-      }
-    })
-  );
+  console.log(`[importar-planilha] Lendo ${filePath}...`);
+  let sheets: { sheet: string; data: unknown[][] }[];
+  try {
+    sheets = await readExcelFile(path.resolve(filePath));
+  } catch (err) {
+    console.error(`[importar-planilha] Não foi possível ler o arquivo: ${(err as Error).message}`);
+    process.exit(1);
+  }
+
+  const sheetsByName = new Map(sheets.map((s) => [s.sheet, s.data]));
+
+  const entries = ALL_TABS.map((tab): [string, ReturnType<typeof rowsFromMatrix>] => {
+    const matrix = sheetsByName.get(tab);
+    if (!matrix) {
+      console.warn(`[importar-planilha] Aba "${tab}" não encontrada no arquivo — mantendo os dados atuais dessa aba.`);
+      return [tab, []];
+    }
+    return [tab, rowsFromMatrix(matrix)];
+  });
   const data: SheetData = Object.fromEntries(entries);
 
   const globalMeta = (data[TABS.META] || []).filter((r) => (r.slide || '').trim() === 'global');

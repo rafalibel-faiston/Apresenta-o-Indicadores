@@ -1,5 +1,5 @@
 import { Slide } from '../../types';
-import { SheetRow } from './csv';
+import { SheetRow } from './rows';
 import { SheetData } from './types';
 import { TABS } from './schema';
 import { toBool, toInt, toNumber } from './numbers';

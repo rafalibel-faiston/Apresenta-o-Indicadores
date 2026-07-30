@@ -9,7 +9,6 @@ import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
 import { currentMesAbrev } from './data/meta';
-import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
 import { historyMonths } from './data/history/loadHistory';
 import SlideViewer from './components/SlideViewer';
 import FaistonLogo from './components/FaistonLogo';
@@ -71,41 +70,10 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [liveSlidesData, setLiveSlidesData] = useState(staticSlidesData);
-  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
-  const [isSheetSyncing, setIsSheetSyncing] = useState(false);
-  const [sheetSyncError, setSheetSyncError] = useState(false);
-
-  // Mês selecionado no seletor de histórico ("Meses anteriores"). `null` = mês atual (ao vivo).
+  // Mês selecionado no seletor de histórico ("Meses anteriores"). `null` = mês atual.
   const [viewingHistorySlug, setViewingHistorySlug] = useState<string | null>(null);
   const [isMonthMenuOpen, setIsMonthMenuOpen] = useState(false);
   const monthMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
-    if (!sheetId) return;
-
-    let cancelled = false;
-    setIsSheetSyncing(true);
-
-    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
-      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
-        if (cancelled) return;
-        setLiveSlidesData(slides);
-        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
-      })
-      .catch((err) => {
-        console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
-        if (!cancelled) setSheetSyncError(true);
-      })
-      .finally(() => {
-        if (!cancelled) setIsSheetSyncing(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     if (!isMonthMenuOpen) return;
@@ -121,8 +89,8 @@ export default function App() {
   const viewingHistoryMonth = viewingHistorySlug
     ? historyMonths.find((m) => m.slug === viewingHistorySlug) ?? null
     : null;
-  const slidesData = viewingHistoryMonth ? viewingHistoryMonth.slides : liveSlidesData;
-  const displayedMesAbrev = viewingHistoryMonth ? viewingHistoryMonth.mesAbrev : (mesAbrev || currentMesAbrev);
+  const slidesData = viewingHistoryMonth ? viewingHistoryMonth.slides : staticSlidesData;
+  const displayedMesAbrev = viewingHistoryMonth ? viewingHistoryMonth.mesAbrev : currentMesAbrev;
 
   const selectMonth = (slug: string | null) => {
     setViewingHistorySlug(slug);
@@ -454,7 +422,7 @@ export default function App() {
                       : dk ? 'text-slate-300 hover:bg-white/8' : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
-                  Atual · {mesAbrev || currentMesAbrev}
+                  Atual · {currentMesAbrev}
                 </button>
                 {historyMonths.map((month) => (
                   <button
@@ -472,15 +440,6 @@ export default function App() {
               </div>
             )}
           </div>
-
-          {isSheetSyncing && (
-            <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">Sincronizando planilha…</span>
-          )}
-          {!isSheetSyncing && sheetSyncError && (
-            <span className="text-[10px] font-bold text-amber-500 ml-1" title="Não foi possível carregar a planilha do Google Sheets. Exibindo os últimos dados salvos no código.">
-              ⚠ Planilha indisponível
-            </span>
-          )}
         </div>
 
         {/* Action Controls */}

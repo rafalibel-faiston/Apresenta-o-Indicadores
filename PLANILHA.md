@@ -1,60 +1,47 @@
-# Alimentando a apresentação via Google Sheets
+# Alimentando a apresentação via planilha Excel (.xlsx)
 
-A apresentação pode ler seus dados de uma planilha do Google Sheets em vez do
-código. Isso é opcional: se a variável `VITE_GOOGLE_SHEET_ID` não estiver
-configurada, o app usa os dados fixos de `src/data/slidesData.ts` normalmente.
+Os dados da apresentação (`src/data/slidesData.ts`) são gerados a partir de
+uma planilha Excel (`.xlsx`), rodando um comando no terminal. Não é
+necessário editar código nem mexer em nenhum serviço externo — só preencher a
+planilha e rodar o import.
 
 ## Como funciona
 
-- Uma única planilha do Google Sheets, com várias **abas** (guias na parte
-  inferior), uma para cada tipo de informação.
-- A planilha precisa estar compartilhada como **"Qualquer pessoa com o
-  link" → Leitor**. Não é necessário publicar na web nem criar chave de API.
-- O app lê cada aba pela URL pública de exportação em CSV do Google Sheets
-  (não depende de login nem de credenciais).
-- Ao abrir a apresentação, ela busca todas as abas e substitui os dados
-  estáticos. Se uma aba estiver vazia, com nome errado, ou a planilha estiver
-  fora do ar, o app mantém os últimos dados que já tinha no código — a
-  apresentação nunca fica quebrada por causa da planilha.
+- Um único arquivo `.xlsx`, com várias **abas** (guias na parte inferior),
+  uma para cada tipo de informação — os nomes e colunas de cada aba estão
+  documentados mais abaixo.
+- Rode `npm run importar-planilha -- caminho/para/arquivo.xlsx`. O comando lê
+  o arquivo, atualiza `src/data/slidesData.ts` com os dados novos e arquiva o
+  mês anterior automaticamente (ver seção seguinte).
+- Se uma aba estiver ausente ou vazia, o app mantém os dados que já tinha
+  naquela aba — a importação nunca quebra a apresentação por causa de uma
+  aba faltando.
 - Você pode preencher só algumas abas para começar; o resto continua vindo
-  do código até você preencher.
+  dos dados já salvos até você preencher.
 
 ## Configuração
 
-1. Crie a planilha no Google Sheets com as abas descritas abaixo (nomes
-   **exatamente** como especificado, sensível a maiúsculas/minúsculas).
-2. Compartilhe: botão **Compartilhar** → **Qualquer pessoa com o link** →
-   permissão **Leitor**.
-3. Copie o ID da planilha a partir da URL:
-   `https://docs.google.com/spreadsheets/d/`**`ESTE_TRECHO`**`/edit`
-4. Configure a variável de ambiente `VITE_GOOGLE_SHEET_ID` com esse ID
-   (no Railway: Settings → Variables; localmente: copie `env.example` para
-   `.env` e cole o ID).
-5. Todo início de mês, abra a planilha e atualize os números. A apresentação
-   busca os dados a cada carregamento da página — não precisa gerar build
-   nem fazer deploy.
+1. Crie a planilha `.xlsx` com as abas descritas abaixo (nomes **exatamente**
+   como especificado, sensível a maiúsculas/minúsculas).
+2. Preencha os números do mês.
+3. Rode:
+   ```
+   npm run importar-planilha -- caminho/para/arquivo.xlsx
+   ```
+4. Confira o resultado (`git diff` em `src/data/slidesData.ts` e
+   `src/data/meta.ts`) e faça o commit/push normalmente — o site é
+   redeployado a partir daí.
 
 ## Importando a planilha e guardando o histórico dos meses anteriores
 
-Além de ler a planilha ao vivo no navegador, dá pra "gravar" o mês atual da
-planilha direto no código, rodando:
+Rodar `npm run importar-planilha -- arquivo.xlsx` faz o seguinte:
 
-```
-npm run importar-planilha
-```
-
-(usa o `VITE_GOOGLE_SHEET_ID` do `.env`; ou rode
-`npm run importar-planilha -- <ID_DA_PLANILHA>` para passar o ID direto).
-
-O que esse comando faz:
-
-1. Busca todas as abas da planilha (igual ao app faz no navegador).
+1. Lê todas as abas do arquivo `.xlsx`.
 2. **Antes** de sobrescrever qualquer coisa, salva uma cópia completa do mês
    que estava salvo até então em `src/data/history/AAAA-MM.json` — os dados
    dos meses anteriores nunca são perdidos.
 3. Atualiza `src/data/slidesData.ts` com os dados novos da planilha (esses
-   passam a ser os dados fixos/padrão, usados mesmo sem `VITE_GOOGLE_SHEET_ID`
-   configurado).
+   passam a ser os dados fixos exibidos pela apresentação).
 4. Atualiza `src/data/meta.ts` com o novo mês (`currentMesAbrev`).
 
 Depois de rodar, confira o `git diff` e faça o commit normalmente — é o mesmo
@@ -63,8 +50,7 @@ fluxo que já era feito manualmente todo mês (ver histórico de commits tipo
 
 Na apresentação, um seletor de mês aparece no cabeçalho (ao lado de
 "LOGÍSTICA & SEGUROS · MÊS.AA") sempre que houver algum mês arquivado,
-permitindo visualizar/exportar os slides de meses anteriores sem precisar
-mexer na planilha.
+permitindo visualizar/exportar os slides de meses anteriores.
 
 ## Formato dos números
 
