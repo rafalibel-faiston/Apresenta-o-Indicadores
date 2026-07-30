@@ -7,7 +7,8 @@ import {
 } from 'lucide-react';
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
-import { slidesData } from './data/slidesData';
+import { slidesData as staticSlidesData } from './data/slidesData';
+import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
 import SlideViewer from './components/SlideViewer';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
@@ -68,6 +69,37 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
+  const [slidesData, setSlidesData] = useState(staticSlidesData);
+  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
+  const [isSheetSyncing, setIsSheetSyncing] = useState(false);
+  const [sheetSyncError, setSheetSyncError] = useState(false);
+
+  useEffect(() => {
+    const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
+    if (!sheetId) return;
+
+    let cancelled = false;
+    setIsSheetSyncing(true);
+
+    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
+      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
+        if (cancelled) return;
+        setSlidesData(slides);
+        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
+      })
+      .catch((err) => {
+        console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
+        if (!cancelled) setSheetSyncError(true);
+      })
+      .finally(() => {
+        if (!cancelled) setIsSheetSyncing(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -365,7 +397,7 @@ export default function App() {
             <span className={`text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
               dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'
             }`}>
-              LOGÍSTICA & SEGUROS · JUN.26
+              LOGÍSTICA & SEGUROS · {mesAbrev || 'JUN.26'}
             </span>
             <h1 className={`text-[11px] font-semibold font-serif leading-none ${
               dk ? 'text-slate-300' : 'text-slate-600'
@@ -373,6 +405,15 @@ export default function App() {
               Apresentação de Resultados
             </h1>
           </div>
+
+          {isSheetSyncing && (
+            <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">Sincronizando planilha…</span>
+          )}
+          {!isSheetSyncing && sheetSyncError && (
+            <span className="text-[10px] font-bold text-amber-500 ml-1" title="Não foi possível carregar a planilha do Google Sheets. Exibindo os últimos dados salvos no código.">
+              ⚠ Planilha indisponível
+            </span>
+          )}
         </div>
 
         {/* Action Controls */}
