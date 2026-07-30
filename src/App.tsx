@@ -3,12 +3,14 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
   Layers, HelpCircle, Download, FileText, Sparkles, Menu, X,
-  Sun, Moon
+  Sun, Moon, History, ChevronDown
 } from 'lucide-react';
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
+import { currentMesAbrev } from './data/meta';
 import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
+import { historyMonths } from './data/history/loadHistory';
 import SlideViewer from './components/SlideViewer';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
@@ -69,10 +71,15 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [slidesData, setSlidesData] = useState(staticSlidesData);
+  const [liveSlidesData, setLiveSlidesData] = useState(staticSlidesData);
   const [mesAbrev, setMesAbrev] = useState<string | null>(null);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
+
+  // Mês selecionado no seletor de histórico ("Meses anteriores"). `null` = mês atual (ao vivo).
+  const [viewingHistorySlug, setViewingHistorySlug] = useState<string | null>(null);
+  const [isMonthMenuOpen, setIsMonthMenuOpen] = useState(false);
+  const monthMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
@@ -84,7 +91,7 @@ export default function App() {
     loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
       .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
         if (cancelled) return;
-        setSlidesData(slides);
+        setLiveSlidesData(slides);
         if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
       })
       .catch((err) => {
@@ -99,6 +106,30 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!isMonthMenuOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (monthMenuRef.current && !monthMenuRef.current.contains(e.target as Node)) {
+        setIsMonthMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isMonthMenuOpen]);
+
+  const viewingHistoryMonth = viewingHistorySlug
+    ? historyMonths.find((m) => m.slug === viewingHistorySlug) ?? null
+    : null;
+  const slidesData = viewingHistoryMonth ? viewingHistoryMonth.slides : liveSlidesData;
+  const displayedMesAbrev = viewingHistoryMonth ? viewingHistoryMonth.mesAbrev : (mesAbrev || currentMesAbrev);
+
+  const selectMonth = (slug: string | null) => {
+    setViewingHistorySlug(slug);
+    setIsMonthMenuOpen(false);
+    setCurrentSlideIndex(0);
+    setIsPlaying(false);
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
@@ -393,17 +424,53 @@ export default function App() {
 
           <div className={`h-8 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'}`} />
 
-          <div className="flex flex-col gap-0.5">
-            <span className={`text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
-              dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'
-            }`}>
-              LOGÍSTICA & SEGUROS · {mesAbrev || 'JUN.26'}
-            </span>
+          <div className="flex flex-col gap-0.5 relative" ref={monthMenuRef}>
+            <button
+              onClick={() => historyMonths.length > 0 && setIsMonthMenuOpen((v) => !v)}
+              className={`flex items-center gap-1 text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
+                historyMonths.length > 0 ? 'cursor-pointer hover:opacity-80' : 'cursor-default'
+              } ${dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'}`}
+              title={historyMonths.length > 0 ? 'Ver meses anteriores' : undefined}
+            >
+              LOGÍSTICA & SEGUROS · {displayedMesAbrev}
+              {viewingHistoryMonth && <History size={10} className="ml-0.5" />}
+              {historyMonths.length > 0 && <ChevronDown size={10} className={`transition-transform ${isMonthMenuOpen ? 'rotate-180' : ''}`} />}
+            </button>
             <h1 className={`text-[11px] font-semibold font-serif leading-none ${
               dk ? 'text-slate-300' : 'text-slate-600'
             }`}>
-              Apresentação de Resultados
+              {viewingHistoryMonth ? `Histórico · ${viewingHistoryMonth.mesAbrev}` : 'Apresentação de Resultados'}
             </h1>
+
+            {isMonthMenuOpen && (
+              <div className={`absolute top-full left-0 mt-2 w-48 rounded-lg border shadow-xl z-30 overflow-hidden py-1 ${
+                dk ? 'bg-[#151720] border-white/12' : 'bg-white border-slate-200'
+              }`}>
+                <button
+                  onClick={() => selectMonth(null)}
+                  className={`w-full text-left px-3 py-2 text-[11px] font-bold flex items-center justify-between ${
+                    !viewingHistoryMonth
+                      ? dk ? 'bg-[#0054ec]/20 text-white' : 'bg-[#0054ec]/8 text-[#0054ec]'
+                      : dk ? 'text-slate-300 hover:bg-white/8' : 'text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  Atual · {mesAbrev || currentMesAbrev}
+                </button>
+                {historyMonths.map((month) => (
+                  <button
+                    key={month.slug}
+                    onClick={() => selectMonth(month.slug)}
+                    className={`w-full text-left px-3 py-2 text-[11px] font-bold flex items-center justify-between ${
+                      viewingHistorySlug === month.slug
+                        ? dk ? 'bg-[#0054ec]/20 text-white' : 'bg-[#0054ec]/8 text-[#0054ec]'
+                        : dk ? 'text-slate-300 hover:bg-white/8' : 'text-slate-600 hover:bg-slate-50'
+                    }`}
+                  >
+                    {month.mesAbrev}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {isSheetSyncing && (

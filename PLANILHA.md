@@ -34,6 +34,38 @@ configurada, o app usa os dados fixos de `src/data/slidesData.ts` normalmente.
    busca os dados a cada carregamento da página — não precisa gerar build
    nem fazer deploy.
 
+## Importando a planilha e guardando o histórico dos meses anteriores
+
+Além de ler a planilha ao vivo no navegador, dá pra "gravar" o mês atual da
+planilha direto no código, rodando:
+
+```
+npm run importar-planilha
+```
+
+(usa o `VITE_GOOGLE_SHEET_ID` do `.env`; ou rode
+`npm run importar-planilha -- <ID_DA_PLANILHA>` para passar o ID direto).
+
+O que esse comando faz:
+
+1. Busca todas as abas da planilha (igual ao app faz no navegador).
+2. **Antes** de sobrescrever qualquer coisa, salva uma cópia completa do mês
+   que estava salvo até então em `src/data/history/AAAA-MM.json` — os dados
+   dos meses anteriores nunca são perdidos.
+3. Atualiza `src/data/slidesData.ts` com os dados novos da planilha (esses
+   passam a ser os dados fixos/padrão, usados mesmo sem `VITE_GOOGLE_SHEET_ID`
+   configurado).
+4. Atualiza `src/data/meta.ts` com o novo mês (`currentMesAbrev`).
+
+Depois de rodar, confira o `git diff` e faça o commit normalmente — é o mesmo
+fluxo que já era feito manualmente todo mês (ver histórico de commits tipo
+"Atualiza dados dos slides com fechamento de JUN.26"), só que automático.
+
+Na apresentação, um seletor de mês aparece no cabeçalho (ao lado de
+"LOGÍSTICA & SEGUROS · MÊS.AA") sempre que houver algum mês arquivado,
+permitindo visualizar/exportar os slides de meses anteriores sem precisar
+mexer na planilha.
+
 ## Formato dos números
 
 - Escreva números simples nas células: `1234.56` ou `1234,56` (os dois
