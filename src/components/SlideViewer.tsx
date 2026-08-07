@@ -153,7 +153,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
           <div className={`mt-2 px-3.5 py-1.5 font-mono text-[11px] font-black tracking-widest rounded-full shadow-inner uppercase border ${
             isDarkMode ? "bg-slate-900 border-slate-800 text-cyan-400" : "bg-slate-50 border-slate-200 text-[#0054ec]"
           }`}>
-            {content.mes || 'JUNHO'}
+            {content.mes || 'AGOSTO'}
           </div>
         </div>
       </div>
@@ -682,7 +682,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
 
               {/* Quick High level summary card */}
               <div className="bg-[#0054ec]/8 border border-[#0054ec]/20 rounded-2xl p-4.5 mt-4 text-[14px] font-medium text-[#151720] leading-relaxed">
-                As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a esmagadora maioria das despesas logísticas com <span className="font-black text-[#2226c0]">66,3%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span> (14,8%).
+                As <span className="font-bold text-[#2226c0]">Transportadoras</span> concentram a maior parte das despesas logísticas com <span className="font-black text-[#2226c0]">42,1%</span> do custo total, seguidas pelas remessas de <span className="font-bold text-[#2226c0]">Correios</span> (29,2%).
               </div>
             </div>
 
@@ -1156,7 +1156,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
             {/* Top 3 KPI cards */}
             <div className="grid grid-cols-3 gap-4">
               <div className="rounded-2xl p-4 border flex flex-col gap-0.5 bg-gradient-to-br from-[#0054ec] via-[#2226c0] to-[#fd11a4] text-white border-transparent shadow-lg">
-                <span className="text-[12px] font-bold uppercase tracking-wider text-[#00fafb]">Total Saving (JUN.26)</span>
+                <span className="text-[12px] font-bold uppercase tracking-wider text-[#00fafb]">Total Saving (AGO.26)</span>
                 <span className="text-2xl font-black font-sans tracking-tight">{formatCurrency(content.totalSaving)}</span>
                 <span className="text-[11px] text-white/60 font-semibold">Saving bruto gerado no período</span>
               </div>
