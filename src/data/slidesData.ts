@@ -357,8 +357,52 @@ export const slidesData: Slide[] = [
     }
   },
   {
-    id: "todo-gerencial",
+    id: "laboratorio-tecnico",
     number: 12,
+    title: "Laboratório Técnico",
+    subtitle: "Reparos e manutenções de equipamentos — Julho/26 (29/06 a 30/07)",
+    category: "operations",
+    content: {
+      kpis: [
+        { label: "Chamados Atendidos", value: 41, type: "number" },
+        { label: "Equipamentos Reparados", value: 28, type: "number", isHighlight: true },
+        { label: "Em Análise / Pendente", value: 13, type: "number" }
+      ],
+      categorias: [
+        {
+          name: "Redes NTT — Switches & APs",
+          total: 21,
+          reparados: 19,
+          pendentes: 2,
+          desc: "13 APs Cisco CW9166I-ROW preparados para configuração e 6 switches C9200L-24P zerados/testados; 2 switches com falha de inicialização (TAM Init Failed) sem conserto."
+        },
+        {
+          name: "Notebooks & Equip. Corporativos",
+          total: 16,
+          reparados: 9,
+          pendentes: 7,
+          desc: "Trocas de tela, dobradiças, bases com teclado, fonte reparada e upgrade de memória; pendências aguardando orçamento (HP 250 G8 não aprovado, Lenovo V14 G2 em análise externa)."
+        },
+        {
+          name: "Impressoras Zebra (T-Systems)",
+          total: 2,
+          reparados: 0,
+          pendentes: 2,
+          desc: "2 impressoras ZT510 em análise, aguardando peças (rolete, correia e pezinhos da cabeça de impressão)."
+        },
+        {
+          name: "Equipamentos de Clientes (Icarros)",
+          total: 2,
+          reparados: 0,
+          pendentes: 2,
+          desc: "MacBook A1398 com bateria estufada e Dell G7 7588 com bateria incompatível, ambos aguardando peça/orçamento."
+        }
+      ]
+    }
+  },
+  {
+    id: "todo-gerencial",
+    number: 13,
     title: "Todo Gerencial da Logística de Custos",
     subtitle: "Saving mensal, utilizado e projeção anual (AGO.26)",
     category: "financials",
@@ -401,7 +445,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "divisor-seguros",
-    number: 13,
+    number: 14,
     title: "DEPARTAMENTO DE SEGUROS",
     subtitle: "Gestão de Riscos, Apólices e Garantia Patrimonial",
     category: "divider",
@@ -413,7 +457,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-patrimonial",
-    number: 14,
+    number: 15,
     title: "Garantia Patrimonial de Estoque",
     subtitle: "Estrutura securitária regular e estoque em transição fiscal",
     category: "insurance",
@@ -444,7 +488,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-extra",
-    number: 15,
+    number: 16,
     title: "Seguros de Trânsito & Guarda Técnica",
     subtitle: "Proteção extraordinária de ativos e estoque em pontos satélites",
     category: "insurance",
@@ -465,7 +509,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-trags",
-    number: 16,
+    number: 17,
     title: "Seguro TRAGs e Arcos Dourados",
     subtitle: "Atuação em desativação e garantia de roubo local pós-entrega",
     category: "insurance",
@@ -496,7 +540,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-satelite",
-    number: 17,
+    number: 18,
     title: "Seguro Starlink & Medição",
     subtitle: "Antenas satelitais e calibradores",
     category: "insurance",
@@ -534,7 +578,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "custo-fatura",
-    number: 18,
+    number: 19,
     title: "Composição de Despesa de Faturas de Seguros",
     subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (AGO.26)",
     category: "financials",
@@ -564,7 +608,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "agradecimento",
-    number: 19,
+    number: 20,
     title: "Obrigado!",
     subtitle: "Sempre evoluindo por meio de tecnologia e cooperação",
     category: "contact",
