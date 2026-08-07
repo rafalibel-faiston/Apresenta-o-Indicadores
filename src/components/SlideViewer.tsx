@@ -5,7 +5,7 @@ import {
   ExternalLink, Search, BarChart3, List, Layers, HelpCircle,
   Database, RefreshCw, Smartphone, Mail, Globe, Sparkles, TrendingUp,
   Network, Cable, Server, BatteryCharging, Cpu, Wifi,
-  ChevronDown, ChevronUp
+  ChevronDown, ChevronUp, Wrench, Laptop, Printer, Building2
 } from 'lucide-react';
 import KPICard from './KPICard';
 import FaistonLogo from './FaistonLogo';
@@ -1436,6 +1436,108 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                           </span>
                         </div>
                       </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {slide.id === 'laboratorio-tecnico' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left KPIs and descriptive callout */}
+            <div className="lg:col-span-4 flex flex-col gap-4">
+              {content.kpis.map((kpi: any, idx: number) => (
+                <KPICard
+                  key={idx}
+                  label={kpi.label}
+                  value={kpi.value}
+                  type={kpi.type}
+                  isHighlight={kpi.isHighlight}
+                  borderAccent="#fd11a4"
+                  isDarkMode={isDarkMode}
+                />
+              ))}
+
+              <div className="bg-[#fd11a4]/5 text-slate-900 border border-[#fd11a4]/15 p-4.5 rounded-2xl flex items-start gap-3">
+                <Wrench className="text-[#fd11a4] mt-0.5 flex-shrink-0" size={18} />
+                <div className="flex flex-col gap-1 text-[14px]">
+                  <span className="font-black text-[#fd11a4] uppercase tracking-wide">Manutenção Interna</span>
+                  <p className="font-medium text-slate-700 leading-relaxed">
+                    Diagnóstico, reparo e preparação de equipamentos de rede, notebooks e periféricos no laboratório técnico, reduzindo custo com substituição e mantendo ativos em operação.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right categorias breakdown */}
+            <div className={`lg:col-span-8 ${cardCls}`}>
+              <div className="flex justify-between items-center border-b border-slate-150 pb-3 mb-4">
+                <h3 className="text-[14px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                  <Layers size={14} className="text-[#fd11a4]" />
+                  Chamados por Categoria
+                </h3>
+                <span className="text-[12px] bg-slate-50 border border-slate-150 px-2.5 py-1 rounded-lg text-slate-500 font-extrabold uppercase tracking-tight">
+                  Relatórios Semanais — Marcelo Nista
+                </span>
+              </div>
+
+              <div className={`flex flex-col gap-3.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[58vh]" : "max-h-[320px]"}`}>
+                {content.categorias.map((cat: any, idx: number) => {
+                  const pctReparado = Math.round((cat.reparados / cat.total) * 100);
+
+                  const getCatSpecs = (name: string) => {
+                    if (name.includes('NTT')) {
+                      return { icon: Network, colorClass: 'text-[#0054ec] bg-[#0054ec]/8 border-[#0054ec]/20', gradient: 'from-[#0054ec] to-[#2226c0]' };
+                    }
+                    if (name.includes('Notebooks')) {
+                      return { icon: Laptop, colorClass: 'text-[#fd11a4] bg-[#fd11a4]/8 border-[#fd11a4]/20', gradient: 'from-[#fd11a4] to-[#9b1dbf]' };
+                    }
+                    if (name.includes('Zebra')) {
+                      return { icon: Printer, colorClass: 'text-[#3a2fe8] bg-[#3a2fe8]/8 border-[#3a2fe8]/20', gradient: 'from-[#3a2fe8] to-[#0054ec]' };
+                    }
+                    return { icon: Building2, colorClass: 'text-[#fd5665] bg-[#fd5665]/8 border-[#fd5665]/20', gradient: 'from-[#fd5665] to-[#fd11a4]' };
+                  };
+
+                  const specs = getCatSpecs(cat.name);
+                  const IconComponent = specs.icon;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="border p-4 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-col gap-3 group relative border-slate-200/80 bg-white/40"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3.5">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center border font-sans ${specs.colorClass} shadow-xs flex-shrink-0`}>
+                            <IconComponent size={18} />
+                          </div>
+                          <div className="flex flex-col gap-0.5">
+                            <span className="text-[15px] font-black text-slate-800 leading-none group-hover:text-[#2226c0] transition-colors">{cat.name}</span>
+                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{cat.total} chamados no período</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 flex-shrink-0">
+                          <div className="flex flex-col items-end">
+                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Reparados</span>
+                            <span className="text-[14px] font-mono font-black text-[#0054ec]">{cat.reparados}</span>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Pendentes</span>
+                            <span className="text-[14px] font-mono font-black text-[#fd5665]">{cat.pendentes}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-150 shadow-inner">
+                        <div
+                          className={`bg-gradient-to-r ${specs.gradient} h-full rounded-full transition-all duration-500`}
+                          style={{ width: `${pctReparado}%` }}
+                        />
+                      </div>
+
+                      <p className="text-[12.5px] text-slate-500 font-semibold leading-relaxed">{cat.desc}</p>
                     </div>
                   );
                 })}
