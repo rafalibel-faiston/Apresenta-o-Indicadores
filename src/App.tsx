@@ -397,7 +397,7 @@ export default function App() {
             <span className={`text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
               dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'
             }`}>
-              LOGÍSTICA & SEGUROS · {mesAbrev || 'JUN.26'}
+              LOGÍSTICA & SEGUROS · {mesAbrev || 'AGO.26'}
             </span>
             <h1 className={`text-[11px] font-semibold font-serif leading-none ${
               dk ? 'text-slate-300' : 'text-slate-600'
