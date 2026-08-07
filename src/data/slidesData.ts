@@ -340,8 +340,8 @@ export const slidesData: Slide[] = [
     category: "operations",
     content: {
       kpis: [
-        { label: "Qtd. Total Descartada", value: 11306, type: "number" },
-        { label: "Receita Líquida Lotes", value: 11500.00, type: "currency", isHighlight: true }
+        { label: "Qtd. Total Descartada", value: 11339, type: "number" },
+        { label: "Receita Líquida Lotes", value: 12050.00, type: "currency", isHighlight: true }
       ],
       lotes: [
         { name: "Lote 1", qty: 420, value: 1100.00, desc: "HDs, Notebooks, Fontes, Cabos, Fãs" },
@@ -351,7 +351,8 @@ export const slidesData: Slide[] = [
         { name: "Lote 5", qty: 4085, value: 3000.00, desc: "Roteadores, Switches, Módulos, Antenas" },
         { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, HDs, Notebooks, Máq. de Cartão" },
         { name: "Lote 8", qty: 6, value: 350.00, desc: "Switches Cisco/Juniper, Servidor HP, Riverbed" },
-        { name: "Lote 9", qty: 815, value: 450.00, desc: "Ferros, Cabos, TV, Monitor" }
+        { name: "Lote 9", qty: 815, value: 450.00, desc: "Ferros, Cabos, TV, Monitor" },
+        { name: "Lote 10", qty: 33, value: 550.00, desc: "Notebooks Diversos, Desktops Dell Optiplex 7050" }
       ]
     }
   },
@@ -377,7 +378,7 @@ export const slidesData: Slide[] = [
         { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 },
         { item: 10, desc: "Descarte sustentável - Lote 8", qty: 6, value: 350.00 },
         { item: 11, desc: "Descarte sustentável - Lote 9", qty: null, value: 450.00 },
-        { item: 12, desc: "Descarte sustentável - Lote 9", qty: null, value: 550.00 }
+        { item: 12, desc: "Descarte sustentável - Lote 10", qty: 33, value: 550.00 }
       ],
       utilizadoItems: [
         { desc: "Identidade Visual", value: 5217.93 },
