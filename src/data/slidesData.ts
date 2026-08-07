@@ -407,7 +407,7 @@ export const slidesData: Slide[] = [
   {
     id: "todo-gerencial",
     number: 13,
-    title: "Todo Gerencial da Logística de Custos",
+    title: "Controle de Saving - Logistica",
     subtitle: "Saving mensal, utilizado e projeção anual (AGO.26)",
     category: "financials",
     content: {
