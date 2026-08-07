@@ -763,10 +763,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   </div>
                 </div>
 
-                <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest mb-2.5">Detalhamento por Cliente</h4>
+                <div className="flex items-center justify-between mb-2.5">
+                  <h4 className="text-[12px] font-black text-slate-400 uppercase tracking-widest">Detalhamento por Cliente</h4>
+                  <span className="text-[11px] bg-slate-100 px-2 py-0.5 rounded text-slate-500 font-black">{content.entrada.details.length} Clientes</span>
+                </div>
                 <div className={`flex flex-col gap-2 overflow-y-auto ${isFullscreen ? "max-h-[38vh]" : "max-h-[180px]"}`}>
                   {content.entrada.details.map((item: any, idx: number) => {
-                    const ratio = (item.qty / 122) * 100;
+                    const ratio = (item.qty / 176) * 100;
                     return (
                       <div key={idx} className="bg-slate-50 flex items-center justify-between p-3 rounded-xl border border-slate-100/50">
                         <span className="text-[14px] font-bold text-slate-800">{item.client}</span>
@@ -783,7 +786,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               </div>
 
               <div className={`text-[12px] text-slate-400 font-semibold tracking-wider text-center mt-4 border-t pt-3 ${divCls}`}>
-                Total de equipamentos de entrada física
+                Alto volume de entrada física com origem em {content.entrada.details[0]?.client}
               </div>
             </div>
 
