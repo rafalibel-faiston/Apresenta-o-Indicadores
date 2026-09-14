@@ -270,12 +270,12 @@ export const slidesData: Slide[] = [
     subtitle: "Valor patrimonial de mercadorias custodiadas por categoria (SET.26)",
     category: "operations",
     content: {
-      total: 50824188.67,
+      total: 48249094.05,
       groups: [
-        { name: "Estoque com NF", value: 40695820.85, percentage: 80.07, color: "bg-[#0054ec]" },
-        { name: "Estoque sem NF", value: 6757876.88, percentage: 13.30, color: "bg-[#fd11a4]" },
-        { name: "Guarda de Técnico", value: 795396.32, percentage: 1.56, color: "bg-[#9b1dbf]" },
-        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.07, color: "bg-[#fd5665]" }
+        { name: "Projetos com NF", value: 38120726.23, percentage: 79.01, color: "bg-[#0054ec]" },
+        { name: "Estoque sem NF", value: 6757876.88, percentage: 14.01, color: "bg-[#fd11a4]" },
+        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.34, color: "bg-[#fd5665]" },
+        { name: "Guarda de Técnico", value: 795396.32, percentage: 1.65, color: "bg-[#9b1dbf]" }
       ],
       guardaTecnica: [
         { client: "NTT", qty: 85, value: 449775.80 },
@@ -441,7 +441,8 @@ export const slidesData: Slide[] = [
         "A apólice cobre todos os equipamentos que entraram em nosso estoque físico até a devida saída regulamentada.",
         "Destaque: NTT representa o maior volume segurado em estoque regular (projetos).",
         "Ativos Fixos abrangem estruturas físicas corporativas: mobiliário de escritório e equipamentos técnicos.",
-        "Em caso de sinistro extraordinário, as câmeras de CFTV são acionadas como exigência comprovatória contratual."
+        "Em caso de sinistro extraordinário, as câmeras de CFTV são acionadas como exigência comprovatória contratual.",
+        "Valor segurado concilia com o Estoque Atual: R$ 48.249.094,05 custodiados menos R$ 795.396,32 de Guarda de Técnico, que é coberta pela apólice de Seguro Extra."
       ]
     }
   },
