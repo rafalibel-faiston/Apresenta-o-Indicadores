@@ -339,15 +339,13 @@ export const slidesData: Slide[] = [
     category: "operations",
     content: {
       kpis: [
-        { label: "Qtd. Total Descartada", value: 11339, type: "number" },
-        { label: "Receita Líquida Lotes", value: 12050.00, type: "currency", isHighlight: true }
+        { label: "Qtd. Total Descartada", value: 11391, type: "number" },
+        { label: "Receita Líquida Lotes", value: 15100.00, type: "currency", isHighlight: true }
       ],
       lotes: [
-        { name: "Lote 1", qty: 420, value: 1100.00, desc: "HDs, Notebooks, Fontes, Cabos, Fãs" },
-        { name: "Lote 2", qty: 334, value: 820.00, desc: "CPUs, Monitores, Ventiladores, Placas" },
-        { name: "Lote 3", qty: 608, value: 2300.00, desc: "Servidores, Placas, Cabos, Baterias" },
-        { name: "Lote 4", qty: 4924, value: 2500.00, desc: "Fontes, Carcaças de SW, HDs, Cabos" },
-        { name: "Lote 5", qty: 4085, value: 3000.00, desc: "Roteadores, Switches, Módulos, Antenas" },
+        { name: "Lotes 1, 2 e 3", qty: 1362, value: 4220.00, desc: "HDs, Notebooks, Fontes, Cabos, Placas, Servidores, Monitores" },
+        { name: "Lotes 4 e 5", qty: 9009, value: 5550.00, desc: "Fontes, Carcaças de SW, Cabos, Roteadores, Switches, Antenas" },
+        { name: "Lote 6", qty: 52, value: 3000.00, desc: "Equipamentos diversos sucateados" },
         { name: "Lote 7", qty: 114, value: 980.00, desc: "TVs, HDs, Notebooks, Máq. de Cartão" },
         { name: "Lote 8", qty: 6, value: 350.00, desc: "Switches Cisco/Juniper, Servidor HP, Riverbed" },
         { name: "Lote 9", qty: 815, value: 450.00, desc: "Ferros, Cabos, TV, Monitor" },

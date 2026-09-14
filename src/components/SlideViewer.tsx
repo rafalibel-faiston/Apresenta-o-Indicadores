@@ -1319,9 +1319,10 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 </span>
               </div>
 
-              <div className={`flex flex-col gap-3.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[58vh]" : "max-h-[320px]"}`}>
+              <div className={`flex flex-col gap-2.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[58vh]" : "max-h-[320px]"}`}>
                 {content.lotes.map((item: any, idx: number) => {
-                  const valProgress = Math.max((item.value / 3000.00) * 100, 2);
+                  const loteCeiling = Math.max(...content.lotes.map((l: any) => l.value));
+                  const valProgress = Math.min(Math.max((item.value / loteCeiling) * 100, 2), 100);
                   const isLastItem = idx === content.lotes.length - 1;
                   
                   // Dynamically map lote specifications based on description
@@ -1385,13 +1386,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   return (
                     <div 
                       key={idx} 
-                      className={`border p-4 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-4 group relative overflow-hidden ${borderClass}`}
+                      className={`border p-3 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 group relative overflow-hidden ${borderClass}`}
                     >
                       {/* Subtle hover background ambient glow match */}
                       <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-slate-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                       {/* Left: Icon, Batch Number, Description, and Category Badge */}
-                      <div className="flex items-center gap-3.5 min-w-[240px] relative z-10">
+                      <div className="flex items-center gap-3 min-w-[230px] relative z-10">
                         {/* Colored icon badge wrapper */}
                         <div className={`w-10 h-10 rounded-xl flex items-center justify-center border font-sans ${specs.colorClass} shadow-xs flex-shrink-0 relative`}>
                            <IconComponent size={18} />
@@ -1404,7 +1405,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                         </div>
                         <div className="flex flex-col gap-0.5">
                           <div className="flex items-center gap-2">
-                            <span className="text-[13px] font-black tracking-tight text-slate-400 font-mono">
+                            <span className="text-[12px] font-black tracking-tight text-slate-400 font-mono">
                               {item.name}
                             </span>
                             {isLastItem && (
@@ -1413,8 +1414,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                               </span>
                             )}
                           </div>
-                          <span className="text-[16px] font-black text-slate-800 leading-none group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
-                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
+                          <span className="text-[13.5px] font-black text-slate-800 leading-snug group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
                         </div>
                       </div>
 
@@ -1436,13 +1437,13 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       <div className="flex items-center justify-between md:justify-end gap-6 min-w-[170px] border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 relative z-10">
                         <div className="flex flex-col items-start md:items-end">
                           <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Quantidade</span>
-                          <span className="text-[14px] font-mono font-black text-slate-700">
+                          <span className="text-[13px] font-mono font-black text-slate-700">
                             {item.qty.toLocaleString('pt-BR')} un
                           </span>
                         </div>
                         <div className="flex flex-col items-end">
                           <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
-                          <span className={`text-[16px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
+                          <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
                             {formatCurrency(item.value)}
                           </span>
                         </div>
