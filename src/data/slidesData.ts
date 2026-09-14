@@ -400,8 +400,51 @@ export const slidesData: Slide[] = [
     }
   },
   {
-    id: "divisor-seguros",
+    id: "todo-gerencial",
     number: 13,
+    title: "Controle de Saving - Logistica",
+    subtitle: "Saving mensal, utilizado e projeção anual (SET.26)",
+    category: "financials",
+    content: {
+      totalSaving: 41820.98,
+      totalUtilizado: 20038.93,
+      saldoSaving: 21782.05,
+      savingItems: [
+        { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
+        { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
+        { item: 3, desc: "Redução Notebook Método", qty: 51, value: 5212.80, obs: "Mensal — cancelamento do seguro" },
+        { item: 4, desc: "Ajuste rateio condomínio 280", qty: 4, value: 5148.99, obs: "Mensal — redução de HC, água e luz" },
+        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", qty: 137, value: 10617.85, obs: "Mensal — cancelamento do seguro" },
+        { item: 6, desc: "Venda de 5 TVs", qty: 5, value: 4000.00 },
+        { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
+        { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
+        { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34, obs: "Mensal" },
+        { item: 10, desc: "Descarte sustentável - Lote 8", qty: 6, value: 350.00 },
+        { item: 11, desc: "Descarte sustentável - Lote 9", qty: null, value: 450.00 },
+        { item: 12, desc: "Descarte sustentável - Lote 10", qty: null, value: 550.00 }
+      ],
+      utilizadoItems: [
+        { desc: "Roubo Notebook - Método", value: 7449.00 },
+        { desc: "Identidade Visual", value: 5217.93 },
+        { desc: "Geladeira", value: 1788.00 },
+        { desc: "Treinamento Empilhadeira - Logística", value: 1699.00 },
+        { desc: "Manutenção AR - Data center", value: 1600.00 },
+        { desc: "Visual Set IA - Tarifação", value: 1200.00 },
+        { desc: "Dedetização 280", value: 950.00 },
+        { desc: "Movimentação máquina de café p/ 280", value: 80.00 },
+        { desc: "Manutenção tomadas Financeiro", value: 55.00 }
+      ],
+      savingAnual: [
+        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", mensal: 10617.85, anual: 127414.20 },
+        { item: 3, desc: "Redução Notebook Método", mensal: 5212.80, anual: 62553.60 },
+        { item: 4, desc: "Ajuste rateio condomínio 280", mensal: 5148.99, anual: 61787.88 },
+        { item: 9, desc: "Renovação Tiflux", mensal: 1741.34, anual: 20896.08 }
+      ]
+    }
+  },
+  {
+    id: "divisor-seguros",
+    number: 14,
     title: "DEPARTAMENTO DE SEGUROS",
     subtitle: "Gestão de Riscos, Apólices e Garantia Patrimonial",
     category: "divider",
@@ -413,7 +456,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-patrimonial",
-    number: 14,
+    number: 15,
     title: "Garantia Patrimonial de Estoque",
     subtitle: "Estrutura securitária regular e estoque em transição fiscal",
     category: "insurance",
@@ -448,7 +491,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-extra",
-    number: 15,
+    number: 16,
     title: "Seguros de Trânsito & Guarda Técnica",
     subtitle: "Proteção extraordinária de ativos e estoque em pontos satélites",
     category: "insurance",
@@ -469,7 +512,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-trags",
-    number: 16,
+    number: 17,
     title: "Seguro TRAGs e Arcos Dourados",
     subtitle: "Atuação em desativação e garantia de roubo local pós-entrega",
     category: "insurance",
@@ -500,7 +543,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-satelite",
-    number: 17,
+    number: 18,
     title: "Seguro Starlink & Medição",
     subtitle: "Antenas satelitais e calibradores",
     category: "insurance",
@@ -540,7 +583,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "custo-fatura",
-    number: 18,
+    number: 19,
     title: "Faturas de Seguros — CNPJ Principal",
     subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (SET.26)",
     category: "financials",
@@ -570,7 +613,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "custo-fatura-gerenciamento",
-    number: 19,
+    number: 20,
     title: "Faturas de Seguros — CNPJ Gerenciamento",
     subtitle: "Conciliação mensal do CNPJ de gerenciamento (SET.26)",
     category: "financials",
@@ -592,7 +635,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "agradecimento",
-    number: 20,
+    number: 21,
     title: "Obrigado!",
     subtitle: "Sempre evoluindo por meio de tecnologia e cooperação",
     category: "contact",
