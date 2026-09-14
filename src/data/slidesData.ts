@@ -421,7 +421,7 @@ export const slidesData: Slide[] = [
       kpis: [
         { label: "Valor Patrimonial Acumulado", value: 47453697.73, type: "currency", isHighlight: true },
         { label: "Custo Mensal da Apólice", value: 32910.57, type: "currency" },
-        { label: "Limite de Cobertura Base", value: 45000000.00, type: "currency" }
+        { label: "Limite de Cobertura Base", value: 53000000.00, type: "currency" }
       ],
       coberturas: [
         { name: "Projetos Faiston", value: 38120726.23, share: 80.33 },
