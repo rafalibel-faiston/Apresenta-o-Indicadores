@@ -1319,10 +1319,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 </span>
               </div>
 
-              <div className={`flex flex-col gap-2.5 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[58vh]" : "max-h-[320px]"}`}>
+              <div className={`flex flex-col gap-2 overflow-y-auto pr-1 ${isFullscreen ? "max-h-[64vh]" : "max-h-[560px]"}`}>
                 {content.lotes.map((item: any, idx: number) => {
-                  const loteCeiling = Math.max(...content.lotes.map((l: any) => l.value));
-                  const valProgress = Math.min(Math.max((item.value / loteCeiling) * 100, 2), 100);
                   const isLastItem = idx === content.lotes.length - 1;
                   
                   // Dynamically map lote specifications based on description
@@ -1386,16 +1384,16 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                   return (
                     <div 
                       key={idx} 
-                      className={`border p-3 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-col md:flex-row md:items-center justify-between gap-3 group relative overflow-hidden ${borderClass}`}
+                      className={`border px-3 py-2.5 rounded-2xl hover:bg-slate-50/50 hover:border-slate-350 hover:shadow-xs transition-all duration-300 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 group relative ${borderClass}`}
                     >
                       {/* Subtle hover background ambient glow match */}
                       <div className="absolute top-0 right-0 w-32 h-32 bg-radial-gradient from-slate-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                       {/* Left: Icon, Batch Number, Description, and Category Badge */}
-                      <div className="flex items-center gap-3 min-w-[230px] relative z-10">
+                      <div className="flex items-center gap-3 flex-1 min-w-[220px] relative z-10">
                         {/* Colored icon badge wrapper */}
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center border font-sans ${specs.colorClass} shadow-xs flex-shrink-0 relative`}>
-                           <IconComponent size={18} />
+                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center border font-sans ${specs.colorClass} shadow-xs flex-shrink-0 relative`}>
+                           <IconComponent size={17} />
                            {isLastItem && (
                              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0054ec] opacity-75"></span>
@@ -1403,7 +1401,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                              </span>
                            )}
                         </div>
-                        <div className="flex flex-col gap-0.5">
+                        <div className="flex flex-col gap-0.5 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="text-[12px] font-black tracking-tight text-slate-400 font-mono">
                               {item.name}
@@ -1415,34 +1413,19 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             )}
                           </div>
                           <span className="text-[13.5px] font-black text-slate-800 leading-snug group-hover:text-[#2226c0] transition-colors">{item.desc}</span>
-                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">{specs.badge}</span>
-                        </div>
-                      </div>
-
-                      {/* Middle: Progress Bar representing efficiency or yield */}
-                      <div className="flex-1 max-w-sm flex flex-col gap-1 md:px-4">
-                        <div className="flex justify-between items-center text-[12px] font-bold text-slate-400">
-                          <span className="uppercase tracking-wide text-[10.5px] font-extrabold text-slate-450">Retorno Sustentável</span>
-                          <span className="font-mono text-slate-700 font-black text-[12.5px]">{valProgress.toFixed(0)}% do teto</span>
-                        </div>
-                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden p-0.5 border border-slate-150 shadow-inner">
-                          <div 
-                            className={`bg-gradient-to-r ${specs.gradient} h-full rounded-full transition-all duration-500`}
-                            style={{ width: `${valProgress}%` }} 
-                          />
                         </div>
                       </div>
 
                       {/* Right: Quantity and Yield Numbers */}
-                      <div className="flex items-center justify-between md:justify-end gap-6 min-w-[170px] border-t md:border-t-0 border-slate-100 pt-3 md:pt-0 relative z-10">
-                        <div className="flex flex-col items-start md:items-end">
-                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Quantidade</span>
+                      <div className="flex items-center justify-end gap-5 w-[215px] flex-shrink-0 relative z-10">
+                        <div className="flex flex-col items-end">
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider whitespace-nowrap">Qtd.</span>
                           <span className="text-[13px] font-mono font-black text-slate-700">
                             {item.qty.toLocaleString('pt-BR')} un
                           </span>
                         </div>
                         <div className="flex flex-col items-end">
-                          <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Valor Recuperado</span>
+                          <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider whitespace-nowrap">Valor Recuperado</span>
                           <span className={`text-[14px] font-mono font-black tracking-tight ${isLastItem ? 'text-[#0054ec]' : 'text-[#2226c0]'}`}>
                             {formatCurrency(item.value)}
                           </span>
