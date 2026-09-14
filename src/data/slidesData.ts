@@ -541,13 +541,13 @@ export const slidesData: Slide[] = [
   {
     id: "custo-fatura",
     number: 18,
-    title: "Composição de Despesa de Faturas de Seguros",
+    title: "Faturas de Seguros — CNPJ Principal",
     subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (SET.26)",
     category: "financials",
     content: {
-      total: 59026.71,
+      total: 58953.59,
       kpis: [
-        { label: "Fatura Líquida Consolidada", value: 59026.71, type: "currency", isHighlight: true }
+        { label: "Fatura CNPJ Principal", value: 58953.59, type: "currency", isHighlight: true }
       ],
       invoiceItems: [
         { label: "Patrimonial", name: "Seguro Patrimonial", value: 32910.57, sub: "Estoque fixo" },
@@ -559,20 +559,40 @@ export const slidesData: Slide[] = [
         { label: "Simpar", name: "Simpar", value: 684.54, sub: "Apólice dedicada Simpar" },
         { label: "Zamp", name: "Zamp", value: 593.71, sub: "Apólice dedicada Zamp" },
         { label: "Fluke", name: "Fluke", value: 430.97, sub: "Instrumentos de medição" },
-        { label: "Mensalidade", name: "Mensalidade", value: 35.00, sub: "Taxa fixa mensal" },
-        { label: "Gerenciamento", name: "Starlink (CNPJ Gerenciamento)", value: 57.63, sub: "Fatura do CNPJ de gerenciamento" },
-        { label: "Gerenciamento", name: "Cobrança Indevida", value: 15.49, sub: "Em contestação junto à corretora" }
+        { label: "Mensalidade", name: "Mensalidade", value: 35.00, sub: "Taxa fixa mensal" }
       ],
       comments: [
-        "Conciliação fechou com faturas auditadas e prêmios aplicados por categoria, acumulando R$ 59.026,71 mensais para uma proteção do patrimônio Faiston.",
-        "CNPJ principal responde por R$ 58.953,59 e o CNPJ de gerenciamento por R$ 73,12 (Starlink R$ 57,63 + cobrança indevida R$ 15,49, em contestação).",
-        "Mês sem estorno de crédito; BD Costs (R$ 5.000,00) e mensalidade fixa (R$ 35,00) seguem como despesas recorrentes da conta."
+        "Fatura do CNPJ principal fecha em R$ 58.953,59, concentrando todas as apólices operacionais da Faiston.",
+        "Patrimonial (R$ 32.910,57) e Extra / Guarda Técnica (R$ 14.110,24) respondem por 79,8% da fatura do mês.",
+        "Mês sem estorno de crédito; BD Costs (R$ 5.000,00) e mensalidade fixa (R$ 35,00) seguem como despesas recorrentes."
+      ]
+    }
+  },
+  {
+    id: "custo-fatura-gerenciamento",
+    number: 19,
+    title: "Faturas de Seguros — CNPJ Gerenciamento",
+    subtitle: "Conciliação mensal do CNPJ de gerenciamento (SET.26)",
+    category: "financials",
+    content: {
+      total: 73.12,
+      kpis: [
+        { label: "Fatura CNPJ Gerenciamento", value: 73.12, type: "currency", isHighlight: true }
+      ],
+      invoiceItems: [
+        { label: "Starlink", name: "Starlink", value: 57.63, sub: "Antenas vinculadas ao CNPJ de gerenciamento" },
+        { label: "Indevido", name: "Cobrança Indevida", value: 15.49, sub: "Em contestação junto à corretora" }
+      ],
+      comments: [
+        "Fatura do CNPJ de gerenciamento fecha em R$ 73,12, valor residual frente aos R$ 58.953,59 do CNPJ principal.",
+        "Cobrança indevida de R$ 15,49 identificada na conciliação e já aberta para contestação junto à corretora.",
+        "Somadas, as duas faturas totalizam R$ 59.026,71 de despesa mensal com seguros."
       ]
     }
   },
   {
     id: "agradecimento",
-    number: 19,
+    number: 20,
     title: "Obrigado!",
     subtitle: "Sempre evoluindo por meio de tecnologia e cooperação",
     category: "contact",

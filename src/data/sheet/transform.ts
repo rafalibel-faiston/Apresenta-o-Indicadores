@@ -407,6 +407,7 @@ function buildSlide(staticSlide: Slide, data: SheetData): Slide {
       applySegurosSections(slide, data);
       break;
     case 'custo-fatura':
+    case 'custo-fatura-gerenciamento':
       applyCustoFatura(slide, data);
       break;
     default:

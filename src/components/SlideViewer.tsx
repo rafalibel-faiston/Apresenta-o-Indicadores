@@ -97,7 +97,8 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
       case 'cia-aerea': return 'cyan';
       case 'dedicados': return 'purple';
       case 'self-storage': return 'pink';
-      case 'custo-fatura': return 'blue';
+      case 'custo-fatura':
+      case 'custo-fatura-gerenciamento': return 'blue';
       case 'seguros-sinistros': return 'purple';
       default: {
         const themes: ('indigo' | 'purple' | 'pink' | 'cyan' | 'blue')[] = ['indigo', 'purple', 'pink', 'cyan', 'blue'];
@@ -1557,7 +1558,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         )}
 
         {/* --- INSURANCE STANDARD VIEW (Slides 13, 14, 15, 16) --- */}
-        {category === 'insurance' && slide.id !== 'custo-fatura' && (
+        {category === 'insurance' && !slide.id.startsWith('custo-fatura') && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch" id="insurance-display">
             {/* Left insurance details, KPIs / commentaries */}
             <div className="lg:col-span-5 flex flex-col gap-4">
@@ -1770,7 +1771,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
         )}
 
         {/* --- COMPOSIÇÃO DE CUSTOS DE SEGURO (Slide 17) --- */}
-        {slide.id === 'custo-fatura' && (
+        {slide.id.startsWith('custo-fatura') && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             {/* Area Line Chart */}
             <div className="lg:col-span-4 flex flex-col gap-4">
