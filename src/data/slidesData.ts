@@ -17,33 +17,29 @@ export const slidesData: Slide[] = [
     id: "correios",
     number: 2,
     title: "Expedições Correios",
-    subtitle: "Consolidado por projeto - Custos, embarques e equipamentos (AGO.26)",
+    subtitle: "Consolidado por projeto - Custos, embarques e equipamentos (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
-        { label: "Custo Total", value: 10817.67, type: "currency", isHighlight: true },
-        { label: "Total Embarques", value: 149, type: "number" },
-        { label: "Equipamentos", value: 149, type: "number" },
-        { label: "Custo Médio", value: 72.60, type: "currency" }
+        { label: "Custo Total", value: 4573.11, type: "currency", isHighlight: true },
+        { label: "Total Embarques", value: 89, type: "number" },
+        { label: "Equipamentos", value: 89, type: "number" },
+        { label: "Custo Médio", value: 51.38, type: "currency" }
       ],
       commentary: [
-        { type: "info", text: "Maior custo: NTT – R$ 3.952,86" },
-        { type: "success", text: "Menor custo: T-SYSTEMS – R$ 46,93" }
+        { type: "info", text: "Maior custo: NTT – R$ 1.964,54" },
+        { type: "success", text: "Menor custo: ITAÚ – R$ 54,54" }
       ],
       projects: [
-        { project: "NTT", cost: 3952.86, shipments: 51, equipments: 51, averageCost: 77.51 },
-        { project: "ITAÚ", cost: 2044.82, shipments: 45, equipments: 45, averageCost: 45.44 },
-        { project: "VIVO VITA", cost: 1998.79, shipments: 28, equipments: 28, averageCost: 71.39 },
-        { project: "ZAMP", cost: 820.32, shipments: 7, equipments: 7, averageCost: 117.19 },
-        { project: "TELCOWEB", cost: 743.86, shipments: 7, equipments: 7, averageCost: 106.27 },
-        { project: "ANIVERSARIANTES FAISTON", cost: 380.97 },
-        { project: "OPEX", cost: 259.04 },
-        { project: "KLABIN", cost: 186.23, shipments: 2, equipments: 2, averageCost: 93.12 },
-        { project: "BEMOBI", cost: 142.77, shipments: 4, equipments: 4, averageCost: 35.69 },
-        { project: "HPE", cost: 91.73, shipments: 2, equipments: 2, averageCost: 45.87 },
-        { project: "C&A", cost: 86.05, shipments: 1, equipments: 1, averageCost: 86.05 },
-        { project: "ALLCARE", cost: 63.30, shipments: 1, equipments: 1, averageCost: 63.30 },
-        { project: "T-SYSTEMS", cost: 46.93, shipments: 1, equipments: 1, averageCost: 46.93 }
+        { project: "NTT", cost: 1964.54, shipments: 26, equipments: 26, averageCost: 75.56 },
+        { project: "OPEX", cost: 978.04, shipments: 36, equipments: 36, averageCost: 27.17 },
+        { project: "VIVO VITA", cost: 567.81, shipments: 10, equipments: 10, averageCost: 56.78 },
+        { project: "TELCOWEB", cost: 322.64, shipments: 4, equipments: 4, averageCost: 80.66 },
+        { project: "KLABIN", cost: 311.94, shipments: 4, equipments: 4, averageCost: 77.99 },
+        { project: "BEMOBI", cost: 178.33, shipments: 4, equipments: 4, averageCost: 44.58 },
+        { project: "HPE", cost: 111.27, shipments: 2, equipments: 2, averageCost: 55.64 },
+        { project: "ZAMP", cost: 84.00, shipments: 2, equipments: 2, averageCost: 42.00 },
+        { project: "ITAÚ", cost: 54.54, shipments: 1, equipments: 1, averageCost: 54.54 }
       ]
     }
   },
@@ -51,33 +47,35 @@ export const slidesData: Slide[] = [
     id: "transportadoras",
     number: 3,
     title: "Expedições Transportadoras",
-    subtitle: "Custo consolidado por projeto (AGO.26)",
+    subtitle: "Custo consolidado por projeto (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
-        { label: "Custo Total", value: 15623.55, type: "currency", isHighlight: true },
-        { label: "Notas Fiscais / Embarques", value: 58, type: "number" },
-        { label: "Equipamentos", value: 150, type: "number" }
+        { label: "Custo Total", value: 46022.29, type: "currency", isHighlight: true },
+        { label: "Notas Fiscais / Embarques", value: 97, type: "number" },
+        { label: "Equipamentos", value: 462, type: "number" }
       ],
       distribution: [
-        { name: "RED CARGAS", value: 9670.61, percentage: 61.90, color: "from-emerald-500 to-teal-500" },
-        { name: "SCALT", value: 5575.18, percentage: 35.68, color: "from-purple-500 to-pink-500" },
-        { name: "BESTLOG", value: 377.76, percentage: 2.42, color: "from-indigo-500 to-violet-500" }
+        { name: "RED CARGAS", value: 32331.76, percentage: 70.25, color: "from-emerald-500 to-teal-500" },
+        { name: "BESTLOG", value: 7661.82, percentage: 16.65, color: "from-indigo-500 to-violet-500" },
+        { name: "SCALT", value: 6028.71, percentage: 13.10, color: "from-purple-500 to-pink-500" }
       ],
       projects: [
-        { project: "NTT", cost: 10281.98, shipments: 38, equipments: 92, averageCost: 270.58 },
-        { project: "ICARROS", cost: 2164.55, shipments: 9, equipments: 11, averageCost: 240.51 },
-        { project: "ZAMP", cost: 1991.05, shipments: 3, equipments: 3, averageCost: 663.68 },
-        { project: "FLEURY", cost: 280.56, shipments: 2, equipments: 27, averageCost: 140.28 },
-        { project: "HABRAS", cost: 250.00, shipments: 1, equipments: 10, averageCost: 250.00 },
-        { project: "ALLCARE", cost: 243.93, shipments: 2, equipments: 3, averageCost: 121.97 },
-        { project: "ENSONO", cost: 151.83, shipments: 1, equipments: 2, averageCost: 151.83 },
-        { project: "TELCOWEB", cost: 139.12, shipments: 1, equipments: 1, averageCost: 139.12 },
-        { project: "METODO", cost: 120.53, shipments: 1, equipments: 1, averageCost: 120.53 }
+        { project: "ZAMP", cost: 19898.80, shipments: 17, equipments: 264, averageCost: 1170.52 },
+        { project: "NTT", cost: 17830.20, shipments: 47, equipments: 147, averageCost: 379.37 },
+        { project: "ICARROS", cost: 4899.19, shipments: 18, equipments: 32, averageCost: 272.18 },
+        { project: "ALLCARE", cost: 851.92, shipments: 5, equipments: 5, averageCost: 170.38 },
+        { project: "T-SYSTEMS", cost: 641.77, shipments: 1, equipments: 1, averageCost: 641.77 },
+        { project: "VIVO VITA", cost: 556.31, shipments: 2, equipments: 2, averageCost: 278.16 },
+        { project: "ENSONO", cost: 396.33, shipments: 3, equipments: 3, averageCost: 132.11 },
+        { project: "STARLINK", cost: 344.94, shipments: 1, equipments: 4, averageCost: 344.94 },
+        { project: "OPEX", cost: 239.39, shipments: 1, equipments: 1, averageCost: 239.39 },
+        { project: "FLEURY", cost: 225.00, shipments: 1, equipments: 1, averageCost: 225.00 },
+        { project: "TELCOWEB", cost: 138.44, shipments: 1, equipments: 2, averageCost: 138.44 }
       ],
       commentary: [
-        { type: "info", text: "NTT e ICARROS somam R$ 12.446,53 (79,7% do custo consolidado)." },
-        { type: "link", text: "NTT concentra 92 dos 150 equipamentos transportados." }
+        { type: "info", text: "ZAMP e NTT somam R$ 37.729,00 (82,0% do custo consolidado)." },
+        { type: "link", text: "ZAMP concentra 264 dos 462 equipamentos transportados." }
       ]
     }
   },
@@ -85,24 +83,23 @@ export const slidesData: Slide[] = [
     id: "cia-aerea",
     number: 4,
     title: "Expedições Cia Aérea",
-    subtitle: "Consolidado GOL - Custo total e equipamentos (AGO.26)",
+    subtitle: "Consolidado GOL - Custo total e equipamentos (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
-        { label: "Custo Total", value: 2078.42, type: "currency", isHighlight: true },
-        { label: "Qtd. Equipamentos", value: 13, type: "number" },
-        { label: "Custo Médio / Equip.", value: 159.88, type: "currency" }
+        { label: "Custo Total", value: 2332.97, type: "currency", isHighlight: true },
+        { label: "Qtd. Equipamentos", value: 21, type: "number" },
+        { label: "Custo Médio / Equip.", value: 111.09, type: "currency" }
       ],
       commentary: [
-        { type: "info", text: "Maior custo: NTT – R$ 864,96" },
-        { type: "success", text: "Menor custo: BEMOBI – R$ 59,71" }
+        { type: "info", text: "Maior custo: NTT – R$ 1.172,32" },
+        { type: "success", text: "Menor custo: C&A – R$ 99,25" }
       ],
       projects: [
-        { project: "NTT", cost: 864.96, equipments: 3, averageCost: 288.32 },
-        { project: "HPE", cost: 570.58, equipments: 7, averageCost: 81.51 },
-        { project: "CEUB", cost: 502.97, equipments: 1, averageCost: 502.97 },
-        { project: "VIVO VITA", cost: 80.20, equipments: 1, averageCost: 80.20 },
-        { project: "BEMOBI", cost: 59.71, equipments: 1, averageCost: 59.71 }
+        { project: "NTT", cost: 1172.32, equipments: 5, averageCost: 234.46 },
+        { project: "HPE", cost: 565.20, equipments: 8, averageCost: 70.65 },
+        { project: "VIVO VITA", cost: 496.20, equipments: 7, averageCost: 70.89 },
+        { project: "C&A", cost: 99.25, equipments: 1, averageCost: 99.25 }
       ]
     }
   },
@@ -110,29 +107,29 @@ export const slidesData: Slide[] = [
     id: "courier",
     number: 5,
     title: "Expedições Courier",
-    subtitle: "Consolidado LOGGI - Custos, embarques e equipamentos (AGO.26)",
+    subtitle: "Consolidado LOGGI - Custos, embarques e equipamentos (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
-        { label: "Custo Total", value: 2478.69, type: "currency", isHighlight: true },
-        { label: "Nº de Embarques", value: 28, type: "number" },
-        { label: "Qtd. Equipamentos", value: 28, type: "number" },
-        { label: "Custo Médio / Emb.", value: 88.52, type: "currency" }
+        { label: "Custo Total", value: 3560.74, type: "currency", isHighlight: true },
+        { label: "Nº de Embarques", value: 36, type: "number" },
+        { label: "Qtd. Equipamentos", value: 36, type: "number" },
+        { label: "Custo Médio / Emb.", value: 98.91, type: "currency" }
       ],
       commentary: [
-        { type: "info", text: "Maior custo: HPE – R$ 828,01 (9 equipamentos)" },
-        { type: "success", text: "Menor custo: VIVO VITA – R$ 84,83 (1 equipamento)" }
+        { type: "info", text: "Maior custo: HPE – R$ 1.141,09 (12 equipamentos)" },
+        { type: "success", text: "Menor custo: ALLCARE – R$ 97,01 (1 equipamento)" }
       ],
       projects: [
-        { project: "HPE", cost: 828.01, shipments: 9, equipments: 9, averageCost: 92.00 },
-        { project: "BEMOBI", cost: 337.95, shipments: 3, equipments: 3, averageCost: 112.65 },
-        { project: "TELCOWEB", cost: 311.32, shipments: 4, equipments: 4, averageCost: 77.83 },
-        { project: "OPEX", cost: 244.21, shipments: 5, equipments: 5, averageCost: 48.84 },
-        { project: "NTT", cost: 227.16, shipments: 2, equipments: 2, averageCost: 113.58 },
-        { project: "CEUB", cost: 190.33, shipments: 2, equipments: 2, averageCost: 95.17 },
-        { project: "T-SYSTEMS", cost: 149.69, shipments: 1, equipments: 1, averageCost: 149.69 },
-        { project: "METSO", cost: 105.19, shipments: 1, equipments: 1, averageCost: 105.19 },
-        { project: "VIVO VITA", cost: 84.83, shipments: 1, equipments: 1, averageCost: 84.83 }
+        { project: "HPE", cost: 1141.09, shipments: 12, equipments: 12, averageCost: 95.09 },
+        { project: "T-SYSTEMS", cost: 752.47, shipments: 8, equipments: 8, averageCost: 94.06 },
+        { project: "BEMOBI", cost: 477.12, shipments: 3, equipments: 3, averageCost: 159.04 },
+        { project: "ZAMP", cost: 343.06, shipments: 3, equipments: 3, averageCost: 114.35 },
+        { project: "STARLINK", cost: 268.18, shipments: 2, equipments: 2, averageCost: 134.09 },
+        { project: "C&A", cost: 228.52, shipments: 2, equipments: 2, averageCost: 114.26 },
+        { project: "TELCOWEB", cost: 146.36, shipments: 2, equipments: 2, averageCost: 73.18 },
+        { project: "OPEX", cost: 106.93, shipments: 3, equipments: 3, averageCost: 35.64 },
+        { project: "ALLCARE", cost: 97.01, shipments: 1, equipments: 1, averageCost: 97.01 }
       ]
     }
   },
@@ -140,29 +137,29 @@ export const slidesData: Slide[] = [
     id: "dedicados",
     number: 6,
     title: "Expedições Dedicados",
-    subtitle: "Consolidado por projeto e rota (AGO.26)",
+    subtitle: "Consolidado por projeto e rota (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
-        { label: "Custo Total", value: 4970.00, type: "currency", isHighlight: true },
-        { label: "Qtd. Equipamentos", value: 176, type: "number" }
+        { label: "Custo Total", value: 2750.00, type: "currency", isHighlight: true },
+        { label: "Qtd. Equipamentos", value: 33, type: "number" }
       ],
       commentary: [
-        { type: "info", text: "Maior custo de rota: CASARINI – R$ 2.120,00" },
-        { type: "success", text: "Custo por projetos: ZAMP lidera com R$ 2.820,00 (134 equipamentos)" }
+        { type: "info", text: "Maior custo de rota: WASHINGTON – R$ 2.050,00" },
+        { type: "success", text: "Custo por projetos: BIONOVIS lidera com R$ 750,00" }
       ],
       rotas: [
-        { transportadora: "CASARINI", total: 2120.00, breakdown: [{ project: "NTT", val: 1050.00 }, { project: "ZAMP", val: 1070.00 }] },
-        { transportadora: "SEVERINO", total: 790.00, breakdown: [{ project: "NTT", val: 240.00 }, { project: "ZAMP", val: 550.00 }] },
-        { transportadora: "THOMÉ", total: 760.00, breakdown: [{ project: "ZAMP", val: 600.00 }, { project: "FLEURY", val: 160.00 }] },
-        { transportadora: "WASHINGTON", total: 750.00, breakdown: [{ project: "NTT", val: 150.00 }, { project: "ZAMP", val: 600.00 }] },
-        { transportadora: "ERIC LIBEL", total: 550.00, breakdown: [{ project: "NTT", val: 300.00 }, { project: "T-SYSTEMS", val: 250.00 }] }
+        { transportadora: "WASHINGTON", total: 2050.00, breakdown: [{ project: "BIONOVIS", val: 750.00 }, { project: "HABRAS", val: 600.00 }, { project: "NTT", val: 300.00 }, { project: "VIVO VITA", val: 300.00 }, { project: "ZAMP", val: 100.00 }] },
+        { transportadora: "THOMÉ", total: 400.00, breakdown: [{ project: "T-SYSTEMS", val: 400.00 }] },
+        { transportadora: "CASARINI", total: 300.00, breakdown: [{ project: "NTT", val: 300.00 }] }
       ],
       projects: [
-        { project: "ZAMP", cost: 2820.00, equipments: 134 },
-        { project: "NTT", cost: 1740.00, equipments: 40 },
-        { project: "T-SYSTEMS", cost: 250.00, equipments: 1 },
-        { project: "FLEURY", cost: 160.00, equipments: 1 }
+        { project: "BIONOVIS", cost: 750.00 },
+        { project: "NTT", cost: 600.00, equipments: 12 },
+        { project: "HABRAS", cost: 600.00, equipments: 11 },
+        { project: "T-SYSTEMS", cost: 400.00, equipments: 1 },
+        { project: "VIVO VITA", cost: 300.00, equipments: 6 },
+        { project: "ZAMP", cost: 100.00, equipments: 3 }
       ]
     }
   },
@@ -170,7 +167,7 @@ export const slidesData: Slide[] = [
     id: "self-storage",
     number: 7,
     title: "Custo mensal Self Storage",
-    subtitle: "Valores consolidados por UF para projeto NTT (AGO.26)",
+    subtitle: "Valores consolidados por UF para projeto NTT (SET.26)",
     category: "expeditions",
     content: {
       kpis: [
@@ -193,41 +190,39 @@ export const slidesData: Slide[] = [
     id: "custo-consolidado",
     number: 8,
     title: "Custo Consolidado Logística",
-    subtitle: "Resumo e distribuição geral por modalidade (AGO.26)",
+    subtitle: "Resumo e distribuição geral por modalidade (SET.26)",
     category: "financials",
     content: {
       kpis: [
-        { label: "Custo Logístico Total", value: 37116.14, type: "currency", isHighlight: true }
+        { label: "Custo Logístico Total", value: 60386.92, type: "currency", isHighlight: true }
       ],
       breakdown: [
-        { category: "Transportadora", val: 15623.55, share: 42.09, color: "#6366f1" },
-        { category: "Correios", val: 10817.67, share: 29.15, color: "#8b5cf6" },
-        { category: "Dedicados", val: 4970.00, share: 13.39, color: "#ec4899" },
-        { category: "Courier (Loggi)", val: 2478.69, share: 6.68, color: "#06b6d4" },
-        { category: "Cia Aérea", val: 2078.42, share: 5.60, color: "#3b82f6" },
-        { category: "Self Storage", val: 1147.81, share: 3.09, color: "#10b981" }
+        { category: "Transportadora", val: 46022.29, share: 76.21, color: "#6366f1" },
+        { category: "Correios", val: 4573.11, share: 7.57, color: "#8b5cf6" },
+        { category: "Courier (Loggi)", val: 3560.74, share: 5.90, color: "#06b6d4" },
+        { category: "Dedicados", val: 2750.00, share: 4.55, color: "#ec4899" },
+        { category: "Cia Aérea", val: 2332.97, share: 3.86, color: "#3b82f6" },
+        { category: "Self Storage", val: 1147.81, share: 1.90, color: "#10b981" }
       ],
       projects: [
-        { name: "NTT", value: 18214.77 },
-        { name: "ZAMP", value: 5631.37 },
-        { name: "ICARROS", value: 2164.55 },
-        { name: "VIVO VITA", value: 2163.82 },
-        { name: "ITAÚ", value: 2044.82 },
-        { name: "HPE", value: 1490.32 },
-        { name: "TELCOWEB", value: 1194.30 },
-        { name: "CEUB", value: 693.30 },
-        { name: "BEMOBI", value: 540.43 },
-        { name: "OPEX", value: 503.25 },
-        { name: "T-SYSTEMS", value: 446.62 },
-        { name: "FLEURY", value: 440.56 },
-        { name: "Aniversariantes Faiston", value: 380.97 },
-        { name: "ALLCARE", value: 307.23 },
-        { name: "HABRAS", value: 250.00 },
-        { name: "KLABIN", value: 186.23 },
-        { name: "ENSONO", value: 151.83 },
-        { name: "METODO", value: 120.53 },
-        { name: "METSO", value: 105.19 },
-        { name: "C&A", value: 86.05 }
+        { name: "NTT", value: 22714.87 },
+        { name: "ZAMP", value: 20425.86 },
+        { name: "ICARROS", value: 4899.19 },
+        { name: "VIVO VITA", value: 1920.32 },
+        { name: "HPE", value: 1817.56 },
+        { name: "T-SYSTEMS", value: 1794.24 },
+        { name: "OPEX", value: 1324.36 },
+        { name: "ALLCARE", value: 948.93 },
+        { name: "BIONOVIS", value: 750.00 },
+        { name: "BEMOBI", value: 655.45 },
+        { name: "STARLINK", value: 613.12 },
+        { name: "TELCOWEB", value: 607.44 },
+        { name: "HABRAS", value: 600.00 },
+        { name: "ENSONO", value: 396.33 },
+        { name: "C&A", value: 327.77 },
+        { name: "KLABIN", value: 311.94 },
+        { name: "FLEURY", value: 225.00 },
+        { name: "ITAÚ", value: 54.54 }
       ]
     }
   },
@@ -235,38 +230,35 @@ export const slidesData: Slide[] = [
     id: "entrada-saida",
     number: 9,
     title: "Consolidado Entrada e Saída",
-    subtitle: "Movimentação física de Notas Fiscais e equipamentos comercializados (AGO.26)",
+    subtitle: "Movimentação física de Notas Fiscais e equipamentos comercializados (SET.26)",
     category: "operations",
     content: {
       entrada: {
         title: "NF Entrada",
-        nfs: 8,
-        equipments: 176,
-        value: 1869644.00,
-        details: [
-          { client: "NTT", qty: 164, value: 1813666.64 },
-          { client: "HABRAS", qty: 11, value: 49500.00 },
-          { client: "METODO", qty: 1, value: 6477.36 }
-        ]
+        nfs: 12,
+        equipments: 589,
+        value: 1290246.36,
+        details: []
       },
       saida: {
         title: "NF Saída",
-        nfs: 96,
-        equipments: 289,
-        value: 1357476.82,
+        nfs: 134,
+        equipments: 305,
+        value: 889918.21,
         details: [
-          { client: "NTT", qty: 53 },
-          { client: "HPE", qty: 18 },
-          { client: "VITA", qty: 4 },
-          { client: "BEMOBI", qty: 4 },
-          { client: "TELCOWEB", qty: 6 },
-          { client: "ZAMP", qty: 3 },
-          { client: "ALL CARE", qty: 2 },
-          { client: "FLEURY", qty: 2 },
-          { client: "CEUB", qty: 1 },
-          { client: "HABRAS", qty: 1 },
-          { client: "METODO", qty: 1 },
-          { client: "T SYSTEMS", qty: 1 }
+          { client: "ZAMP", qty: 127 },
+          { client: "BIONOVIS", qty: 43 },
+          { client: "NTT", qty: 30 },
+          { client: "HPE", qty: 25 },
+          { client: "VITA", qty: 23 },
+          { client: "TELCOWEB", qty: 18 },
+          { client: "HABRAS", qty: 12 },
+          { client: "T-SYSTEMS", qty: 7 },
+          { client: "BEMOBI", qty: 6 },
+          { client: "C&A", qty: 5 },
+          { client: "METSO", qty: 4 },
+          { client: "OPEX", qty: 4 },
+          { client: "ENSONO", qty: 1 }
         ]
       }
     }
@@ -275,15 +267,15 @@ export const slidesData: Slide[] = [
     id: "estoque-atual",
     number: 10,
     title: "Estoque Atual",
-    subtitle: "Valor patrimonial de mercadorias custodiadas por categoria (AGO.26)",
+    subtitle: "Valor patrimonial de mercadorias custodiadas por categoria (SET.26)",
     category: "operations",
     content: {
-      total: 45276955.17,
+      total: 50824188.67,
       groups: [
-        { name: "Estoque com NF", value: 36777137.06, percentage: 81.23, color: "bg-[#0054ec]" },
-        { name: "Estoque sem NF", value: 5129327.17, percentage: 11.33, color: "bg-[#fd11a4]" },
-        { name: "Guarda de Técnico", value: 795396.32, percentage: 1.76, color: "bg-[#9b1dbf]" },
-        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.69, color: "bg-[#fd5665]" }
+        { name: "Estoque com NF", value: 40695820.85, percentage: 80.07, color: "bg-[#0054ec]" },
+        { name: "Estoque sem NF", value: 6757876.88, percentage: 13.30, color: "bg-[#fd11a4]" },
+        { name: "Guarda de Técnico", value: 795396.32, percentage: 1.56, color: "bg-[#9b1dbf]" },
+        { name: "Ativos e Outros", value: 2575094.62, percentage: 5.07, color: "bg-[#fd5665]" }
       ],
       guardaTecnica: [
         { client: "NTT", qty: 85, value: 449775.80 },
@@ -294,30 +286,34 @@ export const slidesData: Slide[] = [
         { name: "Outros e Reservas", value: 1300000.00, desc: "Reservas operacionais e itens diversos" }
       ],
       semNf: [
-        { client: "NTT_TRAG", qty: 862, value: 4561255.76 },
-        { client: "ARCOS DOURADOS REVERSA", qty: 498, value: 498000.00 },
-        { client: "ARCOS DOURADOS RMA", qty: 49, value: 70071.41 }
+        { client: "ZAMP SERVIDORES REVERSA", qty: 248, value: 3000552.00 },
+        { client: "NTT_RMA", qty: 43, value: 1312873.06 },
+        { client: "NTT_TRAG", qty: 218, value: 1153542.64 },
+        { client: "ZAMP STARBUCKS REVERSA", qty: 158, value: 562087.72 },
+        { client: "ARCOS DOURADOS REVERSA", qty: 520, value: 540124.37 },
+        { client: "ARCOS DOURADOS RMA", qty: 55, value: 188697.09 }
       ],
       topProjectsWithNF: [
         { project: "NTT_SUPORTE E MANUTENÇÃO BASE CISCO - BRADESCO", value: 12633285.31, itemQty: 332 },
         { project: "PROJETO F240242 - Evotech Fase 2", value: 5556029.56, itemQty: 257 },
+        { project: "ZAMP", value: 4065303.86, itemQty: 1255 },
         { project: "NTT_GESTÃO DE SPARE - IS20405", value: 3827786.71, itemQty: 155 },
-        { project: "NTT - INSTALAÇÃO DE 48 SWITCHES E 180 APS", value: 3033525.00, itemQty: 490 },
-        { project: "NTT_INSTALAÇÃO 614 ANTENAS - F250727", value: 1820535.71, itemQty: 287 },
-        { project: "NTT_TBRA", value: 1432863.60, itemQty: 151 },
+        { project: "NTT - INSTALAÇÃO DE 48 SWITCHES E 180 APS", value: 2961580.80, itemQty: 487 },
+        { project: "NTT_TBRA", value: 1432705.40, itemQty: 149 },
+        { project: "NTT_INSTALAÇÃO 614 ANTENAS - F250727", value: 1395532.60, itemQty: 220 },
         { project: "NTT_SUSTENTAÇÃO DE 610 EQUIPAMENTOS - F231369", value: 1031936.00, itemQty: 149 },
         { project: "NTT_INSTALAÇÃO DE 1793 DE SWITCH - F231490", value: 819637.20, itemQty: 138 },
-        { project: "NTT_SUSTENTAÇÃO 9000 SW - F221082", value: 734113.25, itemQty: 124 },
+        { project: "NTT_SUSTENTAÇÃO 9000 SW - F221082", value: 686489.93, itemQty: 115 },
         { project: "NTT - SUPORTE E MANUTENÇÃO BASE CISCO - BRADESCO", value: 664680.82, itemQty: 10 },
-        { project: "NTT_IMPLANTAÇÃO 9000 SW - F221082", value: 531230.01, itemQty: 85 },
+        { project: "ALL CARE", value: 530602.10, itemQty: 463 },
+        { project: "NTT_IMPLANTAÇÃO 9000 SW - F221082", value: 525938.53, itemQty: 84 },
         { project: "NTT_SUSTENTAÇÃO F5", value: 359379.28, itemQty: 8 },
         { project: "NTT_INSTALAÇÃO DE 550 SWITCH - F221082", value: 347947.37, itemQty: 257 },
         { project: "FAISTON", value: 235500.83, itemQty: 46 },
         { project: "NTT_INSTALAÇÃO 300 CPE SDWAN - IS211010", value: 204459.19, itemQty: 39 },
         { project: "NTT_INSTALAÇÃO 1700 SW - IS21667", value: 177652.84, itemQty: 29 },
-        { project: "NTT_USP BREAK AND FIX - F231346", value: 122795.30, itemQty: 16 },
         { project: "ITAÚ", value: 122765.00, itemQty: 136 },
-        { project: "VITA", value: 76486.03, itemQty: 15 },
+        { project: "NTT_USP BREAK AND FIX - F231346", value: 114793.80, itemQty: 15 },
         { project: "NTT_CHESF BREAK AND FIX - IS20652", value: 74756.08, itemQty: 7 },
         { project: "NTT_SUSTENTACAO 300 CPE SDWAN - IS211010", value: 68789.24, itemQty: 13 },
         { project: "NTT_SUSTENTAÇÃO DE 124 AP - F221082", value: 67785.92, itemQty: 16 },
@@ -326,13 +322,12 @@ export const slidesData: Slide[] = [
         { project: "TELCOWEB", value: 24750.00, itemQty: 11 },
         { project: "ENSONO", value: 24290.79, itemQty: 7 },
         { project: "SIMPAR", value: 23960.00, itemQty: 17 },
-        { project: "FLEURY", value: 21786.20, itemQty: 4 },
         { project: "MÉTODO", value: 20250.16, itemQty: 4 },
         { project: "NTT_SUPORTE 1700 SW - IS21776", value: 18377.88, itemQty: 3 },
-        { project: "ARCOS DOURADOS", value: 12923.06, itemQty: 4 },
-        { project: "NTT_BREAK FIX - F260189", value: 10840.80, itemQty: 3 },
-        { project: "ALLCARE", value: 10399.66, itemQty: 25 },
-        { project: "CONECT", value: 2474.20, itemQty: 1 }
+        { project: "NTT_BREAK FIX - F260189", value: 10600.00, itemQty: 2 },
+        { project: "CONECT", value: 2474.20, itemQty: 1 },
+        { project: "ARCOS DOURADOS", value: 2063.90, itemQty: 1 },
+        { project: "FLEURY", value: 571.49, itemQty: 1 }
       ]
     }
   },
@@ -405,82 +400,42 @@ export const slidesData: Slide[] = [
     }
   },
   {
-    id: "todo-gerencial",
-    number: 13,
-    title: "Controle de Saving - Logistica",
-    subtitle: "Saving mensal, utilizado e projeção anual (AGO.26)",
-    category: "financials",
-    content: {
-      totalSaving: 41820.98,
-      totalUtilizado: 21328.93,
-      saldoSaving: 20492.05,
-      savingItems: [
-        { item: 1, desc: "Descarte sustentável - Lotes 1, 2 e 3", qty: 1362, value: 4220.00, utilizado: true },
-        { item: 2, desc: "Descarte sustentável - Lotes 4 e 5", qty: 9009, value: 5550.00, utilizado: true },
-        { item: 3, desc: "Redução Notebook Método", qty: 51, value: 5212.80, obs: "Cancelamento do seguro" },
-        { item: 4, desc: "Ajuste rateio condomínio 280", qty: 4, value: 5148.99, obs: "Redução de HC — água, luz" },
-        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", qty: 137, value: 10617.85, obs: "Cancelamento do seguro" },
-        { item: 6, desc: "Venda de 5 TVs", qty: 5, value: 4000.00 },
-        { item: 7, desc: "Descarte sustentável - Lote 6", qty: 52, value: 3000.00 },
-        { item: 8, desc: "Descarte sustentável - Lote 7", qty: 114, value: 980.00 },
-        { item: 9, desc: "Renovação Tiflux", qty: null, value: 1741.34 },
-        { item: 10, desc: "Descarte sustentável - Lote 8", qty: 6, value: 350.00 },
-        { item: 11, desc: "Descarte sustentável - Lote 9", qty: null, value: 450.00 },
-        { item: 12, desc: "Descarte sustentável - Lote 10", qty: 33, value: 550.00 }
-      ],
-      utilizadoItems: [
-        { desc: "Identidade Visual", value: 5217.93 },
-        { desc: "Manutenção AR - Data center", value: 1600.00 },
-        { desc: "Visual Set IA - Tarifação", value: 1200.00 },
-        { desc: "Geladeira", value: 1788.00 },
-        { desc: "Manutenção tomadas Financeiro", value: 55.00 },
-        { desc: "Movimentação máquina de café p/ 280", value: 80.00 },
-        { desc: "Roubo Notebook - Método", value: 7449.00 },
-        { desc: "Visual Set IA - Rastreabilidade", value: 2240.00 },
-        { desc: "Treinamento Empilhadeira - Logística", value: 1699.00 }
-      ],
-      savingAnual: [
-        { item: 3, desc: "Redução Notebook Método", mensal: 5212.80, anual: 62553.60 },
-        { item: 4, desc: "Ajuste rateio condomínio 280", mensal: 5148.99, anual: 61787.88 },
-        { item: 5, desc: "Redução Notebook ALLCARE e ENSONO", mensal: 10617.85, anual: 127414.20 },
-        { item: 9, desc: "Renovação Tiflux", mensal: 1741.34, anual: 20896.08 }
-      ]
-    }
-  },
-  {
     id: "divisor-seguros",
-    number: 14,
+    number: 13,
     title: "DEPARTAMENTO DE SEGUROS",
     subtitle: "Gestão de Riscos, Apólices e Garantia Patrimonial",
     category: "divider",
     content: {
-      totalProtected: 48861060.26,
-      monthlyBillingCost: 54093.45,
+      totalProtected: 53574272.36,
+      monthlyBillingCost: 51881.51,
       activePolicies: 7
     }
   },
   {
     id: "seguros-patrimonial",
-    number: 15,
+    number: 14,
     title: "Garantia Patrimonial de Estoque",
     subtitle: "Estrutura securitária regular e estoque em transição fiscal",
     category: "insurance",
     content: {
       kpis: [
-        { label: "Valor Patrimonial Acumulado", value: 41906464.23, type: "currency", isHighlight: true },
+        { label: "Valor Patrimonial Acumulado", value: 47453697.73, type: "currency", isHighlight: true },
         { label: "Custo Mensal da Apólice", value: 32910.57, type: "currency" },
         { label: "Limite de Cobertura Base", value: 45000000.00, type: "currency" }
       ],
       coberturas: [
-        { name: "Projetos Faiston", value: 34202042.44, share: 81.62 },
-        { name: "Ativos Fixos Faiston", value: 1275094.62, share: 3.04 },
-        { name: "Outros e Reservas", value: 1300000.00, share: 3.10 },
-        { name: "Clientes Sem NF (NTT/Arcos)", value: 5129327.17, share: 12.24 }
+        { name: "Projetos Faiston", value: 38120726.23, share: 80.33 },
+        { name: "Ativos Fixos Faiston", value: 1275094.62, share: 2.69 },
+        { name: "Outros e Reservas", value: 1300000.00, share: 2.74 },
+        { name: "Clientes Sem NF (NTT/Arcos/Zamp)", value: 6757876.88, share: 14.24 }
       ],
       semNfBreakdown: [
-        { name: "NTT_TRAG", qty: 862, value: 4561255.76 },
-        { name: "Arcos Dourados Reversa", qty: 498, value: 498000.00 },
-        { name: "Arcos Dourados RMA", qty: 49, value: 70071.41 }
+        { name: "Zamp Servidores Reversa", qty: 248, value: 3000552.00 },
+        { name: "NTT_RMA", qty: 43, value: 1312873.06 },
+        { name: "NTT_TRAG", qty: 218, value: 1153542.64 },
+        { name: "Zamp Starbucks Reversa", qty: 158, value: 562087.72 },
+        { name: "Arcos Dourados Reversa", qty: 520, value: 540124.37 },
+        { name: "Arcos Dourados RMA", qty: 55, value: 188697.09 }
       ],
       comentarios: [
         "A apólice cobre todos os equipamentos que entraram em nosso estoque físico até a devida saída regulamentada.",
@@ -492,7 +447,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-extra",
-    number: 16,
+    number: 15,
     title: "Seguros de Trânsito & Guarda Técnica",
     subtitle: "Proteção extraordinária de ativos e estoque em pontos satélites",
     category: "insurance",
@@ -500,11 +455,11 @@ export const slidesData: Slide[] = [
       sections: [
         {
           title: "Seguro Extra (Trânsito & Satélites)",
-          totalValue: 6013455.95,
-          monthlyCost: 16236.33,
+          totalValue: 4858726.11,
+          monthlyCost: 13118.56,
           subItems: [
-            { name: "Equipamentos em TRÂNSITO (Faiston)", value: 2733304.21, cost: 7379.92, rate: "0,27% a.m" },
-            { name: "Guarda Técnica (Bases NTT / Arcos)", value: 3280151.74, cost: 8856.41, rate: "0,27% a.m" }
+            { name: "Equipamentos em TRÂNSITO (Faiston)", value: 1699502.51, cost: 4588.66, rate: "0,27% a.m" },
+            { name: "Guarda Técnica (Bases NTT / Arcos)", value: 3159223.60, cost: 8529.90, rate: "0,27% a.m" }
           ],
           desc: "Mitigação completa de perdas por extravio ou furto durante transferências ou estocagem temporária em hubs de terceiros."
         }
@@ -513,7 +468,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-trags",
-    number: 17,
+    number: 16,
     title: "Seguro TRAGs e Arcos Dourados",
     subtitle: "Atuação em desativação e garantia de roubo local pós-entrega",
     category: "insurance",
@@ -521,21 +476,21 @@ export const slidesData: Slide[] = [
       sections: [
         {
           title: "Seguro de TRAGs (Reversa & Desativação)",
-          totalValue: 253991.04,
-          monthlyCost: 685.78,
+          totalValue: 201076.35,
+          monthlyCost: 542.91,
           rate: "0,27% a.m",
           phases: [
-            { client: "Fase 27", val: 253991.04, minCost: 685.78 }
+            { client: "Fase 28", val: 201076.35, minCost: 542.91 }
           ],
           desc: "Cobertura de Responsabilidade Civil durante postagem e remessa de itens substituídos até a recepção física no estoque."
         },
         {
           title: "Seguro Arcos Dourados Instalação",
-          totalValue: 343818.85,
-          monthlyCost: 928.31,
+          totalValue: 713149.29,
+          monthlyCost: 1925.50,
           rate: "0,27% a.m",
           phases: [
-            { client: "Unidades em Instalação", qty: 90, val: 343818.85 }
+            { client: "Unidades em Instalação", qty: 177, val: 713149.29 }
           ],
           desc: "Janela securitária estendida de 30 dias cobrindo roubo local em lojas recém-equipadas antes da homologação final do cliente."
         }
@@ -544,7 +499,7 @@ export const slidesData: Slide[] = [
   },
   {
     id: "seguros-satelite",
-    number: 18,
+    number: 17,
     title: "Seguro Starlink & Medição",
     subtitle: "Antenas satelitais e calibradores",
     category: "insurance",
@@ -552,22 +507,24 @@ export const slidesData: Slide[] = [
       sections: [
         {
           title: "Antenas Operacionais STARLINK",
-          totalValue: 238330.19,
-          monthlyCost: 2859.96,
+          totalValue: 242622.88,
+          monthlyCost: 2911.47,
           rate: "1,20% a.m",
           desc: "Cobertura física integral contra avarias climáticas ou vandalismo operacional, com participação obrigatória estabilizada de 10% sobre sinistros.",
           apolices: [
             { name: "1ª Apólice", value: 82924.82, cost: 995.10 },
             { name: "2ª Apólice", value: 126689.46, cost: 1520.27 },
             { name: "3ª Apólice", value: 3988.64, cost: 47.86 },
-            { name: "4ª Apólice", value: 2327.48, cost: 27.93 },
-            { name: "5ª Apólice", value: 3347.99, cost: 40.18 },
-            { name: "6ª Apólice", value: 2007.92, cost: 24.10 },
-            { name: "7ª Apólice", value: 2789.82, cost: 33.48 },
-            { name: "8ª Apólice", value: 1693.11, cost: 20.32 },
-            { name: "9ª Apólice", value: 3812.39, cost: 45.75 },
-            { name: "10ª Apólice", value: 5958.74, cost: 71.50 },
-            { name: "11ª Apólice", value: 2789.82, cost: 33.48 }
+            { name: "4ª Apólice", value: 5675.47, cost: 68.11 },
+            { name: "5ª Apólice", value: 2007.92, cost: 24.10 },
+            { name: "6ª Apólice", value: 1693.11, cost: 20.32 },
+            { name: "7ª Apólice", value: 3812.39, cost: 45.75 },
+            { name: "8ª Apólice", value: 5958.74, cost: 71.50 },
+            { name: "9ª Apólice", value: 2789.82, cost: 33.48 },
+            { name: "10ª Apólice", value: 1200.00, cost: 14.40 },
+            { name: "11ª Apólice", value: 800.00, cost: 9.60 },
+            { name: "12ª Apólice", value: 784.80, cost: 9.42 },
+            { name: "13ª Apólice", value: 4297.71, cost: 51.57 }
           ]
         },
         {
@@ -582,37 +539,39 @@ export const slidesData: Slide[] = [
   },
   {
     id: "custo-fatura",
-    number: 19,
+    number: 18,
     title: "Composição de Despesa de Faturas de Seguros",
-    subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (AGO.26)",
+    subtitle: "Conciliação mensal, endossos e ajustes de mensalidade (SET.26)",
     category: "financials",
     content: {
-      total: 55772.36,
+      total: 59026.71,
       kpis: [
-        { label: "Fatura Líquida Consolidada", value: 55772.36, type: "currency", isHighlight: true }
+        { label: "Fatura Líquida Consolidada", value: 59026.71, type: "currency", isHighlight: true }
       ],
       invoiceItems: [
         { label: "Patrimonial", name: "Seguro Patrimonial", value: 32910.57, sub: "Estoque fixo" },
-        { label: "Extra", name: "Seguro Extra / Guarda Técnica", value: 16121.17, sub: "Trânsito e bases satélites" },
-        { label: "Arcos", name: "Arcos Dourados", value: 2067.42, sub: "Instalações" },
-        { label: "Starlink", name: "Starlink", value: 1103.81, sub: "Antenas em campo" },
+        { label: "Extra", name: "Seguro Extra / Guarda Técnica", value: 14110.24, sub: "Trânsito e bases satélites" },
+        { label: "BD Costs", name: "BD Costs", value: 5000.00, sub: "Serviços de gestão e corretagem" },
+        { label: "Arcos", name: "Arcos Dourados", value: 2376.06, sub: "Instalações" },
+        { label: "TRAG", name: "TRAG", value: 1775.82, sub: "Reversa e desativação" },
+        { label: "Starlink", name: "Starlink", value: 1036.68, sub: "Antenas em campo" },
         { label: "Simpar", name: "Simpar", value: 684.54, sub: "Apólice dedicada Simpar" },
-        { label: "Zamp", name: "Zamp", value: 208.15, sub: "Apólice dedicada Zamp" },
+        { label: "Zamp", name: "Zamp", value: 593.71, sub: "Apólice dedicada Zamp" },
         { label: "Fluke", name: "Fluke", value: 430.97, sub: "Instrumentos de medição" },
-        { label: "Opex", name: "Opex", value: 6029.80, sub: "Ajuste administrativo do mês" },
         { label: "Mensalidade", name: "Mensalidade", value: 35.00, sub: "Taxa fixa mensal" },
-        { label: "Estorno", name: "Estorno", value: -3819.07, sub: "Crédito de conciliação", isCredit: true }
+        { label: "Gerenciamento", name: "Starlink (CNPJ Gerenciamento)", value: 57.63, sub: "Fatura do CNPJ de gerenciamento" },
+        { label: "Gerenciamento", name: "Cobrança Indevida", value: 15.49, sub: "Em contestação junto à corretora" }
       ],
       comments: [
-        "Conciliação fechou com faturas auditadas e prêmios aplicados por categoria, acumulando R$ 55.772,36 mensais para uma proteção do patrimônio Faiston.",
-        "Fatura do mês inclui ajustes extraordinários: taxa Opex (R$ 6.029,80), mensalidade fixa (R$ 35,00) e estorno de crédito (-R$ 3.819,07).",
-        "Diferenças identificadas entre as taxas aplicadas nas faturas físicas e as apólices digitais estão sob análise técnica."
+        "Conciliação fechou com faturas auditadas e prêmios aplicados por categoria, acumulando R$ 59.026,71 mensais para uma proteção do patrimônio Faiston.",
+        "CNPJ principal responde por R$ 58.953,59 e o CNPJ de gerenciamento por R$ 73,12 (Starlink R$ 57,63 + cobrança indevida R$ 15,49, em contestação).",
+        "Mês sem estorno de crédito; BD Costs (R$ 5.000,00) e mensalidade fixa (R$ 35,00) seguem como despesas recorrentes da conta."
       ]
     }
   },
   {
     id: "agradecimento",
-    number: 20,
+    number: 19,
     title: "Obrigado!",
     subtitle: "Sempre evoluindo por meio de tecnologia e cooperação",
     category: "contact",
