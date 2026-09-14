@@ -359,7 +359,7 @@ export const slidesData: Slide[] = [
     id: "laboratorio-tecnico",
     number: 12,
     title: "Laboratório Técnico",
-    subtitle: "Reparos e manutenções de equipamentos — Julho/26 (29/06 a 30/07)",
+    subtitle: "Reparos e manutenções de equipamentos — Setembro/26",
     category: "operations",
     content: {
       kpis: [
