@@ -3,7 +3,7 @@ export interface Slide {
   number: number;
   title: string;
   subtitle?: string;
-  category: 'cover' | 'expeditions' | 'financials' | 'operations' | 'insurance' | 'contact' | 'divider';
+  category: 'cover' | 'expeditions' | 'financials' | 'operations' | 'insurance' | 'contact' | 'divider' | 'comparative';
   content: any;
 }
 

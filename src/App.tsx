@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
@@ -8,7 +8,8 @@ import {
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
-import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
+import { Workbook, loadWorkbook, resolveCompetenciaFromUrl } from './data/sheet/loadSlides';
+import CompetenciaSelector from './components/CompetenciaSelector';
 import SlideViewer from './components/SlideViewer';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
@@ -69,8 +70,10 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [slidesData, setSlidesData] = useState(staticSlidesData);
-  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
+  // The workbook is the whole historical database: every competência the sheet
+  // carries, loaded once. Switching months never refetches anything.
+  const [workbook, setWorkbook] = useState<Workbook | null>(null);
+  const [competencia, setCompetencia] = useState<string | null>(null);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
 
@@ -81,11 +84,15 @@ export default function App() {
     let cancelled = false;
     setIsSheetSyncing(true);
 
-    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
-      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
+    loadWorkbook(sheetId, staticSlidesData)
+      .then((loaded) => {
         if (cancelled) return;
-        setSlidesData(slides);
-        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
+        setWorkbook(loaded);
+        // A shared link like `?mes=2026-09` opens straight on that month;
+        // otherwise the newest competência is the one presented.
+        const fromUrl = resolveCompetenciaFromUrl(loaded, window.location.search);
+        const latest = loaded.competencias[loaded.competencias.length - 1]?.competencia ?? null;
+        setCompetencia(fromUrl ?? latest);
       })
       .catch((err) => {
         console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
@@ -99,6 +106,26 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  const slidesData = useMemo(() => {
+    if (!workbook) return staticSlidesData;
+    if (competencia) return workbook.slidesFor(competencia);
+    return workbook.fallbackSlides;
+  }, [workbook, competencia]);
+
+  const competenciaOptions = workbook?.competencias ?? [];
+  const mesAbrev =
+    competenciaOptions.find((option) => option.competencia === competencia)?.abbr ??
+    workbook?.fallbackMesAbrev ??
+    null;
+
+  const handleCompetenciaChange = (next: string) => {
+    setCompetencia(next);
+    // Keep the URL shareable — reopening the link lands on the same month.
+    const url = new URL(window.location.href);
+    url.searchParams.set('mes', next);
+    window.history.replaceState({}, '', url);
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
@@ -114,6 +141,12 @@ export default function App() {
   const [zipProgress, setZipProgress] = useState<number | null>(null);
 
   const mainContainerRef = useRef<HTMLDivElement>(null);
+
+  // Decks of different competências can have different lengths (the comparative
+  // slides only exist once there is history), so keep the cursor in range.
+  useEffect(() => {
+    setCurrentSlideIndex((index) => Math.min(index, Math.max(slidesData.length - 1, 0)));
+  }, [slidesData.length]);
 
   const currentSlide = slidesData[currentSlideIndex];
 
@@ -406,6 +439,15 @@ export default function App() {
             </h1>
           </div>
 
+          {competenciaOptions.length > 1 && (
+            <CompetenciaSelector
+              options={competenciaOptions}
+              value={competencia}
+              onChange={handleCompetenciaChange}
+              isDarkMode={dk}
+            />
+          )}
+
           {isSheetSyncing && (
             <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">Sincronizando planilha…</span>
           )}
@@ -570,7 +612,8 @@ export default function App() {
                              item.category === 'expeditions' ? 'Expedição' :
                              item.category === 'financials' ? 'Financeiro' :
                              item.category === 'operations' ? 'Operações' :
-                             item.category === 'insurance' ? 'Seguro' : 'Contato'}
+                             item.category === 'insurance' ? 'Seguro' :
+                             item.category === 'comparative' ? 'Comparativo' : 'Contato'}
                           </span>
                         </div>
 
