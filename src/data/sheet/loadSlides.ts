@@ -5,9 +5,19 @@ import { buildSlides } from './transform';
 import { SheetData } from './types';
 import { SheetRow } from './csv';
 import { consolidatedMonths, selectMonth } from './byMonth';
-import { ExpedicaoRecord, SelfStorageRecord, normalizeHeader, parseExpedicoes, parseSelfStorage, sheetIdFrom } from './raw';
-import { applyConsolidado, applyRawExpedicoes, applyRawSelfStorage } from './aggregate';
-import { MonthKey, STATIC_MONTH, monthAbbrev, monthFullName, monthYear, previousMonth } from './months';
+import {
+  ExpedicaoRecord,
+  NotaRecord,
+  SelfStorageRecord,
+  monthFromTabName,
+  normalizeHeader,
+  parseExpedicoes,
+  parseNotas,
+  parseSelfStorage,
+  sheetIdFrom,
+} from './raw';
+import { applyConsolidado, applyRawExpedicoes, applyRawNotas, applyRawSelfStorage } from './aggregate';
+import { MonthKey, STATIC_MONTH, monthAbbrev, monthFullName, monthYear, parseMonth, previousMonth } from './months';
 
 // Slides without monthly data — never flagged as "data from another month".
 const NON_MONTHLY_SLIDES = new Set(['capa', 'agradecimento']);
@@ -40,6 +50,16 @@ async function safe<T>(label: string, fn: () => Promise<T>, fallback: T): Promis
 interface RawData {
   expedicoes: ExpedicaoRecord[];
   selfStorage: SelfStorageRecord[];
+  notas: NotaRecord[];
+}
+
+type SourceTipo = 'expedicoes' | 'self-storage' | 'notas';
+
+function sourceTipo(raw: string): SourceTipo {
+  const t = normalizeHeader(raw);
+  if (t.includes('STORAGE')) return 'self-storage';
+  if (/\bNF|NOTA|ENTRADA|SAIDA/.test(t)) return 'notas';
+  return 'expedicoes';
 }
 
 // Reads the raw control sheets: the `Expedicoes`/`SelfStorage` tabs of the main
@@ -47,17 +67,21 @@ interface RawData {
 async function loadRaw(mainSheetId: string): Promise<RawData> {
   const fontes = await safe<SheetRow[]>(`a aba "${RAW_TABS.FONTES}"`, () => fetchSheetTab(mainSheetId, RAW_TABS.FONTES), []);
 
-  const sources = [
-    { tipo: 'expedicoes', sheetId: mainSheetId, aba: RAW_TABS.EXPEDICOES, modal: '', transportadora: '' },
-    { tipo: 'self-storage', sheetId: mainSheetId, aba: RAW_TABS.SELF_STORAGE, modal: '', transportadora: '' },
+  const blank = { modal: '', transportadora: '', lado: '', mes: '' };
+  const sources: { tipo: SourceTipo; sheetId: string; aba: string; modal: string; transportadora: string; lado: string; mes: string }[] = [
+    { tipo: 'expedicoes', sheetId: mainSheetId, aba: RAW_TABS.EXPEDICOES, ...blank },
+    { tipo: 'self-storage', sheetId: mainSheetId, aba: RAW_TABS.SELF_STORAGE, ...blank },
+    { tipo: 'notas', sheetId: mainSheetId, aba: RAW_TABS.NOTAS, ...blank },
     ...fontes
       .filter((f) => (f.aba || '').trim())
       .map((f) => ({
-        tipo: normalizeHeader(f.tipo || '').includes('STORAGE') ? 'self-storage' : 'expedicoes',
+        tipo: sourceTipo(f.tipo || ''),
         sheetId: (f.planilha || '').trim() ? sheetIdFrom(f.planilha) : mainSheetId,
         aba: f.aba.trim(),
         modal: (f.modal || '').trim(),
         transportadora: (f.transportadora || '').trim(),
+        lado: (f.lado || '').trim(),
+        mes: (f.mes || '').trim(),
       })),
   ];
 
@@ -65,12 +89,15 @@ async function loadRaw(mainSheetId: string): Promise<RawData> {
     sources.map((src) => safe(`a aba "${src.aba}"`, () => fetchSheetGrid(src.sheetId, src.aba), [] as string[][]))
   );
 
-  const raw: RawData = { expedicoes: [], selfStorage: [] };
+  const raw: RawData = { expedicoes: [], selfStorage: [], notas: [] };
   sources.forEach((src, i) => {
     if (!grids[i].length) return;
     const label = src.sheetId === mainSheetId ? src.aba : `${src.aba} (${src.sheetId.slice(0, 8)}…)`;
-    if (src.tipo === 'self-storage') raw.selfStorage.push(...parseSelfStorage(grids[i], label));
-    else raw.expedicoes.push(...parseExpedicoes(grids[i], { label, modal: src.modal, carrier: src.transportadora }));
+    // Month of the whole tab, for pastes whose rows carry no date.
+    const month = parseMonth(src.mes) ?? monthFromTabName(src.aba);
+    if (src.tipo === 'self-storage') raw.selfStorage.push(...parseSelfStorage(grids[i], label, month));
+    else if (src.tipo === 'notas') raw.notas.push(...parseNotas(grids[i], { label, lado: src.lado, month }));
+    else raw.expedicoes.push(...parseExpedicoes(grids[i], { label, modal: src.modal, carrier: src.transportadora, month }));
   });
   return raw;
 }
@@ -104,6 +131,7 @@ export async function loadMonthlyBase(sheetId: string, staticSlides: Slide[]): P
   const months = new Set<MonthKey>([...consolidatedMonths(data), STATIC_MONTH]);
   raw.expedicoes.forEach((r) => months.add(r.month));
   raw.selfStorage.forEach((r) => months.add(r.month));
+  raw.notas.forEach((r) => months.add(r.month));
 
   const build = (month: MonthKey): MonthBuild => {
     const { data: monthData, sourceMonth } = selectMonth(data, month);
@@ -112,8 +140,15 @@ export async function loadMonthlyBase(sheetId: string, staticSlides: Slide[]): P
     const monthRecs = raw.expedicoes.filter((r) => r.month === month);
     const prevRecs = raw.expedicoes.filter((r) => r.month === prev);
     const fromRaw = new Set<string>();
+    const partialSlides: Record<string, string[]> = {};
 
     slides.forEach((slide) => {
+      if (slide.id === 'entrada-saida') {
+        const missing = applyRawNotas(slide, raw.notas.filter((r) => r.month === month));
+        if (missing) fromRaw.add(slide.id);
+        if (missing?.length) partialSlides[slide.id] = missing;
+        return;
+      }
       const manualCommentary = sourceMonth[slide.id] === month && hasCommentaryFor(monthData, slide.id);
       const rebuilt =
         slide.id === 'self-storage'
@@ -125,7 +160,6 @@ export async function loadMonthlyBase(sheetId: string, staticSlides: Slide[]): P
       if (rebuilt) fromRaw.add(slide.id);
     });
 
-    const partialSlides: Record<string, string[]> = {};
     const consolidado = slides.find((s) => s.id === 'custo-consolidado');
     if (consolidado && fromRaw.size) {
       const current = new Set([...fromRaw, ...Object.keys(sourceMonth).filter((id) => sourceMonth[id] === month)]);

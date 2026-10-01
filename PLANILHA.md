@@ -115,6 +115,47 @@ Regras de cálculo:
   na de data). O Google Sheets descarta na exportação as células de tipo
   diferente da maioria da coluna.
 
+### Entrada e Saída: colar o relatório do mês de uma vez
+
+Entrada e Saída **não** é lançada linha a linha. Todo mês vocês colam o
+relatório de notas fiscais inteiro (ex.: exportado do SAP), com as linhas de
+item do jeito que vier, e o app consolida: nº de NFs (distintas),
+equipamentos, valor e quantidade por cliente, separado em NF Entrada e NF
+Saída.
+
+**Onde colar:**
+- Aba `NotasFiscais` da planilha principal, **ou**
+- Uma aba por mês com o mês no nome (ex.: `NF OUT.26`, `NF 10-2026`),
+  cadastrada na aba `Fontes` com `tipo` = `notas`. Assim cada colagem fica
+  guardada e o histórico se mantém. Também dá pra cadastrar uma aba só de
+  entradas e outra só de saídas.
+
+Colunas extras da aba `Fontes` (opcionais, valem pra aba inteira):
+| tipo | planilha | aba | lado | mes |
+|---|---|---|---|---|
+| notas | | NF OUT.26 | | |
+| notas | | Saídas Outubro | saida | OUT.26 |
+
+- `mes`: o mês do relatório, quando as linhas não têm data. Também vale para
+  expedições e self storage. Sem ele, o app tenta ler o mês do nome da aba.
+- `lado`: `entrada` ou `saida`, quando o relatório não tem coluna que diga.
+
+**Colunas reconhecidas no relatório de notas:**
+| Informação | Nomes aceitos |
+|---|---|
+| Nº da NF (obrigatório) | `NF`, `Nº NF`, `NOTA FISCAL`, `NÚMERO NF`, `NF-E`, `NÚMERO` |
+| Entrada/Saída | `TIPO`, `OPERAÇÃO`, `MOVIMENTO`, `E/S` (valores `Entrada`/`Saída`/`E`/`S`); ou `CFOP` (1/2/3 = entrada, 5/6/7 = saída); ou o `lado` da aba `Fontes` |
+| Cliente | `PROJETO`, `CLIENTE`, `PARCEIRO`, `NOME DO PN`, `RAZÃO SOCIAL`, `DESTINATÁRIO`, `EMITENTE`, `FORNECEDOR` |
+| Quantidade | `QTD EQUIPAMENTOS`, `QUANTIDADE`, `QTDE`, `QTD` (sem ela, 1 por linha) |
+| Valor do item | `VALOR TOTAL ITEM`, `VALOR ITEM`, `TOTAL DA LINHA` (somado linha a linha) |
+| Valor da nota | `VALOR NF`, `VALOR NOTA`, `VALOR TOTAL NF`, `TOTAL DOCUMENTO`, `VALOR TOTAL`, `VALOR` (contado **uma vez por NF**, mesmo repetido em várias linhas) |
+| Data / mês | `DATA EMISSÃO`, `DATA LANÇAMENTO`, `DATA DOCUMENTO`, `DATA`, `MES` |
+| Status | `STATUS`, `SITUAÇÃO` (`CANCELADA` é ignorada) |
+
+Se o mês tiver só um dos lados (ex.: só saídas), o outro aparece zerado e o
+cabeçalho avisa "⚠ Sem dados de OUT.26: NF Entrada". O app não mistura com
+dados de outro mês.
+
 ### 2. Abas consolidadas com a coluna `mes`
 
 Todas as abas descritas abaixo (`Meta`, `KPIs`, `EstoqueGroups`, seguros

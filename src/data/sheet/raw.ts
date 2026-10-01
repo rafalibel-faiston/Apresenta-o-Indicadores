@@ -57,8 +57,9 @@ const ALIASES = {
   obs: ['OBS', 'OBSERVACAO', 'OBSERVACOES', 'DESCRICAO'],
 } as const;
 
+type AliasTable = Record<string, readonly string[]>;
 type Field = keyof typeof ALIASES;
-type ColumnMap = Partial<Record<Field, number>>;
+type ColumnMap<F extends string = Field> = Partial<Record<F, number>>;
 
 function matchHeader(headers: string[], aliases: readonly string[]): number | undefined {
   for (const alias of aliases) {
@@ -73,11 +74,11 @@ function matchHeader(headers: string[], aliases: readonly string[]): number | un
   return undefined;
 }
 
-function mapColumns(row: string[]): ColumnMap {
+function mapColumns<T extends AliasTable>(row: string[], table: T): ColumnMap<Extract<keyof T, string>> {
   const headers = row.map(normalizeHeader);
-  const map: ColumnMap = {};
-  (Object.keys(ALIASES) as Field[]).forEach((field) => {
-    const idx = matchHeader(headers, ALIASES[field]);
+  const map: ColumnMap<Extract<keyof T, string>> = {};
+  (Object.keys(table) as Extract<keyof T, string>[]).forEach((field) => {
+    const idx = matchHeader(headers, table[field]);
     if (idx !== undefined) map[field] = idx;
   });
   return map;
@@ -85,10 +86,14 @@ function mapColumns(row: string[]): ColumnMap {
 
 // Finds the header row among the first rows (control sheets often have a title
 // above the table) and returns it with the column map.
-function locateHeader(rows: string[][], required: Field[][]): { headerIdx: number; cols: ColumnMap } | undefined {
+function locateHeader<T extends AliasTable = typeof ALIASES>(
+  rows: string[][],
+  required: Extract<keyof T, string>[][],
+  table: T = ALIASES as unknown as T
+): { headerIdx: number; cols: ColumnMap<Extract<keyof T, string>> } | undefined {
   const limit = Math.min(rows.length, 15);
   for (let i = 0; i < limit; i++) {
-    const cols = mapColumns(rows[i]);
+    const cols = mapColumns(rows[i], table);
     if (required.every((options) => options.some((f) => cols[f] !== undefined))) {
       return { headerIdx: i, cols };
     }
@@ -115,10 +120,12 @@ export interface SourceDefaults {
   modal?: string;
   carrier?: string;
   label: string;
+  // Month for rows without date/month (from `Fontes.mes` or the tab name).
+  month?: MonthKey;
 }
 
 export function parseExpedicoes(rows: string[][], defaults: SourceDefaults): ExpedicaoRecord[] {
-  const located = locateHeader(rows, [['cost'], ['month', 'date']]);
+  const located = locateHeader(rows, defaults.month ? [['cost']] : [['cost'], ['month', 'date']]);
   if (!located) {
     console.warn(`[planilha] "${defaults.label}": não encontrei as colunas de custo (ex.: VALOR FINAL/CUSTO) e data/mês (ex.: DATA EXPEDIÇÃO/MES).`);
     return [];
@@ -131,7 +138,7 @@ export function parseExpedicoes(rows: string[][], defaults: SourceDefaults): Exp
     if (row.every((c) => !c.trim())) return;
     if (/CANCELAD/.test(normalizeHeader(cell(row, cols.status)))) return;
 
-    const month = parseMonth(cell(row, cols.month)) ?? parseMonth(cell(row, cols.date));
+    const month = parseMonth(cell(row, cols.month)) ?? parseMonth(cell(row, cols.date)) ?? defaults.month;
     const cost = toNumber(cell(row, cols.cost));
     const carrier = (cell(row, cols.carrier) || defaults.carrier || '').toUpperCase();
     const modalText = cell(row, cols.modal);
@@ -170,8 +177,8 @@ export function parseExpedicoes(rows: string[][], defaults: SourceDefaults): Exp
   return records;
 }
 
-export function parseSelfStorage(rows: string[][], label: string): SelfStorageRecord[] {
-  const located = locateHeader(rows, [['cost'], ['month', 'date'], ['uf']]);
+export function parseSelfStorage(rows: string[][], label: string, defaultMonth?: MonthKey): SelfStorageRecord[] {
+  const located = locateHeader(rows, defaultMonth ? [['cost'], ['uf']] : [['cost'], ['month', 'date'], ['uf']]);
   if (!located) {
     console.warn(`[planilha] "${label}": não encontrei as colunas MES/DATA, UF e CUSTO.`);
     return [];
@@ -180,7 +187,7 @@ export function parseSelfStorage(rows: string[][], label: string): SelfStorageRe
   const records: SelfStorageRecord[] = [];
 
   rows.slice(headerIdx + 1).forEach((row) => {
-    const month = parseMonth(cell(row, cols.month)) ?? parseMonth(cell(row, cols.date));
+    const month = parseMonth(cell(row, cols.month)) ?? parseMonth(cell(row, cols.date)) ?? defaultMonth;
     const cost = toNumber(cell(row, cols.cost));
     const uf = cell(row, cols.uf).toUpperCase();
     if (!month || cost === undefined || !uf) return;
@@ -193,6 +200,113 @@ export function parseSelfStorage(rows: string[][], label: string): SelfStorageRe
     });
   });
   return records;
+}
+
+// --- Notas fiscais (Entrada e Saída) ---------------------------------------
+// The month's NF report (e.g. exported from SAP) is pasted at once, item lines
+// included; the app consolidates NFs, equipments, value and qty per client.
+
+export type Lado = 'entrada' | 'saida';
+
+export interface NotaRecord {
+  month: MonthKey;
+  lado: Lado;
+  nf: string;
+  client: string;
+  qty: number;
+  // Value of this line; for reports that only carry the NF total, the total is
+  // repeated on each line and `perNf` tells the aggregation to count it once.
+  value: number;
+  perNf: boolean;
+}
+
+const NF_ALIASES = {
+  month: ALIASES.month,
+  date: ['DATA EMISSAO', 'DATA DE EMISSAO', 'DATA LANCAMENTO', 'DATA DE LANCAMENTO', 'DATA DOCUMENTO', 'DATA ENTRADA', 'DATA SAIDA', 'DATA'],
+  lado: ['TIPO', 'OPERACAO', 'TIPO OPERACAO', 'TIPO DE OPERACAO', 'MOVIMENTO', 'MOVIMENTACAO', 'ENTRADA SAIDA', 'E S'],
+  cfop: ['CFOP'],
+  nf: ['NF', 'NF E', 'NFE', 'NOTA FISCAL', 'NOTA', 'N NF', 'NO NF', 'NUMERO NF', 'NUMERO DA NF', 'N NOTA', 'NUMERO NOTA', 'NUMERO'],
+  client: ['PROJETO', 'CLIENTE', 'NOME DO CLIENTE', 'PARCEIRO', 'PARCEIRO DE NEGOCIO', 'NOME PN', 'NOME DO PN', 'RAZAO SOCIAL', 'DESTINATARIO', 'EMITENTE', 'FORNECEDOR'],
+  qty: ['QTD EQUIPAMENTOS', 'EQUIPAMENTOS', 'QUANTIDADE', 'QTDE', 'QTD'],
+  valueItem: ['VALOR TOTAL ITEM', 'VALOR TOTAL DO ITEM', 'VALOR ITEM', 'VALOR DO ITEM', 'TOTAL ITEM', 'TOTAL DA LINHA', 'TOTAL LINHA', 'VALOR LINHA'],
+  valueNf: ['VALOR NF', 'VALOR DA NF', 'VALOR NOTA', 'VALOR DA NOTA', 'VALOR TOTAL NF', 'VALOR TOTAL DA NOTA', 'TOTAL NF', 'TOTAL DOCUMENTO', 'VALOR TOTAL', 'VALOR'],
+  status: ['STATUS', 'SITUACAO'],
+} as const;
+
+export function classifyLado(text: string): Lado | undefined {
+  const s = normalizeHeader(text);
+  if (!s) return undefined;
+  if (/^(E|ENT)$|ENTRADA|RECEBIMENTO|COMPRA/.test(s)) return 'entrada';
+  if (/^(S|SAI)$|SAIDA|EXPEDICAO|REMESSA|VENDA/.test(s)) return 'saida';
+  return undefined;
+}
+
+// CFOP starting with 1/2/3 is an inbound operation, 5/6/7 outbound.
+function ladoFromCfop(cfop: string): Lado | undefined {
+  const d = cfop.replace(/\D/g, '')[0];
+  if (d && '123'.includes(d)) return 'entrada';
+  if (d && '567'.includes(d)) return 'saida';
+  return undefined;
+}
+
+export interface NotaDefaults {
+  label: string;
+  lado?: string;
+  // Month of the whole paste, when the rows have no date (from `Fontes.mes` or
+  // the tab name, e.g. "NF OUT.26").
+  month?: MonthKey;
+}
+
+export function parseNotas(rows: string[][], defaults: NotaDefaults): NotaRecord[] {
+  const located = locateHeader(rows, [['nf'], ['valueItem', 'valueNf', 'qty']], NF_ALIASES);
+  if (!located) {
+    console.warn(`[planilha] "${defaults.label}": não encontrei as colunas de NF e valor/quantidade no relatório de notas.`);
+    return [];
+  }
+  const { headerIdx, cols } = located;
+  const records: NotaRecord[] = [];
+  let skipped = 0;
+
+  rows.slice(headerIdx + 1).forEach((row) => {
+    if (row.every((c) => !c.trim())) return;
+    if (/CANCELAD/.test(normalizeHeader(cell(row, cols.status)))) return;
+
+    const nf = cell(row, cols.nf);
+    if (!nf || /^TOTAL/.test(normalizeHeader(nf))) return;
+
+    const month = parseMonth(cell(row, cols.month)) ?? parseMonth(cell(row, cols.date)) ?? defaults.month;
+    const lado =
+      classifyLado(cell(row, cols.lado)) ?? ladoFromCfop(cell(row, cols.cfop)) ?? classifyLado(defaults.lado ?? '');
+    if (!month || !lado) {
+      skipped++;
+      return;
+    }
+
+    const itemValue = toNumber(cell(row, cols.valueItem));
+    const nfValue = toNumber(cell(row, cols.valueNf));
+    const qtyRaw = cell(row, cols.qty);
+
+    records.push({
+      month,
+      lado,
+      nf,
+      client: cell(row, cols.client).toUpperCase() || 'NÃO INFORMADO',
+      qty: qtyRaw ? toNumber(qtyRaw, 0)! : 1,
+      value: itemValue ?? nfValue ?? 0,
+      perNf: itemValue === undefined && nfValue !== undefined,
+    });
+  });
+
+  if (skipped) {
+    console.warn(`[planilha] "${defaults.label}": ${skipped} linha(s) sem mês ou sem tipo (entrada/saída) foram ignoradas.`);
+  }
+  return records;
+}
+
+// Month written at the end of a tab name: "NF OUT.26", "Entradas 10-2026".
+export function monthFromTabName(name: string): MonthKey | undefined {
+  const m = name.trim().match(/([A-Za-zÀ-ú]{3,}[\s./\-_]*\d{2,4}|\d{1,2}[./\-]\d{4})$/);
+  return m ? parseMonth(m[1]) : undefined;
 }
 
 // Extracts the spreadsheet ID from a full Google Sheets URL (or returns the ID as-is).

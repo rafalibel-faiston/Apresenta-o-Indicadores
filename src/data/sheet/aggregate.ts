@@ -1,7 +1,7 @@
 // Builds the expedition slides straight from the raw control-sheet rows of a
 // month: totals, per-project tables, carrier split and auto commentary.
 import { Slide } from '../../types';
-import { ExpedicaoRecord, ModalId, SelfStorageRecord } from './raw';
+import { ExpedicaoRecord, Lado, ModalId, NotaRecord, SelfStorageRecord } from './raw';
 
 const DISTRIBUTION_PALETTE = [
   'from-indigo-500 to-violet-500',
@@ -225,6 +225,38 @@ export function applyRawSelfStorage(slide: Slide, records: SelfStorageRecord[]):
     { label: 'Regiões', value: regions.length, type: 'number' },
   ];
   return true;
+}
+
+const LADO_TITLES: Record<Lado, string> = { entrada: 'NF Entrada', saida: 'NF Saída' };
+
+// Consolidates the month's pasted NF report into the "Entrada e Saída" slide.
+// Returns undefined when the month has no NF rows, otherwise the sides that were
+// missing from the paste (shown zeroed instead of mixing in another month).
+export function applyRawNotas(slide: Slide, records: NotaRecord[]): string[] | undefined {
+  if (!records.length) return undefined;
+  const missing: string[] = [];
+
+  (['entrada', 'saida'] as Lado[]).forEach((lado) => {
+    const recs = records.filter((r) => r.lado === lado);
+    const target = slide.content[lado];
+    if (!recs.length) missing.push(LADO_TITLES[lado]);
+
+    // NF-level values repeat on every item line of the same NF: count once.
+    const nfTotals = new Map<string, number>();
+    let itemValue = 0;
+    recs.forEach((r) => {
+      if (r.perNf) nfTotals.set(r.nf, Math.max(nfTotals.get(r.nf) ?? 0, r.value));
+      else itemValue += r.value;
+    });
+
+    target.nfs = new Set(recs.map((r) => r.nf)).size;
+    target.equipments = Math.round(sum(recs, (r) => r.qty));
+    target.value = round2(itemValue + sum([...nfTotals.values()], (v) => v));
+    target.details = [...groupBy(recs, (r) => r.client)]
+      .map(([client, rs]) => ({ client, qty: Math.round(sum(rs, (r) => r.qty)) }))
+      .sort((a, b) => b.qty - a.qty);
+  });
+  return missing;
 }
 
 const CONSOLIDADO_SOURCES: { slideId: string; category: string }[] = [

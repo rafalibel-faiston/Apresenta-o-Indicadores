@@ -459,7 +459,7 @@ export default function App() {
           {monthBuild?.partialSlides[currentSlide.id] && (
             <span
               className="text-[10px] font-bold text-amber-500 ml-1"
-              title="Essas modalidades não têm lançamentos no mês e ficaram fora do total."
+              title="Esses itens não têm lançamentos no mês na planilha."
             >
               ⚠ Sem dados de {mesAbrev}: {monthBuild.partialSlides[currentSlide.id].join(', ')}
             </span>

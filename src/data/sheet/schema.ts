@@ -40,4 +40,5 @@ export const RAW_TABS = {
   FONTES: 'Fontes',
   EXPEDICOES: 'Expedicoes',
   SELF_STORAGE: 'SelfStorage',
+  NOTAS: 'NotasFiscais',
 } as const;
