@@ -1,8 +1,8 @@
-import { csvToObjects, SheetRow } from './csv';
+import { csvToObjects, parseCsv, SheetRow } from './csv';
 
 // Uses Google's "gviz" CSV export, which works for any sheet shared as
 // "Anyone with the link" (Viewer) without needing an API key or OAuth.
-export async function fetchSheetTab(sheetId: string, tabName: string): Promise<SheetRow[]> {
+async function fetchSheetCsv(sheetId: string, tabName: string): Promise<string> {
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
 
   const res = await fetch(url);
@@ -19,5 +19,15 @@ export async function fetchSheetTab(sheetId: string, tabName: string): Promise<S
     );
   }
 
-  return csvToObjects(text);
+  return text;
+}
+
+export async function fetchSheetTab(sheetId: string, tabName: string): Promise<SheetRow[]> {
+  return csvToObjects(await fetchSheetCsv(sheetId, tabName));
+}
+
+// Raw grid (header included) — used for control sheets whose header row is not
+// necessarily the first one.
+export async function fetchSheetGrid(sheetId: string, tabName: string): Promise<string[][]> {
+  return parseCsv(await fetchSheetCsv(sheetId, tabName));
 }

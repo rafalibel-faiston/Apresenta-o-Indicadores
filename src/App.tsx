@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
@@ -8,7 +8,8 @@ import {
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
-import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
+import { loadMonthlyBase, MonthlyBase } from './data/sheet/loadSlides';
+import { monthAbbrev, parseMonth } from './data/sheet/months';
 import SlideViewer from './components/SlideViewer';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
@@ -69,8 +70,10 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [slidesData, setSlidesData] = useState(staticSlidesData);
-  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
+  const [monthlyBase, setMonthlyBase] = useState<MonthlyBase | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(() =>
+    parseMonth(new URLSearchParams(window.location.search).get('mes') ?? undefined) ?? null
+  );
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
 
@@ -81,11 +84,12 @@ export default function App() {
     let cancelled = false;
     setIsSheetSyncing(true);
 
-    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
-      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
+    loadMonthlyBase(sheetId, staticSlidesData)
+      .then((base) => {
         if (cancelled) return;
-        setSlidesData(slides);
-        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
+        setMonthlyBase(base);
+        // Default to the most recent month (or keep ?mes= when it exists in the base).
+        setSelectedMonth((current) => (current && base.months.includes(current) ? current : base.months[0]));
       })
       .catch((err) => {
         console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
@@ -99,6 +103,20 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  const monthBuild = useMemo(
+    () => (monthlyBase && selectedMonth ? monthlyBase.build(selectedMonth) : null),
+    [monthlyBase, selectedMonth]
+  );
+  const slidesData = monthBuild?.slides ?? staticSlidesData;
+  const mesAbrev = monthlyBase && selectedMonth ? monthAbbrev(selectedMonth) : null;
+
+  const changeMonth = (month: string) => {
+    setSelectedMonth(month);
+    const url = new URL(window.location.href);
+    url.searchParams.set('mes', month);
+    window.history.replaceState(null, '', url);
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
@@ -397,7 +415,23 @@ export default function App() {
             <span className={`text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
               dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'
             }`}>
-              LOGÍSTICA & SEGUROS · {mesAbrev || 'SET.26'}
+              LOGÍSTICA & SEGUROS ·{' '}
+              {monthlyBase && monthlyBase.months.length > 1 ? (
+                <select
+                  value={selectedMonth ?? ''}
+                  onChange={(e) => changeMonth(e.target.value)}
+                  className={`bg-transparent font-black uppercase cursor-pointer focus:outline-none ${
+                    dk ? 'text-[#00fafb]' : 'text-[#0054ec]'
+                  }`}
+                  title="Selecionar o mês da apresentação"
+                >
+                  {monthlyBase.months.map((m) => (
+                    <option key={m} value={m}>{monthAbbrev(m)}</option>
+                  ))}
+                </select>
+              ) : (
+                mesAbrev || 'SET.26'
+              )}
             </span>
             <h1 className={`text-[11px] font-semibold font-serif leading-none ${
               dk ? 'text-slate-300' : 'text-slate-600'
@@ -412,6 +446,22 @@ export default function App() {
           {!isSheetSyncing && sheetSyncError && (
             <span className="text-[10px] font-bold text-amber-500 ml-1" title="Não foi possível carregar a planilha do Google Sheets. Exibindo os últimos dados salvos no código.">
               ⚠ Planilha indisponível
+            </span>
+          )}
+          {monthBuild?.staleSlides[currentSlide.id] && (
+            <span
+              className="text-[10px] font-bold text-amber-500 ml-1"
+              title={`Este slide ainda não tem lançamentos de ${mesAbrev} na planilha — exibindo o último fechamento disponível.`}
+            >
+              ⚠ Slide com dados de {monthAbbrev(monthBuild.staleSlides[currentSlide.id])}
+            </span>
+          )}
+          {monthBuild?.partialSlides[currentSlide.id] && (
+            <span
+              className="text-[10px] font-bold text-amber-500 ml-1"
+              title="Essas modalidades não têm lançamentos no mês e ficaram fora do total."
+            >
+              ⚠ Sem dados de {mesAbrev}: {monthBuild.partialSlides[currentSlide.id].join(', ')}
             </span>
           )}
         </div>

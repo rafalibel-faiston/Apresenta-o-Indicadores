@@ -30,9 +30,106 @@ configurada, o app usa os dados fixos de `src/data/slidesData.ts` normalmente.
 4. Configure a variável de ambiente `VITE_GOOGLE_SHEET_ID` com esse ID
    (no Railway: Settings → Variables; localmente: copie `env.example` para
    `.env` e cole o ID).
-5. Todo início de mês, abra a planilha e atualize os números. A apresentação
-   busca os dados a cada carregamento da página — não precisa gerar build
-   nem fazer deploy.
+5. Todo início de mês, lance os dados do mês novo (veja "Base mês a mês"
+   abaixo). A apresentação busca os dados a cada carregamento da página, então
+   não precisa gerar build nem fazer deploy.
+
+## Base mês a mês (automática)
+
+A planilha guarda o **histórico de todos os meses**. A apresentação monta
+sozinha a lista de meses disponíveis, abre no mais recente e tem um seletor de
+mês no cabeçalho (ao lado de "LOGÍSTICA & SEGUROS"). O mês escolhido vai pra
+URL (`?mes=2026-10`), então dá pra mandar o link de um fechamento específico.
+
+Há dois jeitos de alimentar um mês. Os dois podem ser usados juntos.
+
+### 1. Planilhas brutas de controle (recomendado para expedições)
+
+Vocês lançam **uma linha por expedição** nas planilhas de controle do dia a
+dia, e o app calcula tudo: custo total, embarques, equipamentos, custo médio,
+tabela por projeto, divisão por transportadora, rotas dos dedicados, maior e
+menor custo, variação vs mês anterior e o **Custo Consolidado**. Não precisa
+mais montar a "Atualização_Gráficos_Fechamento" na mão.
+
+**Onde o app procura as linhas:**
+- Aba `Expedicoes` da planilha principal (opcional).
+- Aba `SelfStorage` da planilha principal (opcional).
+- Qualquer planilha/aba listada na aba **`Fontes`** da planilha principal. É
+  assim que vocês conectam as planilhas de controle que já usam, sem copiar
+  nada: cadastra uma vez e todo mês o app lê direto delas.
+
+**Aba `Fontes`:**
+| tipo | planilha | aba | modal | transportadora |
+|---|---|---|---|---|
+| expedicoes | https://docs.google.com/spreadsheets/d/XXXX/edit | Correios 2026 | correios | CORREIOS |
+| expedicoes | XXXX | Controle Transportadoras | | |
+| self storage | | Storage | | |
+
+- `tipo`: `expedicoes` ou `self storage`.
+- `planilha`: link ou ID da planilha de controle (em branco = a própria
+  planilha principal). Ela também precisa estar como **"Qualquer pessoa com
+  o link" → Leitor**.
+- `aba`: nome exato da aba.
+- `modal` (opcional): padrão da aba inteira quando a planilha não tem coluna
+  de modal (ex.: uma planilha só de Correios). Valores: `correios`,
+  `transportadoras`, `cia-aerea`, `courier`, `dedicados`.
+- `transportadora` (opcional): padrão quando não há coluna de transportadora.
+
+**Colunas reconhecidas nas planilhas brutas** (o nome não precisa ser
+idêntico: maiúsculas, acentos e `R$` são ignorados, e o cabeçalho pode estar
+abaixo de um título, até a linha 15):
+
+| Informação | Nomes aceitos |
+|---|---|
+| Mês (obrigatório: mês **ou** data) | `MES`, `MÊS REFERÊNCIA`, `COMPETÊNCIA`, `FECHAMENTO` |
+| Data | `DATA EXPEDIÇÃO`, `DATA DE ENVIO`, `DATA COLETA`, `DATA EMISSÃO`, `DATA` |
+| Custo (obrigatório) | `VALOR FINAL`, `CUSTO TOTAL`, `CUSTO`, `VALOR FRETE`, `FRETE`, `VALOR CTE`, `VALOR TOTAL`, `VALOR` |
+| Modal | `MODAL`, `MODALIDADE`, `TIPO DE FRETE` |
+| Transportadora | `TRANSPORTADORA`, `PARCEIRO`, `FORNECEDOR`, `EMPRESA` |
+| Projeto | `PROJETO`, `CLIENTE`, `CENTRO DE CUSTO` |
+| Embarques | `EMBARQUES`, `Nº DE EMBARQUES`, `QTD EMBARQUES` |
+| Equipamentos | `QTD EQUIPAMENTOS`, `EQUIPAMENTOS`, `QUANTIDADE`, `QTD` |
+| Nota fiscal | `NF`, `NF / GRM`, `NOTA FISCAL`, `CTE` |
+| Rota (dedicados) | `ROTA` |
+| Status | `STATUS` (linhas com `CANCELADO` são ignoradas) |
+| UF / Obs (self storage) | `UF`, `ESTADO` / `OBS`, `OBSERVAÇÃO`, `DESCRIÇÃO` |
+
+Regras de cálculo:
+- **Mês**: usa a coluna de mês; sem ela, o mês da data (`13/10/2026`,
+  `2026-10-13`, `OUT.26`, `10/2026`).
+- **Modal**: o texto da coluna `MODAL` é classificado (`Correios/Sedex/PAC`,
+  `Rodoviário/Transportadora`, `Aéreo/GOL/LATAM`, `Courier/Loggi`,
+  `Dedicado`). Sem coluna, vale o `modal` da aba `Fontes`.
+- **Embarques**: soma da coluna de embarques; sem ela, cada **NF distinta**
+  conta como um embarque (sem NF, cada linha conta como um).
+- **Equipamentos**: soma da coluna; sem ela, 1 por linha.
+- Linhas sem mês/data, sem custo ou sem modal identificável são ignoradas
+  (aparece um aviso no console do navegador). Linhas `TOTAL` também.
+- Quando um slide de expedição tem linhas brutas no mês, elas **substituem**
+  o que estiver nas abas consolidadas (`KPIs`, `Projects`...) para aquele
+  slide e mês. Comentários da aba `Commentary` com o mesmo mês têm prioridade
+  sobre os comentários automáticos.
+- **Custo Consolidado** soma só as modalidades com dados do mês. Se faltar
+  alguma, o cabeçalho mostra "⚠ Sem dados de OUT.26: Courier".
+- Mantenha em cada coluna um tipo só (só números na coluna de custo, só datas
+  na de data). O Google Sheets descarta na exportação as células de tipo
+  diferente da maioria da coluna.
+
+### 2. Abas consolidadas com a coluna `mes`
+
+Todas as abas descritas abaixo (`Meta`, `KPIs`, `EstoqueGroups`, seguros
+etc.) aceitam uma coluna extra **`mes`** (ex.: `OUT.26`). Para fechar um mês
+novo, **acrescente** as linhas com o mês novo em vez de sobrescrever as
+antigas. Assim o histórico fica guardado.
+
+- Para cada slide, o app usa as linhas do mês selecionado. Se o slide não
+  tiver linhas daquele mês, usa o **último mês anterior** disponível (útil
+  para estoque e seguros, que mudam pouco) e mostra no cabeçalho
+  "⚠ Slide com dados de SET.26".
+- Linhas sem `mes` valem como o mês de `global.mesAbrev` (aba `Meta`), ou
+  seja, uma planilha antiga sem coluna `mes` continua funcionando igual.
+- O mês do subtítulo (`(OUT.26)`) e o mês/ano da capa são preenchidos
+  automaticamente.
 
 ## Formato dos números
 

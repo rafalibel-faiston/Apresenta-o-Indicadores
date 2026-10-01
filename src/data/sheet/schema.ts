@@ -33,3 +33,11 @@ export const TABS = {
 } as const;
 
 export const ALL_TABS: string[] = Object.values(TABS);
+
+// Raw control-sheet tabs (one row per shipment / invoice), aggregated by month
+// in the app. `Fontes` lists other spreadsheets to read them from.
+export const RAW_TABS = {
+  FONTES: 'Fontes',
+  EXPEDICOES: 'Expedicoes',
+  SELF_STORAGE: 'SelfStorage',
+} as const;

@@ -1,4 +1,4 @@
-// Accepts plain numbers ("1234.56"), pt-BR formatted numbers ("1.234,56" or "1234,56")
+// Accepts plain numbers ("1234.56"), pt-BR ("1.234,56" / "1234,56"), US ("1,234.56")
 // and values with stray currency symbols/spaces ("R$ 1.234,56").
 export function toNumber(raw: string | undefined, fallback?: number): number | undefined {
   if (raw === undefined) return fallback;
@@ -10,7 +10,10 @@ export function toNumber(raw: string | undefined, fallback?: number): number | u
   const hasComma = s.includes(',');
   const hasDot = s.includes('.');
 
-  if (hasComma && hasDot) {
+  if (hasComma && hasDot && s.lastIndexOf('.') > s.lastIndexOf(',')) {
+    // US thousands+decimal: 1,234.56
+    s = s.replace(/,/g, '');
+  } else if (hasComma && hasDot) {
     // pt-BR thousands+decimal: 1.234,56
     s = s.replace(/\./g, '').replace(',', '.');
   } else if (hasComma && !hasDot) {
