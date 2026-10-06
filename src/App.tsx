@@ -3,13 +3,17 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
   Layers, HelpCircle, Download, FileText, Sparkles, Menu, X,
-  Sun, Moon
+  Sun, Moon, Upload, RotateCcw
 } from 'lucide-react';
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
 import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
 import SlideViewer from './components/SlideViewer';
+import ImportWorkbookModal, { AppliedImport } from './components/ImportWorkbookModal';
+import { readXlsx } from './data/workbook/readXlsx';
+import { importWorkbook } from './data/workbook/importWorkbook';
+import { clearStoredWorkbook, fromBase64, loadStoredWorkbook, saveWorkbook } from './data/workbook/storage';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
 
@@ -70,9 +74,50 @@ function replaceOklchInCss(css: string): string {
 
 export default function App() {
   const [slidesData, setSlidesData] = useState(staticSlidesData);
+  // Slides before any .xlsx import (code data, or Google Sheets when configured).
+  const [baseSlides, setBaseSlides] = useState(staticSlidesData);
+  const [baseMesAbrev, setBaseMesAbrev] = useState<string | null>(null);
   const [mesAbrev, setMesAbrev] = useState<string | null>(null);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importInfo, setImportInfo] = useState<{ fileName: string; monthLabel: string; notSaved?: boolean } | null>(null);
+  const importInfoRef = useRef(importInfo);
+  importInfoRef.current = importInfo;
+
+  // Re-applies the last workbook imported in this browser (see data/workbook/storage.ts).
+  useEffect(() => {
+    const stored = loadStoredWorkbook();
+    if (!stored) return;
+    readXlsx(fromBase64(stored.base64), stored.fileName)
+      .then((wb) => {
+        const { slides, monthLabel } = importWorkbook(wb, staticSlidesData, stored.monthLabel);
+        setSlidesData(slides);
+        setMesAbrev(monthLabel);
+        setImportInfo({ fileName: stored.fileName, monthLabel });
+      })
+      .catch((err) => {
+        console.error('Planilha salva no navegador não pôde ser lida — descartando.', err);
+        clearStoredWorkbook();
+      });
+  }, []);
+
+  const applyImport = ({ slides, monthLabel, fileName, bytes }: AppliedImport) => {
+    const saved = saveWorkbook(bytes, fileName, monthLabel);
+    setSlidesData(slides);
+    setMesAbrev(monthLabel);
+    setImportInfo({ fileName, monthLabel, notSaved: !saved });
+    setCurrentSlideIndex(0);
+    setShowImportModal(false);
+  };
+
+  const restoreOriginalData = () => {
+    clearStoredWorkbook();
+    setSlidesData(baseSlides);
+    setMesAbrev(baseMesAbrev);
+    setImportInfo(null);
+    setCurrentSlideIndex(0);
+  };
 
   useEffect(() => {
     const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
@@ -84,6 +129,10 @@ export default function App() {
     loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
       .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
         if (cancelled) return;
+        setBaseSlides(slides);
+        if (fetchedMesAbrev) setBaseMesAbrev(fetchedMesAbrev);
+        // An imported .xlsx takes precedence over the Google Sheets data.
+        if (importInfoRef.current) return;
         setSlidesData(slides);
         if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
       })
@@ -414,6 +463,25 @@ export default function App() {
               ⚠ Planilha indisponível
             </span>
           )}
+          {importInfo && (
+            <span
+              className={`hidden md:flex items-center gap-1.5 text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
+                importInfo.notSaved ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-emerald-700 bg-emerald-50 border-emerald-200'
+              }`}
+              title={importInfo.notSaved
+                ? 'O navegador não deixou salvar a planilha: ao recarregar a página, os dados voltam ao original.'
+                : 'Dados vindos da planilha importada. Ficam salvos neste navegador até você restaurar.'}
+            >
+              <span className="max-w-[180px] truncate">📊 {importInfo.fileName}</span>
+              <button
+                onClick={restoreOriginalData}
+                className="flex items-center gap-0.5 underline-offset-2 hover:underline"
+                title="Descartar a planilha importada e voltar aos dados originais"
+              >
+                <RotateCcw size={10} /> Restaurar
+              </button>
+            </span>
+          )}
         </div>
 
         {/* Action Controls */}
@@ -430,6 +498,15 @@ export default function App() {
           >
             <HelpCircle size={13} />
             Atalhos
+          </button>
+
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="flex items-center gap-1 font-bold px-3 py-1.5 text-[11px] rounded-lg transition-all border border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 active:scale-95 cursor-pointer"
+            title="Gerar a apresentação a partir da planilha de fechamento (.xlsx)"
+          >
+            <Upload size={12} />
+            Importar planilha
           </button>
 
           <button
@@ -802,6 +879,10 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {showImportModal && (
+        <ImportWorkbookModal baseSlides={baseSlides} onApply={applyImport} onClose={() => setShowImportModal(false)} />
       )}
 
       {/* Hidden capture stage for PPT/ZIP export */}
