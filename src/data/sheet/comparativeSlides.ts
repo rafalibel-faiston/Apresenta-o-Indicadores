@@ -132,7 +132,12 @@ export function buildEvolucaoSlide(
  * everything already presented. Shown whenever the workbook has at least two
  * competências.
  */
-export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: number, isRecorte = false): Slide | null {
+export function buildConsolidadoSlide(
+  snapshots: MonthSnapshot[],
+  slideNumber: number,
+  isRecorte = false,
+  competenciaAtual: string | null = null
+): Slide | null {
   if (snapshots.length < 2) return null;
 
   const meses = snapshots.map((s) => ({
@@ -144,16 +149,16 @@ export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: n
   // `sum` totals the period, `last` shows the closing position (a stock balance
   // makes no sense summed across months), `avg` averages it.
   const linhas = [
-    { label: 'Custo Logístico Total', format: 'currency', mode: 'sum', values: snapshots.map((s) => s.custoLogistico) },
-    { label: 'NF Entrada (valor)', format: 'currency', mode: 'sum', values: snapshots.map((s) => s.entrada?.value ?? null) },
-    { label: 'NF Saída (valor)', format: 'currency', mode: 'sum', values: snapshots.map((s) => s.saida?.value ?? null) },
-    { label: 'NF Entrada (qtd.)', format: 'number', mode: 'sum', values: snapshots.map((s) => s.entrada?.nfs ?? null) },
-    { label: 'NF Saída (qtd.)', format: 'number', mode: 'sum', values: snapshots.map((s) => s.saida?.nfs ?? null) },
-    { label: 'Equipamentos Expedidos', format: 'number', mode: 'sum', values: snapshots.map((s) => s.saida?.equipments ?? null) },
-    { label: 'Estoque Custodiado', format: 'currency', mode: 'last', values: snapshots.map((s) => s.estoqueTotal) },
-    { label: 'Patrimônio Segurado', format: 'currency', mode: 'last', values: snapshots.map((s) => s.segurosProtegido) },
-    { label: 'Custo Mensal de Seguros', format: 'currency', mode: 'avg', values: snapshots.map((s) => s.segurosCustoMensal) },
-    { label: 'Receita de Descarte', format: 'currency', mode: 'last', values: snapshots.map((s) => s.descarteReceita) },
+    { label: 'Custo Logístico Total', format: 'currency', mode: 'sum', polarity: 'down', values: snapshots.map((s) => s.custoLogistico) },
+    { label: 'NF Entrada (valor)', format: 'currency', mode: 'sum', polarity: 'neutral', values: snapshots.map((s) => s.entrada?.value ?? null) },
+    { label: 'NF Saída (valor)', format: 'currency', mode: 'sum', polarity: 'neutral', values: snapshots.map((s) => s.saida?.value ?? null) },
+    { label: 'NF Entrada (qtd.)', format: 'number', mode: 'sum', polarity: 'neutral', values: snapshots.map((s) => s.entrada?.nfs ?? null) },
+    { label: 'NF Saída (qtd.)', format: 'number', mode: 'sum', polarity: 'neutral', values: snapshots.map((s) => s.saida?.nfs ?? null) },
+    { label: 'Equipamentos Expedidos', format: 'number', mode: 'sum', polarity: 'neutral', values: snapshots.map((s) => s.saida?.equipments ?? null) },
+    { label: 'Estoque Custodiado', format: 'currency', mode: 'last', polarity: 'neutral', values: snapshots.map((s) => s.estoqueTotal) },
+    { label: 'Patrimônio Segurado', format: 'currency', mode: 'last', polarity: 'neutral', values: snapshots.map((s) => s.segurosProtegido) },
+    { label: 'Custo Mensal de Seguros', format: 'currency', mode: 'avg', polarity: 'down', values: snapshots.map((s) => s.segurosCustoMensal) },
+    { label: 'Receita de Descarte', format: 'currency', mode: 'last', polarity: 'up', values: snapshots.map((s) => s.descarteReceita) },
   ].filter((linha) => linha.values.some((v) => v !== null));
 
   const anos = Array.from(new Set(snapshots.map((s) => competenciaYear(s.competencia)))).filter(Boolean);
@@ -176,6 +181,14 @@ export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: n
       anos,
       meses,
       linhas,
+      competenciaAtual,
+      // Part-to-whole per month, for the stacked columns.
+      composicao: snapshots.map((s) => ({
+        competencia: s.competencia,
+        label: competenciaAbbr(s.competencia),
+        total: s.custoLogistico,
+        partes: s.custoPorModalidade.map((p) => ({ category: p.category, value: p.value })),
+      })),
       kpis: [
         { label: 'Competências', value: snapshots.length, type: 'number' },
         { label: 'Custo Acumulado', value: sumSeries(custos), type: 'currency', isHighlight: true },
@@ -205,7 +218,7 @@ export function withComparativeSlides(
   const isRecorte = selecionados.length < snapshots.length;
 
   const evolucao = buildEvolucaoSlide(selecionados, competenciaAtual, 0, isRecorte);
-  const consolidado = buildConsolidadoSlide(selecionados, 0, isRecorte);
+  const consolidado = buildConsolidadoSlide(selecionados, 0, isRecorte, competenciaAtual);
   const extras = [evolucao, consolidado].filter((s): s is Slide => s !== null);
   if (!extras.length) return slides;
 

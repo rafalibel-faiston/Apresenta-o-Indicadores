@@ -32,7 +32,7 @@ export function stableSeriesColor(key: string, isDarkMode = false): string {
   return scale[hash % scale.length];
 }
 
-function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>, fallback = 720) {
+export function useContainerWidth(ref: React.RefObject<HTMLDivElement | null>, fallback = 720) {
   const [width, setWidth] = useState(fallback);
 
   useEffect(() => {

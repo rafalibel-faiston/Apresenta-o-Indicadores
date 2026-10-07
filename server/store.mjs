@@ -1,6 +1,7 @@
 // Base histórica das planilhas de fechamento: uma planilha por competência
 // (mês, AAAA-MM). Subir de novo o mesmo mês substitui a versão atual, mas a
-// anterior continua na tabela (ativa = false) — nada é apagado de verdade.
+// anterior continua na tabela (ativa = false). Apagar um mês remove todas as
+// versões dele de vez.
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -84,7 +85,8 @@ async function createPostgresStore(databaseUrl) {
       }
     },
     async remove(competencia) {
-      await pool.query('UPDATE planilhas SET ativa = false WHERE ativa AND competencia = $1', [competencia]);
+      const { rowCount } = await pool.query('DELETE FROM planilhas WHERE competencia = $1', [competencia]);
+      return rowCount;
     },
     close: () => pool.end(),
   };
@@ -138,10 +140,10 @@ async function createFileStore(dataDir) {
     },
     async remove(competencia) {
       const rows = await readIndex();
-      rows.forEach((r) => {
-        if (r.competencia === competencia) r.ativa = false;
-      });
-      await writeIndex(rows);
+      const gone = rows.filter((r) => r.competencia === competencia);
+      await Promise.all(gone.map((r) => fs.rm(fileFor(r.id), { force: true })));
+      await writeIndex(rows.filter((r) => r.competencia !== competencia));
+      return gone.length;
     },
     close: async () => {},
   };

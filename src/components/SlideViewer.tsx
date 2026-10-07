@@ -11,6 +11,7 @@ import KPICard from './KPICard';
 import FaistonLogo from './FaistonLogo';
 import EntradaSaidaChart from './EntradaSaidaChart';
 import { MonthlyTrendChart, VariationBadge, seriesColor, stableSeriesColor } from './TrendChart';
+import { IndicadorCard, StackedMonthlyColumns, modalidadeColor } from './ComparativeCharts';
 import { 
   ResponsiveBarChart, 
   HorizontalBarChart, 
@@ -34,6 +35,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
   const [chartDisplayType, setChartDisplayType] = useState<'bar' | 'combined'>('combined');
   const [activeRegion, setActiveRegion] = useState<string | null>(null);
   const [consolidatedTab, setConsolidatedTab] = useState<'chart' | 'bars'>('chart');
+  const [comparativoView, setComparativoView] = useState<'graficos' | 'tabela'>('graficos');
 
   useEffect(() => {
     setChartDisplayType('combined');
@@ -375,7 +377,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                       ...content.modalidades.map((m: any) => Math.max(m.atual || 0, m.anterior || 0)),
                       1
                     );
-                    const color = stableSeriesColor(mod.category, isDarkMode);
+                    const color = modalidadeColor(mod.category, isDarkMode);
                     return (
                       <div key={mod.category} className="flex flex-col gap-1.5">
                         <div className="flex items-center justify-between gap-2">
@@ -466,110 +468,166 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
               ))}
             </div>
 
-            <div className={`rounded-3xl border shadow-sm overflow-hidden ${
-              isDarkMode ? 'bg-[#12131a] border-slate-800' : 'bg-white border-slate-200'
-            }`}>
-              <div className={`flex items-baseline justify-between gap-3 px-5 py-4 border-b ${
-                isDarkMode ? 'border-slate-800' : 'border-slate-100'
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+              <div className={`lg:col-span-5 rounded-3xl border p-5 shadow-sm flex flex-col gap-3 ${
+                isDarkMode ? 'bg-[#12131a] border-slate-800' : 'bg-white border-slate-200'
               }`}>
-                <h3 className={`text-[13px] font-black font-serif uppercase tracking-wide ${
-                  isDarkMode ? 'text-slate-200' : 'text-slate-700'
-                }`}>
-                  Indicadores por Competência
-                </h3>
-                <span className={`text-[10px] font-mono uppercase tracking-widest ${
-                  isDarkMode ? 'text-slate-500' : 'text-slate-400'
-                }`}>
-                  {content.periodo}
-                </span>
+                <div className="flex items-baseline justify-between gap-3">
+                  <h3 className={`text-[13px] font-black font-serif uppercase tracking-wide ${
+                    isDarkMode ? 'text-slate-200' : 'text-slate-700'
+                  }`}>
+                    Custo por Modalidade
+                  </h3>
+                  <span className={`text-[10px] font-mono uppercase tracking-widest ${
+                    isDarkMode ? 'text-slate-500' : 'text-slate-400'
+                  }`}>
+                    {content.meses.length} meses
+                  </span>
+                </div>
+                <StackedMonthlyColumns
+                  data={content.composicao ?? []}
+                  currentCompetencia={content.competenciaAtual}
+                  isDarkMode={isDarkMode}
+                  height={250}
+                />
               </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-[12px]">
-                  <thead>
-                    <tr className={isDarkMode ? 'bg-white/3' : 'bg-[#f1f3fa]'}>
-                      <th className={`text-left font-black font-mono uppercase tracking-widest text-[9px] px-5 py-3 sticky left-0 ${
-                        isDarkMode ? 'bg-[#181a24] text-slate-400' : 'bg-[#f1f3fa] text-slate-500'
-                      }`}>
-                        Indicador
-                      </th>
-                      {content.meses.map((mes: any) => (
-                        <th key={mes.competencia} className={`text-right font-black font-mono uppercase tracking-widest text-[9px] px-4 py-3 whitespace-nowrap ${
-                          isDarkMode ? 'text-slate-400' : 'text-slate-500'
-                        }`}>
-                          {mes.label}
-                        </th>
-                      ))}
-                      <th className={`text-right font-black font-mono uppercase tracking-widest text-[9px] px-5 py-3 whitespace-nowrap ${
-                        isDarkMode ? 'text-[#00fafb]' : 'text-[#0054ec]'
-                      }`}>
-                        Consolidado
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {content.linhas.map((linha: any, idx: number) => {
-                      const present = linha.values.filter((v: number | null) => v !== null) as number[];
-                      const consolidado =
-                        linha.mode === 'last'
-                          ? present[present.length - 1] ?? null
-                          : linha.mode === 'avg'
-                            ? present.length ? present.reduce((a: number, b: number) => a + b, 0) / present.length : null
-                            : present.reduce((a: number, b: number) => a + b, 0);
-                      const fmt = (value: number | null) =>
-                        value === null
-                          ? '—'
-                          : linha.format === 'currency'
-                            ? formatCompact(value)
-                            : new Intl.NumberFormat('pt-BR').format(Math.round(value));
-                      const modoLabel = linha.mode === 'last' ? 'posição final' : linha.mode === 'avg' ? 'média' : 'soma';
+              <div className={`lg:col-span-7 rounded-3xl border shadow-sm overflow-hidden flex flex-col ${
+                isDarkMode ? 'bg-[#12131a] border-slate-800' : 'bg-white border-slate-200'
+              }`}>
+                <div className={`flex items-center justify-between gap-3 px-5 py-3 border-b ${
+                  isDarkMode ? 'border-slate-800' : 'border-slate-100'
+                }`}>
+                  <h3 className={`text-[13px] font-black font-serif uppercase tracking-wide ${
+                    isDarkMode ? 'text-slate-200' : 'text-slate-700'
+                  }`}>
+                    Indicadores por Competência
+                  </h3>
+                  <div className={`flex items-center p-0.5 rounded-lg border text-[10px] font-bold ${
+                    isDarkMode ? 'border-slate-800 bg-white/5' : 'border-slate-200 bg-slate-50'
+                  }`}>
+                    {(['graficos', 'tabela'] as const).map((view) => (
+                      <button
+                        key={view}
+                        type="button"
+                        onClick={() => setComparativoView(view)}
+                        className={`px-2.5 py-1 rounded-md transition-colors ${
+                          comparativoView === view
+                            ? 'bg-[#0054ec] text-white'
+                            : isDarkMode ? 'text-slate-400 hover:text-white' : 'text-slate-500 hover:text-[#0054ec]'
+                        }`}
+                      >
+                        {view === 'graficos' ? 'Gráficos' : 'Tabela'}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                      return (
-                        <tr
-                          key={linha.label}
-                          className={`border-t transition-colors ${
-                            isDarkMode
-                              ? `border-slate-850 hover:bg-white/3 ${idx % 2 ? 'bg-white/2' : ''}`
-                              : `border-slate-100 hover:bg-slate-50 ${idx % 2 ? 'bg-slate-50/40' : ''}`
-                          }`}
-                        >
-                          <td className={`px-5 py-2.5 font-semibold font-serif whitespace-nowrap sticky left-0 ${
-                            isDarkMode ? 'bg-[#12131a] text-slate-300' : 'bg-white text-slate-700'
-                          }`}>
-                            <span className="flex items-center gap-2">
-                              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: stableSeriesColor(linha.label, isDarkMode) }} />
-                              {linha.label}
-                            </span>
-                          </td>
-                          {linha.values.map((value: number | null, vIdx: number) => (
-                            <td key={vIdx} className={`px-4 py-2.5 text-right font-mono tabular-nums ${
-                              value === null
-                                ? isDarkMode ? 'text-slate-600' : 'text-slate-300'
-                                : isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                {comparativoView === 'graficos' ? (
+                  <div className="@container p-3">
+                  <div className="grid grid-cols-2 @lg:grid-cols-3 @xl:grid-cols-4 gap-2">
+                    {content.linhas.map((linha: any) => (
+                      <IndicadorCard
+                        key={linha.label}
+                        linha={linha}
+                        meses={content.meses}
+                        currentCompetencia={content.competenciaAtual}
+                        isDarkMode={isDarkMode}
+                      />
+                    ))}
+                  </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="overflow-x-auto">
+                      <table className="w-full border-collapse text-[12px]">
+                        <thead>
+                          <tr className={isDarkMode ? 'bg-white/3' : 'bg-[#f1f3fa]'}>
+                            <th className={`text-left font-black font-mono uppercase tracking-widest text-[9px] px-5 py-3 sticky left-0 ${
+                              isDarkMode ? 'bg-[#181a24] text-slate-400' : 'bg-[#f1f3fa] text-slate-500'
                             }`}>
-                              {fmt(value)}
-                            </td>
-                          ))}
-                          <td
-                            className={`px-5 py-2.5 text-right font-mono font-black tabular-nums whitespace-nowrap ${
-                              isDarkMode ? 'text-white' : 'text-slate-900'
-                            }`}
-                            title={`Consolidado por ${modoLabel}`}
-                          >
-                            {fmt(consolidado)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                              Indicador
+                            </th>
+                            {content.meses.map((mes: any) => (
+                              <th key={mes.competencia} className={`text-right font-black font-mono uppercase tracking-widest text-[9px] px-4 py-3 whitespace-nowrap ${
+                                isDarkMode ? 'text-slate-400' : 'text-slate-500'
+                              }`}>
+                                {mes.label}
+                              </th>
+                            ))}
+                            <th className={`text-right font-black font-mono uppercase tracking-widest text-[9px] px-5 py-3 whitespace-nowrap ${
+                              isDarkMode ? 'text-[#00fafb]' : 'text-[#0054ec]'
+                            }`}>
+                              Consolidado
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {content.linhas.map((linha: any, idx: number) => {
+                            const present = linha.values.filter((v: number | null) => v !== null) as number[];
+                            const consolidado =
+                              linha.mode === 'last'
+                                ? present[present.length - 1] ?? null
+                                : linha.mode === 'avg'
+                                  ? present.length ? present.reduce((a: number, b: number) => a + b, 0) / present.length : null
+                                  : present.reduce((a: number, b: number) => a + b, 0);
+                            const fmt = (value: number | null) =>
+                              value === null
+                                ? '—'
+                                : linha.format === 'currency'
+                                  ? formatCompact(value)
+                                  : new Intl.NumberFormat('pt-BR').format(Math.round(value));
+                            const modoLabel = linha.mode === 'last' ? 'posição final' : linha.mode === 'avg' ? 'média' : 'soma';
 
-              <div className={`px-5 py-3 border-t text-[10px] font-light ${
-                isDarkMode ? 'border-slate-800 text-slate-500' : 'border-slate-100 text-slate-400'
-              }`}>
-                Consolidado: soma do período para fluxos (custos e notas fiscais), posição de fechamento para saldos
-                (estoque e patrimônio segurado) e média para o custo recorrente de seguros.
+                            return (
+                              <tr
+                                key={linha.label}
+                                className={`border-t transition-colors ${
+                                  isDarkMode
+                                    ? `border-slate-850 hover:bg-white/3 ${idx % 2 ? 'bg-white/2' : ''}`
+                                    : `border-slate-100 hover:bg-slate-50 ${idx % 2 ? 'bg-slate-50/40' : ''}`
+                                }`}
+                              >
+                                <td className={`px-5 py-2.5 font-semibold font-serif whitespace-nowrap sticky left-0 ${
+                                  isDarkMode ? 'bg-[#12131a] text-slate-300' : 'bg-white text-slate-700'
+                                }`}>
+                                  <span className="flex items-center gap-2">
+                                    <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: stableSeriesColor(linha.label, isDarkMode) }} />
+                                    {linha.label}
+                                  </span>
+                                </td>
+                                {linha.values.map((value: number | null, vIdx: number) => (
+                                  <td key={vIdx} className={`px-4 py-2.5 text-right font-mono tabular-nums ${
+                                    value === null
+                                      ? isDarkMode ? 'text-slate-600' : 'text-slate-300'
+                                      : isDarkMode ? 'text-slate-300' : 'text-slate-600'
+                                  }`}>
+                                    {fmt(value)}
+                                  </td>
+                                ))}
+                                <td
+                                  className={`px-5 py-2.5 text-right font-mono font-black tabular-nums whitespace-nowrap ${
+                                    isDarkMode ? 'text-white' : 'text-slate-900'
+                                  }`}
+                                  title={`Consolidado por ${modoLabel}`}
+                                >
+                                  {fmt(consolidado)}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    <div className={`px-5 py-3 border-t text-[10px] font-light ${
+                      isDarkMode ? 'border-slate-800 text-slate-500' : 'border-slate-100 text-slate-400'
+                    }`}>
+                      Consolidado: soma do período para fluxos (custos e notas fiscais), posição de fechamento para saldos
+                      (estoque e patrimônio segurado) e média para o custo recorrente de seguros.
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
   Layers, HelpCircle, Download, FileText, Sparkles, Menu, X,
-  Sun, Moon, Upload, Trash2
+  Sun, Moon, Upload, Database
 } from 'lucide-react';
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
@@ -13,6 +13,7 @@ import { normalizeCompetencia } from './data/sheet/competencia';
 import { buildHub, ImportedMonth } from './data/hub';
 import CompetenciaSelector from './components/CompetenciaSelector';
 import CompareMonthsPicker from './components/CompareMonthsPicker';
+import MonthsBaseModal from './components/MonthsBaseModal';
 import { normalizeRecorte, recorteFromSearch } from './data/recorte';
 import SlideViewer from './components/SlideViewer';
 import ImportWorkbookModal, { AppliedImport } from './components/ImportWorkbookModal';
@@ -88,6 +89,11 @@ export default function App() {
   const [competencia, setCompetencia] = useState<string | null>(null);
   // Months picked in "Comparar" (`?comparar=` in the URL); empty = the whole history.
   const [recorte, setRecorte] = useState<string[]>(() => recorteFromSearch(window.location.search));
+  // Comparative slides on/off (`?comparativos=0` in the URL turns them off).
+  const [showComparativos, setShowComparativos] = useState(
+    () => new URLSearchParams(window.location.search).get('comparativos') !== '0'
+  );
+  const [showBaseModal, setShowBaseModal] = useState(false);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
   const [isLoadingMonths, setIsLoadingMonths] = useState(true);
@@ -170,8 +176,8 @@ export default function App() {
   );
 
   const slidesData = useMemo(
-    () => (selectedCompetencia ? hub.slidesFor(selectedCompetencia, activeRecorte) : hub.fallbackSlides),
-    [hub, selectedCompetencia, activeRecorte]
+    () => (selectedCompetencia ? hub.slidesFor(selectedCompetencia, activeRecorte, showComparativos) : hub.fallbackSlides),
+    [hub, selectedCompetencia, activeRecorte, showComparativos]
   );
 
   const mesAbrev =
@@ -186,6 +192,15 @@ export default function App() {
     const url = new URL(window.location.href);
     if (next) url.searchParams.set('mes', next);
     else url.searchParams.delete('mes');
+    window.history.replaceState({}, '', url);
+  };
+
+  const toggleComparativos = () => {
+    const next = !showComparativos;
+    setShowComparativos(next);
+    const url = new URL(window.location.href);
+    if (next) url.searchParams.delete('comparativos');
+    else url.searchParams.set('comparativos', '0');
     window.history.replaceState({}, '', url);
   };
 
@@ -216,20 +231,27 @@ export default function App() {
     });
   };
 
-  const removeImportedMonth = async (month: ImportedMonth) => {
+  const deleteImportedMonth = async (month: ImportedMonth) => {
     if (month.saveState === 'saving') return;
-    if (!window.confirm(`Tirar ${month.monthLabel} da apresentação? A planilha continua guardada no histórico do banco.`)) return;
-    // Only the local view has it if the upload never made it — nothing to undo on the server.
+    if (
+      !window.confirm(
+        `Apagar ${month.monthLabel} da base?\n\nA planilha "${month.fileName}" sai da apresentação para todo mundo e é apagada do banco (todas as versões). Não dá para desfazer.`
+      )
+    )
+      return;
+    // Only the local view has it if the upload never made it — nothing to delete on the server.
     if (month.saveState === 'saved') {
       const error = await removeMonth(month.competencia);
       if (error) {
-        window.alert(`Não foi possível remover no servidor: ${error}`);
+        window.alert(`Não foi possível apagar no servidor: ${error}`);
         return;
       }
     }
     setImportedMonths((current) => current.filter((m) => m.competencia !== month.competencia));
-    handleCompetenciaChange(null);
-    setCurrentSlideIndex(0);
+    if (month.competencia === selectedCompetencia) {
+      handleCompetenciaChange(null);
+      setCurrentSlideIndex(0);
+    }
   };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -529,9 +551,10 @@ export default function App() {
 
           <FaistonLogo width={130} height={36} className={dk ? 'text-white opacity-95' : 'text-slate-900 opacity-100'} />
 
-          <div className={`h-8 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'}`} />
+          {/* The month selector already shows the month — on narrower screens it replaces this block. */}
+          <div className={`h-8 w-px ${dk ? 'bg-white/10' : 'bg-slate-200'} ${competenciaOptions.length > 0 ? 'hidden 2xl:block' : ''}`} />
 
-          <div className="flex flex-col gap-0.5">
+          <div className={`flex-col gap-0.5 whitespace-nowrap ${competenciaOptions.length > 0 ? 'hidden 2xl:flex' : 'flex'}`}>
             <span className={`text-[9px] font-black tracking-[0.18em] uppercase font-mono ${
               dk ? 'text-[#00fafb]/80' : 'text-[#0054ec]'
             }`}>
@@ -553,13 +576,15 @@ export default function App() {
             />
           )}
 
-          {/* With two months there is nothing to pick — both are always compared. */}
-          {competenciaOptions.length > 2 && (
+          {/* Comparative slides only exist from two months on. */}
+          {competenciaOptions.length > 1 && (
             <CompareMonthsPicker
               options={competenciaOptions}
               current={selectedCompetencia}
               value={activeRecorte}
               onChange={handleRecorteChange}
+              enabled={showComparativos}
+              onToggle={toggleComparativos}
               isDarkMode={dk}
             />
           )}
@@ -576,7 +601,7 @@ export default function App() {
           )}
           {selectedImport && (
             <span
-              className={`hidden md:flex items-center gap-1.5 whitespace-nowrap text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
+              className={`hidden md:flex items-center justify-center w-7 h-7 text-[12px] rounded-lg border ${
                 typeof selectedImport.saveState === 'object'
                   ? 'text-amber-600 bg-amber-50 border-amber-200'
                   : selectedImport.saveState === 'saving'
@@ -588,20 +613,12 @@ export default function App() {
                   ? `A planilha não foi salva no servidor (${selectedImport.saveState.error}). Só você está vendo esses dados e, ao recarregar a página, eles somem.`
                   : selectedImport.saveState === 'saving'
                     ? 'Salvando a planilha no servidor…'
-                    : `${selectedImport.monthLabel} veio desta planilha, salva no banco — todo mundo que abrir a apresentação vê esta versão.${
+                    : `${selectedImport.monthLabel} veio de "${selectedImport.fileName}", salva no banco — todo mundo que abrir a apresentação vê esta versão.${
                         selectedImport.importedAt ? ` Importada em ${new Date(selectedImport.importedAt).toLocaleString('pt-BR')}.` : ''
                       }`
               }
             >
-              <span className="max-w-[140px] truncate">📊 {selectedImport.fileName}</span>
-              <button
-                onClick={() => removeImportedMonth(selectedImport)}
-                disabled={selectedImport.saveState === 'saving'}
-                className="flex items-center gap-0.5 underline-offset-2 hover:underline disabled:opacity-40 disabled:no-underline"
-                title={`Tirar ${selectedImport.monthLabel} da apresentação (a planilha continua no histórico do banco)`}
-              >
-                <Trash2 size={10} /> Remover mês
-              </button>
+              📊
             </span>
           )}
         </div>
@@ -619,7 +636,22 @@ export default function App() {
             }`}
           >
             <HelpCircle size={13} />
-            Atalhos
+          </button>
+
+          <button
+            onClick={() => setShowBaseModal(true)}
+            className={`flex items-center gap-1.5 whitespace-nowrap font-bold px-3 py-1.5 text-[11px] rounded-lg transition-colors border ${
+              dk
+                ? 'text-slate-300 hover:text-white hover:bg-white/8 border-white/10'
+                : 'text-slate-600 hover:text-[#0054ec] hover:bg-slate-50 border-slate-200'
+            }`}
+            title="Ver, abrir e apagar os meses salvos na base"
+          >
+            <Database size={12} />
+            Base<span className="hidden 2xl:inline"> de meses</span>
+            {competenciaOptions.length > 0 && (
+              <span className="font-mono text-[10px] px-1.5 rounded-full bg-[#0054ec]/10 text-[#0054ec]">{competenciaOptions.length}</span>
+            )}
           </button>
 
           <button
@@ -628,7 +660,7 @@ export default function App() {
             title="Gerar a apresentação a partir da planilha de fechamento (.xlsx)"
           >
             <Upload size={12} />
-            Importar planilha
+            Importar<span className="hidden 2xl:inline"> planilha</span>
           </button>
 
           <button
@@ -685,14 +717,14 @@ export default function App() {
             href="https://faiston.com"
             target="_blank"
             rel="noreferrer"
-            className={`hidden sm:flex items-center gap-1.5 text-[11px] font-bold px-3.5 py-1.5 rounded-lg border transition-all hover:scale-[1.02] ${
+            title="faiston.com"
+            className={`hidden sm:flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-2 rounded-lg border transition-all hover:scale-[1.02] ${
               dk
                 ? 'border-[#0054ec]/50 bg-gradient-to-r from-[#0054ec]/20 to-[#2226c0]/20 text-[#00fafb] hover:from-[#0054ec]/35 hover:to-[#2226c0]/35'
                 : 'border-[#0054ec]/30 bg-[#0054ec]/8 text-[#0054ec] hover:bg-[#0054ec]/15'
             }`}
           >
             <Sparkles size={11} className="opacity-80" />
-            faiston.com
           </a>
         </div>
       </header>
@@ -1002,6 +1034,25 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {showBaseModal && (
+        <MonthsBaseModal
+          options={competenciaOptions}
+          imports={importedMonths}
+          current={selectedCompetencia}
+          onOpen={(c) => {
+            handleCompetenciaChange(c);
+            setCurrentSlideIndex(0);
+            setShowBaseModal(false);
+          }}
+          onDelete={deleteImportedMonth}
+          onImport={() => {
+            setShowBaseModal(false);
+            setShowImportModal(true);
+          }}
+          onClose={() => setShowBaseModal(false)}
+        />
       )}
 
       {showImportModal && (
