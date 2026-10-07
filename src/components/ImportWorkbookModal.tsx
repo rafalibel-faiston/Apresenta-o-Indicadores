@@ -78,7 +78,7 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
             </div>
             <div>
               <h3 className="text-sm font-black uppercase tracking-wide text-slate-900">Importar planilha do fechamento</h3>
-              <p className="text-[11px] text-slate-500 font-medium">Os slides são gerados no seu navegador — nada é enviado para servidor.</p>
+              <p className="text-[11px] text-slate-500 font-medium">Ao aplicar, a planilha fica salva no servidor e vale para todo mundo que abrir a apresentação.</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100" title="Fechar">

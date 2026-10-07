@@ -7,4 +7,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    // API da planilha (server/index.mjs) — rode "npm run dev:server" junto com "npm run dev".
+    proxy: {
+      '/api': 'http://localhost:3000',
+    },
+  },
 })

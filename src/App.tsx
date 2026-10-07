@@ -81,38 +81,59 @@ export default function App() {
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [importInfo, setImportInfo] = useState<{ fileName: string; monthLabel: string; notSaved?: boolean } | null>(null);
+  const [importInfo, setImportInfo] = useState<{
+    fileName: string;
+    monthLabel: string;
+    importedAt?: string;
+    /** 'saving' while the upload is in flight; an error message when the server refused it. */
+    saveState: 'saving' | 'saved' | { error: string };
+  } | null>(null);
   const importInfoRef = useRef(importInfo);
   importInfoRef.current = importInfo;
 
-  // Re-applies the last workbook imported in this browser (see data/workbook/storage.ts).
+  // Re-applies the workbook saved on the server (see data/workbook/storage.ts and server/).
   useEffect(() => {
-    const stored = loadStoredWorkbook();
-    if (!stored) return;
-    readXlsx(fromBase64(stored.base64), stored.fileName)
-      .then((wb) => {
+    let cancelled = false;
+    loadStoredWorkbook()
+      .then(async (stored) => {
+        if (!stored || cancelled) return;
+        const wb = await readXlsx(fromBase64(stored.base64), stored.fileName);
+        // Someone imported a new workbook while this one was loading — theirs wins.
+        if (cancelled || importInfoRef.current) return;
         const { slides, monthLabel } = importWorkbook(wb, staticSlidesData, stored.monthLabel);
         setSlidesData(slides);
         setMesAbrev(monthLabel);
-        setImportInfo({ fileName: stored.fileName, monthLabel });
+        setImportInfo({ fileName: stored.fileName, monthLabel, importedAt: stored.importedAt, saveState: 'saved' });
       })
-      .catch((err) => {
-        console.error('Planilha salva no navegador não pôde ser lida — descartando.', err);
-        clearStoredWorkbook();
-      });
+      .catch((err) => console.error('Não foi possível carregar a planilha salva no servidor.', err));
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const applyImport = ({ slides, monthLabel, fileName, bytes }: AppliedImport) => {
-    const saved = saveWorkbook(bytes, fileName, monthLabel);
     setSlidesData(slides);
     setMesAbrev(monthLabel);
-    setImportInfo({ fileName, monthLabel, notSaved: !saved });
+    setImportInfo({ fileName, monthLabel, saveState: 'saving' });
     setCurrentSlideIndex(0);
     setShowImportModal(false);
+    saveWorkbook(bytes, fileName, monthLabel).then((error) => {
+      setImportInfo((info) =>
+        info && info.fileName === fileName ? { ...info, saveState: error ? { error } : 'saved', importedAt: new Date().toISOString() } : info
+      );
+    });
   };
 
-  const restoreOriginalData = () => {
-    clearStoredWorkbook();
+  const restoreOriginalData = async () => {
+    if (importInfo?.saveState === 'saving') return;
+    // Only the local view was changed if the upload never made it — nothing to undo on the server.
+    if (importInfo?.saveState === 'saved') {
+      const error = await clearStoredWorkbook();
+      if (error) {
+        window.alert(`Não foi possível restaurar no servidor: ${error}`);
+        return;
+      }
+    }
     setSlidesData(baseSlides);
     setMesAbrev(baseMesAbrev);
     setImportInfo(null);
@@ -466,16 +487,27 @@ export default function App() {
           {importInfo && (
             <span
               className={`hidden md:flex items-center gap-1.5 text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
-                importInfo.notSaved ? 'text-amber-600 bg-amber-50 border-amber-200' : 'text-emerald-700 bg-emerald-50 border-emerald-200'
+                typeof importInfo.saveState === 'object'
+                  ? 'text-amber-600 bg-amber-50 border-amber-200'
+                  : importInfo.saveState === 'saving'
+                    ? 'text-slate-500 bg-slate-50 border-slate-200'
+                    : 'text-emerald-700 bg-emerald-50 border-emerald-200'
               }`}
-              title={importInfo.notSaved
-                ? 'O navegador não deixou salvar a planilha: ao recarregar a página, os dados voltam ao original.'
-                : 'Dados vindos da planilha importada. Ficam salvos neste navegador até você restaurar.'}
+              title={
+                typeof importInfo.saveState === 'object'
+                  ? `A planilha não foi salva no servidor (${importInfo.saveState.error}). Só você está vendo esses dados e, ao recarregar a página, eles somem.`
+                  : importInfo.saveState === 'saving'
+                    ? 'Salvando a planilha no servidor…'
+                    : `Dados da planilha importada, salvos no servidor — todo mundo que abrir a apresentação vê esta versão.${
+                        importInfo.importedAt ? ` Importada em ${new Date(importInfo.importedAt).toLocaleString('pt-BR')}.` : ''
+                      }`
+              }
             >
               <span className="max-w-[180px] truncate">📊 {importInfo.fileName}</span>
               <button
                 onClick={restoreOriginalData}
-                className="flex items-center gap-0.5 underline-offset-2 hover:underline"
+                disabled={importInfo.saveState === 'saving'}
+                className="flex items-center gap-0.5 underline-offset-2 hover:underline disabled:opacity-40 disabled:no-underline"
                 title="Descartar a planilha importada e voltar aos dados originais"
               >
                 <RotateCcw size={10} /> Restaurar
