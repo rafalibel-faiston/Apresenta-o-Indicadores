@@ -8,6 +8,7 @@ import { csvToObjects } from '../src/data/sheet/csv';
 import { buildWorkbook } from '../src/data/sheet/loadSlides';
 import { normalizeCompetencia, competenciaAbbr } from '../src/data/sheet/competencia';
 import { slidesData } from '../src/data/slidesData';
+import { buildHub, ImportedMonth } from '../src/data/hub';
 
 let failures = 0;
 function check(name: string, actual: unknown, expected: unknown) {
@@ -121,6 +122,51 @@ const unico = buildWorkbook({ KPIs: csvToObjects(`mes,slide,order,label,value,ty
 2026-09,correios,1,Custo Total,999,currency
 `) } as any, slidesData);
 check('um mês não gera comparativo', unico.slidesFor('2026-09').some((s) => s.id === 'evolucao-mensal'), false);
+
+// --- hub: meses importados (.xlsx salvos no banco) ---------------------------
+function xlsxMes(competencia: string, monthLabel: string, custoNtt: number): ImportedMonth {
+  const grid = [
+    ['PROJETO', 'Custo', 'Embarques', 'Equipamentos'],
+    ['NTT', custoNtt, 10, 20],
+    ['BRADESCO', 500, 3, 4],
+    ['TOTAL', custoNtt + 500, 13, 24],
+  ];
+  return {
+    competencia,
+    monthLabel,
+    fileName: `Fechamento ${monthLabel}.xlsx`,
+    wb: { fileName: `Fechamento ${monthLabel}.xlsx`, sheets: [{ name: 'CORREIOS', hidden: false, grid }] },
+    saveState: 'saved',
+  };
+}
+
+const hub = buildHub(null, [xlsxMes('2026-10', 'OUT.26', 1500), xlsxMes('2026-09', 'SET.26', 1000)], slidesData);
+check('hub ordena os meses importados', hub.competencias.map((c) => c.abbr), ['SET.26', 'OUT.26']);
+check('hub marca a origem', hub.competencias.every((c) => c.source === 'importada'), true);
+const deckOut = hub.slidesFor('2026-10');
+check('correios de outubro vem da planilha', (deckOut.find((s) => s.id === 'correios') as any).content.kpis[0].value, 2000);
+check('correios de setembro vem da planilha', (hub.slidesFor('2026-09').find((s) => s.id === 'correios') as any).content.kpis[0].value, 1500);
+const evolucaoHub = deckOut.find((s) => s.id === 'evolucao-mensal') as any;
+check('hub gera comparativo com 2 meses', !!evolucaoHub, true);
+const consolidadoHub = deckOut.find((s) => s.id === 'comparativo-consolidado') as any;
+check('consolidado do hub tem os 2 meses', consolidadoHub.content.meses.map((m: any) => m.label), ['SET.26', 'OUT.26']);
+
+// Um mês sozinho não tem com o que comparar.
+const semLab = buildHub(null, [xlsxMes('2026-10', 'OUT.26', 1500)], slidesData);
+check('um mês importado não gera comparativo', semLab.slidesFor('2026-10').some((s) => s.id === 'evolucao-mensal'), false);
+
+// Google Sheets legado (sem coluna mes) entra no histórico como o mês do badge.
+const legadoComMes = buildWorkbook({
+  KPIs: csvToObjects(`slide,order,label,value,type
+correios,1,Custo Total,999,currency
+`),
+  Meta: csvToObjects(`slide,key,value
+global,mesAbrev,SET.26
+`),
+} as any, slidesData);
+const hubLegado = buildHub(legadoComMes, [xlsxMes('2026-10', 'OUT.26', 1500)], slidesData);
+check('legado vira SET.26 no hub', hubLegado.competencias.map((c) => `${c.abbr}:${c.source}`), ['SET.26:sheets', 'OUT.26:importada']);
+check('hub sem importação não muda o legado', buildHub(legadoComMes, [], slidesData).competencias.length, 0);
 
 console.log(failures === 0 ? '\nTODOS OS TESTES PASSARAM' : `\n${failures} TESTE(S) FALHARAM`);
 process.exit(failures === 0 ? 0 : 1);

@@ -1,21 +1,22 @@
-// Servidor de produção: entrega o build do Vite (dist/) e guarda a planilha
-// importada no banco, para que todo mundo que abrir a apresentação veja a
-// mesma versão (antes ficava só no localStorage de cada navegador).
+// Servidor de produção: entrega o build do Vite (dist/) e guarda as planilhas
+// de fechamento no banco — uma por mês —, para que todo mundo que abrir a
+// apresentação veja os mesmos meses e o comparativo entre eles.
 //
-//   GET    /api/planilha  → planilha ativa ({ fileName, monthLabel, importedAt, base64 }) ou 204
-//   PUT    /api/planilha  → salva uma nova planilha ({ fileName, monthLabel, base64 })
-//   DELETE /api/planilha  → "Restaurar": volta aos dados originais do código
-//   GET    /api/health    → status do servidor e do banco
+//   GET    /api/planilhas                    → meses salvos [{ id, competencia, monthLabel, fileName, importedAt }]
+//   GET    /api/planilhas/arquivo/:id        → o .xlsx daquela versão (imutável, cacheado no navegador)
+//   PUT    /api/planilhas/:competencia       → salva/substitui o mês ({ fileName, monthLabel, base64 })
+//   DELETE /api/planilhas/:competencia       → tira o mês da apresentação (a versão fica no histórico)
+//   GET    /api/health                       → status do servidor e do banco
 //
-// Banco: Postgres via DATABASE_URL (Railway). Sem DATABASE_URL, cai num arquivo
-// local (data/planilha.json) — serve para desenvolvimento, não para produção,
-// porque o disco do Railway é apagado a cada deploy.
+// Banco: Postgres via DATABASE_URL (Railway). Sem DATABASE_URL, cai em arquivos
+// locais (data/) — serve para desenvolvimento, não para produção, porque o
+// disco do Railway é apagado a cada deploy.
 
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createStore } from './store.mjs';
+import { competenciaFromLabel, createStore } from './store.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
@@ -70,44 +71,54 @@ async function handleApi(req, res, pathname) {
     return sendJson(res, 200, { ok: true, storage: store.kind, protected: !!IMPORT_TOKEN });
   }
 
-  if (pathname !== '/api/planilha') return sendJson(res, 404, { error: 'Rota não encontrada.' });
-
-  if (req.method === 'GET') {
-    const current = await store.getActive();
-    if (!current) {
-      res.writeHead(204, { 'Cache-Control': 'no-store' });
-      return res.end();
-    }
-    return sendJson(res, 200, current);
+  if (pathname === '/api/planilhas' && req.method === 'GET') {
+    return sendJson(res, 200, await store.listActive());
   }
 
-  if (req.method === 'PUT' || req.method === 'DELETE') {
-    if (!authorized(req)) return sendJson(res, 401, { error: 'Senha de importação inválida.' });
-
-    if (req.method === 'DELETE') {
-      await store.clear();
-      return sendJson(res, 200, { ok: true });
-    }
-
-    const body = await readJsonBody(req);
-    const fileName = typeof body.fileName === 'string' ? body.fileName.trim().slice(0, 255) : '';
-    const monthLabel = typeof body.monthLabel === 'string' ? body.monthLabel.trim() : '';
-    const base64 = typeof body.base64 === 'string' ? body.base64 : '';
-    if (!fileName || !/^[A-Z]{3}\.\d{2}$/.test(monthLabel) || !base64) {
-      return sendJson(res, 400, { error: 'Envie fileName, monthLabel (MMM.AA) e base64.' });
-    }
-    const data = Buffer.from(base64, 'base64');
-    // Todo .xlsx é um ZIP: começa com "PK".
-    if (data.length < 4 || data[0] !== 0x50 || data[1] !== 0x4b) {
-      return sendJson(res, 400, { error: 'O arquivo não parece ser um .xlsx.' });
-    }
-    const saved = await store.save({ fileName, monthLabel, data });
-    console.log(`[planilha] salva: ${fileName} (${monthLabel}, ${data.length} bytes)`);
-    return sendJson(res, 200, { fileName: saved.fileName, monthLabel: saved.monthLabel, importedAt: saved.importedAt });
+  const file = /^\/api\/planilhas\/arquivo\/(\d+)$/.exec(pathname);
+  if (file && req.method === 'GET') {
+    const data = await store.getFile(Number(file[1]));
+    if (!data) return sendJson(res, 404, { error: 'Planilha não encontrada.' });
+    // Cada id é uma versão que nunca muda: o navegador baixa uma vez só.
+    res.writeHead(200, {
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Cache-Control': 'private, max-age=31536000, immutable',
+    });
+    return res.end(data);
   }
 
-  res.writeHead(405, { Allow: 'GET, PUT, DELETE' });
-  res.end();
+  const month = /^\/api\/planilhas\/(\d{4}-\d{2})$/.exec(pathname);
+  if (!month) return sendJson(res, 404, { error: 'Rota não encontrada.' });
+  const competencia = month[1];
+
+  if (req.method !== 'PUT' && req.method !== 'DELETE') {
+    res.writeHead(405, { Allow: 'PUT, DELETE' });
+    return res.end();
+  }
+  if (!authorized(req)) return sendJson(res, 401, { error: 'Senha de importação inválida.' });
+
+  if (req.method === 'DELETE') {
+    await store.remove(competencia);
+    console.log(`[planilha] mês removido: ${competencia}`);
+    return sendJson(res, 200, { ok: true });
+  }
+
+  const body = await readJsonBody(req);
+  const fileName = typeof body.fileName === 'string' ? body.fileName.trim().slice(0, 255) : '';
+  const monthLabel = typeof body.monthLabel === 'string' ? body.monthLabel.trim() : '';
+  const base64 = typeof body.base64 === 'string' ? body.base64 : '';
+  if (!fileName || !base64) return sendJson(res, 400, { error: 'Envie fileName, monthLabel e base64.' });
+  if (competenciaFromLabel(monthLabel) !== competencia) {
+    return sendJson(res, 400, { error: `O mês ${monthLabel || '(vazio)'} não corresponde à competência ${competencia}.` });
+  }
+  const data = Buffer.from(base64, 'base64');
+  // Todo .xlsx é um ZIP: começa com "PK".
+  if (data.length < 4 || data[0] !== 0x50 || data[1] !== 0x4b) {
+    return sendJson(res, 400, { error: 'O arquivo não parece ser um .xlsx.' });
+  }
+  const saved = await store.save({ competencia, fileName, monthLabel, data });
+  console.log(`[planilha] salva: ${fileName} (${monthLabel}, ${data.length} bytes, versão ${saved.id})`);
+  return sendJson(res, 200, saved);
 }
 
 async function serveStatic(req, res, pathname) {

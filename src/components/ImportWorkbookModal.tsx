@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { AlertTriangle, CheckCircle2, FileSpreadsheet, MinusCircle, Upload, X } from 'lucide-react';
 import { Slide } from '../types';
 import { readXlsx, Workbook } from '../data/workbook/readXlsx';
+import { normalizeCompetencia } from '../data/sheet/competencia';
 import { detectMonthLabel, importWorkbook, parseMonthLabel, SlideReport, unusedSheets } from '../data/workbook/importWorkbook';
 
 export interface AppliedImport {
@@ -12,7 +13,10 @@ export interface AppliedImport {
 }
 
 interface Props {
-  baseSlides: Slide[];
+  /** Deck the workbook is applied on top of, for a given competência (`AAAA-MM`). */
+  baseSlidesFor: (competencia: string | null) => Slide[];
+  /** Months already in the database — uploading one of them again replaces it. */
+  storedMonths: { competencia: string; monthLabel: string; fileName: string; importedAt?: string }[];
   onApply: (result: AppliedImport) => void;
   onClose: () => void;
 }
@@ -23,7 +27,7 @@ const STATUS = {
   kept: { icon: MinusCircle, cls: 'text-slate-400', label: 'Mantido' },
 } as const;
 
-export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Props) {
+export default function ImportWorkbookModal({ baseSlidesFor, storedMonths, onApply, onClose }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [loaded, setLoaded] = useState<{ wb: Workbook; bytes: Uint8Array } | null>(null);
   const [monthLabel, setMonthLabel] = useState('');
@@ -32,10 +36,12 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
   const [isDragging, setIsDragging] = useState(false);
 
   const monthValid = !!parseMonthLabel(monthLabel) && /^[A-Z]{3}\.\d{2}$/.test(monthLabel);
+  const competencia = monthValid ? normalizeCompetencia(monthLabel) : null;
   const result = useMemo(() => {
     if (!loaded || !monthValid) return null;
-    return importWorkbook(loaded.wb, baseSlides, monthLabel);
-  }, [loaded, monthLabel, monthValid, baseSlides]);
+    return importWorkbook(loaded.wb, baseSlidesFor(competencia), monthLabel);
+  }, [loaded, monthLabel, monthValid, competencia, baseSlidesFor]);
+  const replacing = storedMonths.find((m) => m.competencia === competencia);
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
@@ -78,7 +84,7 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
             </div>
             <div>
               <h3 className="text-sm font-black uppercase tracking-wide text-slate-900">Importar planilha do fechamento</h3>
-              <p className="text-[11px] text-slate-500 font-medium">Ao aplicar, a planilha fica salva no servidor e vale para todo mundo que abrir a apresentação.</p>
+              <p className="text-[11px] text-slate-500 font-medium">Cada planilha vira um mês na base: fica salva no servidor para todo mundo e entra no comparativo entre meses.</p>
             </div>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100" title="Fechar">
@@ -127,8 +133,8 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
           {loaded && (
             <label className="flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50 px-4 py-3">
               <span className="text-[12px] font-bold text-slate-700">
-                Mês da apresentação
-                <span className="block text-[11px] font-medium text-slate-500">Aparece na capa, no cabeçalho e nos subtítulos (formato MMM.AA).</span>
+                Mês desta planilha
+                <span className="block text-[11px] font-medium text-slate-500">Mês em que ela é salva na base. Aparece na capa, no cabeçalho e nos subtítulos (formato MMM.AA).</span>
               </span>
               <input
                 value={monthLabel}
@@ -139,6 +145,14 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
                 }`}
               />
             </label>
+          )}
+
+          {replacing && (
+            <div className="text-[12px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
+              {replacing.monthLabel} já está na base ({replacing.fileName}
+              {replacing.importedAt ? `, importada em ${new Date(replacing.importedAt).toLocaleString('pt-BR')}` : ''}). Aplicar
+              substitui o mês por esta planilha — a versão anterior continua guardada no histórico do banco.
+            </div>
           )}
 
           {result && (
@@ -184,7 +198,7 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
             className="px-4 py-2 rounded-xl text-[12px] font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90"
             style={{ backgroundColor: '#0054ec' }}
           >
-            Aplicar na apresentação
+            {replacing ? `Substituir ${replacing.monthLabel}` : 'Salvar mês na base'}
           </button>
         </div>
       </div>

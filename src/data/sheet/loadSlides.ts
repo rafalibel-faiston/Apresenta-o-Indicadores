@@ -16,6 +16,8 @@ export interface CompetenciaOption {
   abbr: string;
   /** Long label for menus, e.g. `Setembro/2026`. */
   label: string;
+  /** Where the month comes from: the Google Sheets history or an uploaded .xlsx. */
+  source?: 'sheets' | 'importada';
 }
 
 export interface Workbook {
@@ -25,6 +27,10 @@ export interface Workbook {
   slidesFor(competencia: string): Slide[];
   /** Flat, comparable numbers per competência — the backing store of the comparative slides. */
   snapshots: MonthSnapshot[];
+  /** Raw deck per competência (without comparative slides) — merged with uploaded months in data/hub.ts. */
+  decks: Map<string, Slide[]>;
+  /** Which tabs were really filled in per competência (see sourceKeysForCompetencia). */
+  backed: Map<string, BackedPredicate>;
   /** Deck used when the sheet carries no competência at all. */
   fallbackSlides: Slide[];
   /** Badge for the header when no competência is selected. */
@@ -77,11 +83,14 @@ export function buildWorkbook(data: SheetData, staticSlides: Slide[]): Workbook 
     competencia,
     abbr: globalMetaValue(metaRows, 'mesAbrev', competencia) || competenciaAbbr(competencia),
     label: competenciaLabel(competencia),
+    source: 'sheets',
   }));
 
   return {
     competencias,
     snapshots,
+    decks,
+    backed,
     slidesFor(competencia: string): Slide[] {
       const deck = decks.get(competencia);
       if (!deck) return buildSlides(staticSlides, data);

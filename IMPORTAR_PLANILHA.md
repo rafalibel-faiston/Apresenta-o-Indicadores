@@ -2,16 +2,27 @@
 
 Todo mês: abra a apresentação, clique em **Importar planilha** (botão verde no topo),
 arraste a planilha `Atualização Gráficos Fechamento <Mês>.xlsx` e clique em
-**Aplicar na apresentação**. Depois exporte normalmente (PPT / ZIP / PNG).
+**Salvar mês na base**. Depois exporte normalmente (PPT / ZIP / PNG).
 
-- A leitura da planilha roda no navegador. Ao aplicar, o .xlsx é salvo **no
-  servidor (Postgres)** e passa a valer para **todo mundo** que abrir a
-  apresentação, em qualquer navegador ou computador.
-- O mês da apresentação vem do nome do arquivo (`... Out.26.xlsx` → `OUT.26`) e
-  pode ser corrigido na própria janela antes de aplicar.
-- O selo no topo mostra o arquivo em uso: verde = salvo no servidor, cinza =
+- **Cada planilha vira um mês na base de dados** (Postgres). Os meses vão se
+  acumulando e ficam disponíveis para todo mundo, em qualquer navegador.
+- O mês vem do nome do arquivo (`... Out.26.xlsx` → `OUT.26`) e pode ser
+  corrigido na janela antes de salvar. Ele define a capa, o cabeçalho e os
+  subtítulos.
+- Depois de salvar, a apresentação abre direto no mês importado. O **seletor de
+  mês** no topo troca entre todos os meses da base (os vindos de planilha
+  aparecem com a marca "· planilha"), e o link fica com `?mes=AAAA-MM` para
+  compartilhar o mês exato.
+- Com **2 meses ou mais**, entram os slides **Evolução Mensal do Custo
+  Logístico** e **Comparativo Consolidado**, logo depois do Custo Consolidado.
+  Só entram na comparação os slides que a planilha daquele mês realmente
+  preencheu.
+- Subir de novo um mês que já existe **substitui** aquele mês (a janela avisa).
+  A versão anterior continua guardada no banco.
+- O selo no topo mostra a planilha do mês aberto: verde = salva, cinza =
   salvando, amarelo = não salvou (só você está vendo; passe o mouse para ver o
-  motivo). **Restaurar** volta todo mundo para os dados originais do código.
+  motivo). **Remover mês** tira o mês da apresentação, mas o arquivo continua
+  no histórico do banco.
 - Antes de aplicar, a janela mostra um relatório por slide:
   - ✅ **Atualizado**: veio da planilha.
   - ⚠️ **Conferir**: veio da planilha, mas algum total não bateu ou falta algo.
@@ -48,9 +59,14 @@ do Self Storage, comentários fixos).
 
 ## Banco de dados (Railway)
 
-Cada importação vira uma linha na tabela `planilhas` (criada sozinha no primeiro
-start). A ativa é a mais recente; **Restaurar** só desativa, nada é apagado, então
-o histórico de todos os meses fica guardado.
+Tabela `planilhas` (criada sozinha no primeiro start): uma linha por upload, com
+a competência (`AAAA-MM`), o nome do arquivo e o .xlsx original. Para cada mês,
+vale a linha mais recente com `ativa = true`. Substituir ou remover um mês só
+desativa as linhas antigas, então nada se perde.
+
+O banco guarda o .xlsx, não os slides prontos: cada mês é recalculado com o
+código atual, então correções no importador valem também para os meses antigos.
+O navegador baixa cada arquivo uma vez só e depois usa o cache.
 
 Configuração no Railway:
 
@@ -63,7 +79,7 @@ Configuração no Railway:
    com o link pode trocar a planilha.
 4. Faça o redeploy. Em `/api/health` deve aparecer `"storage":"postgres"`.
 
-Sem `DATABASE_URL` o servidor salva em `data/planilha.json`: serve para rodar
+Sem `DATABASE_URL` o servidor salva em `data/`: serve para rodar
 local, mas no Railway esse arquivo some a cada deploy.
 
 ## Cuidados no Excel
@@ -79,8 +95,11 @@ local, mas no Railway esse arquivo some a cada deploy.
 ## Para quem for mexer no código
 
 - `server/index.mjs`: servidor Node (sem framework) que entrega o `dist/` e a API
-  `GET/PUT/DELETE /api/planilha`. `server/store.mjs`: Postgres ou arquivo local.
+  (`GET /api/planilhas`, `GET /api/planilhas/arquivo/:id`,
+  `PUT|DELETE /api/planilhas/:AAAA-MM`). `server/store.mjs`: Postgres ou arquivos locais.
 - `src/data/workbook/storage.ts`: chamadas à API (e o pedido de senha).
+- `src/data/hub.ts`: junta os meses do Google Sheets com os meses importados num
+  histórico só e gera os slides comparativos.
 - Para rodar local: `npm run dev:server` (API na porta 3000) e `npm run dev` em
   outro terminal (o Vite repassa `/api` para a 3000). Ou `npm run build && npm start`.
 

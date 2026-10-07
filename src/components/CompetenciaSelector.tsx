@@ -99,6 +99,7 @@ export default function CompetenciaSelector({ options, value, onChange, isDarkMo
                   <span className="text-[12px] font-semibold font-serif leading-none">{option.label}</span>
                   <span className={`text-[9px] font-mono tracking-widest ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
                     {option.abbr}
+                    {option.source === 'importada' && <span className="ml-1.5 text-emerald-600">· planilha</span>}
                   </span>
                 </span>
                 {isSelected && <Check size={14} />}

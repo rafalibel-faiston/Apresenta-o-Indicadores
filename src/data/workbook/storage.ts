@@ -1,18 +1,22 @@
-// Keeps the last imported workbook on the server (Postgres, see server/) so every
-// browser opening the presentation sees the same data. The raw .xlsx is stored (not
-// the generated slides), so the import is recomputed with the current code every
-// time — new slides or fixes in the app apply automatically to the stored workbook.
+// Monthly closing workbooks stored on the server (Postgres, see server/): one
+// per competência, so every browser sees the same months and the comparative
+// slides can read them all. The raw .xlsx is stored (not the generated slides),
+// so each month is recomputed with the current code — new slides or fixes in the
+// importer apply automatically to months uploaded before them.
 
-const API = '/api/planilha';
+const API = '/api/planilhas';
 const TOKEN_KEY = 'faiston-apresentacao:senha-importacao';
 // Where the workbook used to live before the server existed — cleared on load.
 const LEGACY_KEY = 'faiston-apresentacao:planilha-importada:v1';
 
-export interface StoredWorkbook {
-  fileName: string;
+export interface StoredMonth {
+  /** Version id — a new upload of the same month gets a new id. */
+  id: number;
+  /** Canonical `AAAA-MM`. */
+  competencia: string;
   monthLabel: string;
+  fileName: string;
   importedAt: string;
-  base64: string;
 }
 
 function toBase64(bytes: Uint8Array): string {
@@ -21,13 +25,6 @@ function toBase64(bytes: Uint8Array): string {
     binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
   }
   return btoa(binary);
-}
-
-export function fromBase64(base64: string): Uint8Array {
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes;
 }
 
 function readToken(): string {
@@ -51,9 +48,9 @@ function writeToken(token: string | null) {
  * PUT/DELETE are protected when the server has IMPORT_TOKEN set. On a 401 the
  * password is asked once and remembered in this browser.
  */
-async function writeRequest(method: 'PUT' | 'DELETE', body?: unknown): Promise<Response> {
+async function writeRequest(url: string, method: 'PUT' | 'DELETE', body?: unknown): Promise<Response> {
   const send = (token: string) =>
-    fetch(API, {
+    fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json', 'X-Import-Token': token },
       body: body === undefined ? undefined : JSON.stringify(body),
@@ -69,37 +66,49 @@ async function writeRequest(method: 'PUT' | 'DELETE', body?: unknown): Promise<R
   return res;
 }
 
-export async function loadStoredWorkbook(): Promise<StoredWorkbook | null> {
+async function errorOf(res: Response): Promise<string> {
+  const { error } = await res.json().catch(() => ({ error: '' }));
+  return error || `HTTP ${res.status}`;
+}
+
+export async function listStoredMonths(): Promise<StoredMonth[]> {
   try {
     localStorage.removeItem(LEGACY_KEY);
   } catch {
     /* nothing stored */
   }
   const res = await fetch(API, { cache: 'no-store' });
-  if (res.status === 204) return null;
   if (!res.ok) throw new Error(`Servidor respondeu HTTP ${res.status}`);
-  return (await res.json()) as StoredWorkbook;
+  return (await res.json()) as StoredMonth[];
 }
 
-/** Returns an error message, or null when the workbook was saved. */
-export async function saveWorkbook(data: Uint8Array, fileName: string, monthLabel: string): Promise<string | null> {
+/** Each version id never changes, so the browser caches the file after the first download. */
+export async function fetchMonthFile(id: number): Promise<Uint8Array> {
+  const res = await fetch(`${API}/arquivo/${id}`);
+  if (!res.ok) throw new Error(`Servidor respondeu HTTP ${res.status}`);
+  return new Uint8Array(await res.arrayBuffer());
+}
+
+export async function saveMonth(
+  competencia: string,
+  data: Uint8Array,
+  fileName: string,
+  monthLabel: string
+): Promise<{ saved: StoredMonth } | { error: string }> {
   try {
-    const res = await writeRequest('PUT', { fileName, monthLabel, base64: toBase64(data) });
-    if (res.ok) return null;
-    const { error } = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-    return error || `HTTP ${res.status}`;
+    const res = await writeRequest(`${API}/${competencia}`, 'PUT', { fileName, monthLabel, base64: toBase64(data) });
+    if (res.ok) return { saved: (await res.json()) as StoredMonth };
+    return { error: await errorOf(res) };
   } catch {
-    return 'Servidor indisponível.';
+    return { error: 'Servidor indisponível.' };
   }
 }
 
-/** Returns an error message, or null when the server went back to the original data. */
-export async function clearStoredWorkbook(): Promise<string | null> {
+/** Returns an error message, or null when the month left the presentation. */
+export async function removeMonth(competencia: string): Promise<string | null> {
   try {
-    const res = await writeRequest('DELETE');
-    if (res.ok) return null;
-    const { error } = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
-    return error || `HTTP ${res.status}`;
+    const res = await writeRequest(`${API}/${competencia}`, 'DELETE');
+    return res.ok ? null : await errorOf(res);
   } catch {
     return 'Servidor indisponível.';
   }
