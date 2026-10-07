@@ -69,12 +69,13 @@ cabeçalho (ex.: trocar `PROJETO` por `CLIENTE`).
 | TRAGs e Arcos Dourados | `Seguro` | Blocos `TRAG` e `ARCOS DOURADOS` |
 | Starlink & Medição | `Seguro` | Blocos `CONECT` (apólices Starlink) e `FLUKE` |
 | Divisor de Seguros | calculado | Soma dos valores segurados e custos mensais dos slides de seguro |
-| Faturas — CNPJ Principal | `Consolidado seguro` | Tabela `SEGURO / CUSTO`. `ESTORNO` (ou valor negativo) vira crédito |
+| Faturas — CNPJ Principal | `FATURA` (planilhas antigas: `Consolidado seguro`) | Tabela `SEGURO / CUSTO` abaixo do título `CUSTO FATURA CNPJ PRINCIPAL`. `ESTORNO` (ou valor negativo) vira crédito. A soma é conferida com a linha `TOTAL` |
+| Faturas — CNPJ Gerenciamento | `FATURA` | Tabela `SEGURO / CUSTO` abaixo do título `CUSTO FATURA CNPJ GERENCIAMENTO`, conferida com a linha `TOTAL` |
+| Laboratório Técnico | `Laboratorio Técnico` | Uma linha por chamado: `Chamado` (cliente), `Modelo`, `SITUAÇÃO 2` (o que foi feito), `DATA` (`OK`/`BAD` + data) e `PEÇAS PARA REPOSIÇÃO E OBSERVAÇÕES`. `OK` = reparado; `BAD` ou em branco = sem reparo/pendente. Os cards são agrupados por cliente e o mês do subtítulo vem das datas da coluna `DATA` |
 | Descarte Sustentável | `SANLIEN` | Só **adiciona lotes novos**. Os lotes que já estão no slide não mudam |
 
-**Ficam como estão (não estão na planilha):** Laboratório Técnico, Fatura do CNPJ
-de Gerenciamento e os textos descritivos (descrições de seguros, textos das UFs
-do Self Storage, comentários fixos).
+**Ficam como estão (não estão na planilha):** os textos descritivos (descrições
+de seguros, textos das UFs do Self Storage, comentários fixos).
 
 ## Banco de dados (Railway)
 

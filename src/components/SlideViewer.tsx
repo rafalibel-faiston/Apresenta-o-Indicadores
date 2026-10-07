@@ -41,6 +41,9 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
     setChartDisplayType('combined');
     setActiveRegion(null);
     setConsolidatedTab('chart');
+    // Invoice slides: a "curve" needs a few points — with one or two items open the list.
+    const invoiceItems = slide.content?.invoiceItems;
+    if (Array.isArray(invoiceItems)) setActiveTab(invoiceItems.length < 3 ? 'table' : 'summary');
   }, [slide]);
 
   const dk = isDarkMode;
@@ -1797,7 +1800,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                     if (name.includes('NTT')) {
                       return { icon: Network, colorClass: 'text-[#0054ec] bg-[#0054ec]/8 border-[#0054ec]/20', gradient: 'from-[#0054ec] to-[#2226c0]' };
                     }
-                    if (name.includes('Notebooks')) {
+                    if (name.includes('Notebooks') || name.includes('Corporativo')) {
                       return { icon: Laptop, colorClass: 'text-[#fd11a4] bg-[#fd11a4]/8 border-[#fd11a4]/20', gradient: 'from-[#fd11a4] to-[#9b1dbf]' };
                     }
                     if (name.includes('Zebra')) {

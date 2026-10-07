@@ -10,6 +10,7 @@ import { normalizeCompetencia, competenciaAbbr } from '../src/data/sheet/compete
 import { slidesData } from '../src/data/slidesData';
 import { buildHub, ImportedMonth } from '../src/data/hub';
 import { atalhosRecorte, normalizeRecorte, recorteFromSearch } from '../src/data/recorte';
+import { importWorkbook } from '../src/data/workbook/importWorkbook';
 
 let failures = 0;
 function check(name: string, actual: unknown, expected: unknown) {
@@ -204,6 +205,64 @@ const consVisual = hub4.slidesFor('2026-10').find((s) => s.id === 'comparativo-c
 check('consolidado traz a composição por mês', consVisual.content.composicao.map((m: any) => m.label), ['OUT.25', 'JUL.26', 'SET.26', 'OUT.26']);
 check('consolidado sabe o mês aberto', consVisual.content.competenciaAtual, '2026-10');
 check('custo tem polaridade "down"', consVisual.content.linhas.find((l: any) => l.label === 'Custo Logístico Total')?.polarity, 'down');
+
+// --- faturas (aba FATURA) e laboratório técnico, layout do fechamento OUT.26 ---
+const grid = (rows: [number, number, unknown][]) => {
+  const g: any[][] = [];
+  rows.forEach(([r, c, v]) => {
+    g[r] = g[r] || [];
+    g[r][c] = v;
+  });
+  return g;
+};
+const fechamentoOut = {
+  fileName: 'Atualização Gráficos Fechamento Out.26.xlsx',
+  sheets: [
+    {
+      name: 'FATURA',
+      hidden: false,
+      grid: grid([
+        [3, 0, 'CUSTO FATURA CNPJ PRINCIPAL - SEGURO '],
+        [5, 1, 'SEGURO'], [5, 2, 'CUSTO '],
+        [6, 1, 'PATRIMONIAL'], [6, 2, 33612.99],
+        [7, 1, 'EXTRA/ GUARDA'], [7, 2, 15428.37],
+        [8, 1, 'DESMOBILIZAÇÃO BK'], [8, 2, 1650.2],
+        [9, 1, 'MESALIDADE'], [9, 2, 35],
+        [10, 1, 'TOTAL'], [10, 2, 50726.56],
+        [33, 0, 'CUSTO FATURA CNPJ GERENCIAMENTO - SEGURO '],
+        [35, 1, 'SEGURO'], [35, 2, 'CUSTO '],
+        [36, 1, 'STARLINK'], [36, 2, 51.57],
+        [46, 1, 'TOTAL'], [46, 2, 51.57],
+      ]),
+    },
+    {
+      name: 'Laboratorio Técnico',
+      hidden: false,
+      grid: grid([
+        [0, 0, 'Chamado'], [0, 1, 'Modelo'], [0, 2, 'SERVICE TAG'], [0, 3, 'SITUAÇÃO'], [0, 4, 'ENTRADA'], [0, 5, 'SITUAÇÃO 2'], [0, 7, 'TECNICO'], [0, 6, 'DATA'], [0, 8, 'PEÇAS PARA REPOSIÇÃO E OBSERVAÇÕES'],
+        [1, 0, 'Corporativo'], [1, 1, 'Lenovo ideaPad 3 15ITL6'], [1, 5, 'Dobradiças - ok para uso'], [1, 6, 'OK\u00a0 03/09/2026'],
+        [2, 0, 'NTT'], [2, 1, 'AP CW9166I-ROW'], [2, 5, 'Preparado para configuração'], [2, 6, 'OK 07/09/2026'],
+        [3, 0, 'NTT'], [3, 1, 'AP CW9166I-ROW'], [3, 5, 'Preparado para configuração'], [3, 6, 'OK 07/09/2026'],
+        [4, 0, 'Corporativo'], [4, 1, 'DELL INSPIRION 15 3511'], [4, 5, 'Curto na placa'], [4, 6, 'Bad 24/09/2026'], [4, 8, 'Enviar para analise externa'],
+        [5, 0, 'TELCOWEB'], [5, 1, 'CPE'], [5, 5, 'Não sobe video'], [5, 6, 'BAD 01/09/2026'],
+      ]),
+    },
+  ],
+};
+const out = importWorkbook(fechamentoOut as any, slidesData, 'OUT.26');
+const fat = out.slides.find((s) => s.id === 'custo-fatura') as any;
+const ger = out.slides.find((s) => s.id === 'custo-fatura-gerenciamento') as any;
+const lab = out.slides.find((s) => s.id === 'laboratorio-tecnico') as any;
+const rep = (id: string) => out.report.find((r) => r.id === id)!;
+check('fatura principal vem da aba FATURA', [fat.content.total, rep('custo-fatura').status], [50726.56, 'updated']);
+check('fatura principal reconhece mensalidade e BK', fat.content.invoiceItems.map((i: any) => i.label), ['Patrimonial', 'Extra', 'Desmob. BK', 'Mensalidade']);
+check('fatura gerenciamento vem da aba FATURA', [ger.content.total, ger.content.invoiceItems.length, rep('custo-fatura-gerenciamento').status], [51.57, 1, 'updated']);
+check('soma das duas faturas no comentário', ger.content.comments[2], 'Somadas, as duas faturas totalizam R$ 50.778,13 de despesa mensal com seguros.');
+check('laboratório: KPIs', lab.content.kpis.map((k: any) => k.value), [5, 3, 2]);
+check('laboratório: categorias por cliente', lab.content.categorias.map((c: any) => `${c.name}:${c.reparados}/${c.total}`), ['Corporativo Faiston:1/2', 'NTT — Redes:2/2', 'Telcoweb:0/1']);
+check('laboratório: mês das datas', lab.subtitle, 'Reparos e manutenções de equipamentos — Setembro/26');
+check('laboratório: análise externa no resumo', lab.content.categorias[0].desc.includes('enviado para análise externa'), true);
+check('laboratório: status', rep('laboratorio-tecnico').status, 'updated');
 
 console.log(failures === 0 ? '\nTODOS OS TESTES PASSARAM' : `\n${failures} TESTE(S) FALHARAM`);
 process.exit(failures === 0 ? 0 : 1);
