@@ -89,7 +89,7 @@ export function brl(n: number): string {
 
 const pctText = (n: number) => `${n.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
 
-const KEEP_UPPER = new Set(['NTT', 'RMA', 'TRAG', 'NF', 'SW', 'AP', 'APS', 'CPE', 'HP', 'TI']);
+const KEEP_UPPER = new Set(['NTT', 'RMA', 'TRAG', 'NF', 'SW', 'AP', 'APS', 'CPE', 'HP', 'TI', 'BK']);
 
 function titleCase(value: string): string {
   return value
@@ -877,35 +877,83 @@ const INVOICE_ITEMS: { match: (n: string) => boolean; label: string; name: strin
   { match: (n) => n.startsWith('ZAMP'), label: 'Zamp', name: 'Zamp', sub: 'Apólice dedicada Zamp' },
   { match: (n) => n.startsWith('FLUKE'), label: 'Fluke', name: 'Fluke', sub: 'Instrumentos de medição' },
   { match: (n) => n.startsWith('OPEX'), label: 'Opex', name: 'Opex', sub: 'Ajuste administrativo do mês' },
+  { match: (n) => n.startsWith('DESMOBILIZ'), label: 'Desmob. BK', name: 'Desmobilização BK', sub: 'Desmobilização de equipamentos BK' },
   { match: (n) => n.startsWith('MENSALIDADE') || n.startsWith('MESALIDADE'), label: 'Mensalidade', name: 'Mensalidade', sub: 'Taxa fixa mensal' },
   { match: (n) => n.startsWith('ESTORNO') || n.startsWith('CREDITO'), label: 'Estorno', name: 'Estorno', sub: 'Crédito de conciliação', credit: true },
 ];
 
-function importFaturas(ctx: ImportContext, monthLabel: string) {
-  const slide = ctx.slide('custo-fatura');
-  const sheet = ctx.sheet('custo-fatura', 'Consolidado seguro');
-  if (!slide || !sheet) return;
-  const header = findCells(sheet, (v) => v === 'SEGURO').find((p) => norm(cell(sheet, p.r, p.c + 1)).startsWith('CUSTO'));
-  if (!header) return ctx.kept('custo-fatura', 'Tabela "SEGURO | CUSTO" não encontrada na aba Consolidado seguro.');
+type InvoiceItem = { label: string; name: string; value: number; sub: string; isCredit?: true };
 
+/** Reads a "SEGURO | CUSTO" table into invoice items, keeping the slide's descriptions for known items. */
+function readInvoiceTable(sheet: Sheet, header: Pos, previousItems: any[]): { items: InvoiceItem[]; sheetTotal: number | null } {
   const items = dataRows(sheet, header)
     .map((r) => {
       const raw = text(sheet, r, header.c);
       const value = round2(num(sheet, r, header.c + 1));
       const known = INVOICE_ITEMS.find((i) => i.match(norm(raw)));
       const label = known?.label ?? titleCase(raw);
-      const previous = (slide.content.invoiceItems || []).find((i: any) => norm(i.label) === norm(label));
+      const previous = previousItems.find((i: any) => norm(i.label) === norm(label));
       const isCredit = !!known?.credit || value < 0;
       return {
         label,
         name: previous?.name ?? known?.name ?? titleCase(raw),
         value,
         sub: previous?.sub ?? known?.sub ?? '',
-        ...(isCredit ? { isCredit: true } : {}),
+        ...(isCredit ? { isCredit: true as const } : {}),
       };
     })
     .filter((i) => i.value !== 0)
     .sort((a, b) => Number(!!a.isCredit) - Number(!!b.isCredit) || b.value - a.value);
+
+  // The TOTAL row may sit a few blank rows below the items (the management table does).
+  let sheetTotal: number | null = null;
+  for (let r = header.r + 1; r <= header.r + 30 && r < sheet.grid.length; r++) {
+    if (norm(cell(sheet, r, header.c)) === 'TOTAL') {
+      sheetTotal = round2(num(sheet, r, header.c + 1));
+      break;
+    }
+  }
+  return { items, sheetTotal };
+}
+
+/** Every "SEGURO | CUSTO" header of a sheet, top to bottom. */
+function invoiceHeaders(sheet: Sheet): Pos[] {
+  return findCells(sheet, (v) => v === 'SEGURO')
+    .filter((p) => norm(cell(sheet, p.r, p.c + 1)).startsWith('CUSTO'))
+    .sort((a, b) => a.r - b.r || a.c - b.c);
+}
+
+/** The first invoice header below a title cell such as "CUSTO FATURA CNPJ PRINCIPAL - SEGURO". */
+function invoiceHeaderUnder(sheet: Sheet, titleMatch: (n: string) => boolean): Pos | undefined {
+  const title = findCells(sheet, titleMatch)[0];
+  if (!title) return undefined;
+  return invoiceHeaders(sheet).find((h) => h.r > title.r);
+}
+
+function importFaturas(ctx: ImportContext, monthLabel: string) {
+  const slide = ctx.slide('custo-fatura');
+  if (!slide) return;
+
+  // Since OUT.26 both invoices live in the FATURA tab, each under its own title.
+  // Older workbooks only have the principal one, in "Consolidado seguro".
+  const faturaSheet = findSheet(ctx.wb, 'FATURA');
+  const legacySheet = findSheet(ctx.wb, 'Consolidado seguro');
+  let sheet: Sheet | undefined;
+  let principalHeader: Pos | undefined;
+  let gerHeader: Pos | undefined;
+  if (faturaSheet) {
+    sheet = faturaSheet;
+    principalHeader = invoiceHeaderUnder(faturaSheet, (v) => v.includes('CNPJ PRINCIPAL')) ?? invoiceHeaders(faturaSheet)[0];
+    gerHeader = invoiceHeaderUnder(faturaSheet, (v) => v.includes('CNPJ GERENCIAMENTO'));
+  }
+  if (!principalHeader && legacySheet) {
+    sheet = legacySheet;
+    principalHeader = invoiceHeaders(legacySheet)[0];
+  }
+  if (!sheet) return ctx.kept('custo-fatura', 'Abas "FATURA" e "Consolidado seguro" não encontradas — dados anteriores mantidos.');
+  if (!principalHeader) return ctx.kept('custo-fatura', `Tabela "SEGURO | CUSTO" não encontrada na aba ${sheet.name.trim()}.`);
+
+  const { items, sheetTotal } = readInvoiceTable(sheet, principalHeader, slide.content.invoiceItems || []);
   if (!items.length) return ctx.kept('custo-fatura', 'Tabela de fatura sem valores.');
 
   const total = round2(sum(items, (i) => i.value));
@@ -930,32 +978,194 @@ function importFaturas(ctx: ImportContext, monthLabel: string) {
       : `Mês sem estorno de crédito${mensalidade ? `; mensalidade fixa (${brl(mensalidade.value)}) segue como despesa recorrente` : ''}.`
   );
   slide.content.comments = comments;
-  ctx.updated('custo-fatura', `${plural(items.length, 'item', 'itens')}, total ${brl(total)}.`);
+  ctx.updated('custo-fatura', `Aba ${sheet.name.trim()}: ${plural(items.length, 'item', 'itens')}, total ${brl(total)}.`);
+  if (sheetTotal !== null && Math.abs(sheetTotal - total) > 0.05) {
+    ctx.warn('custo-fatura', `A soma dos itens (${brl(total)}) não bate com o TOTAL da planilha (${brl(sheetTotal)}).`);
+  }
 
-  // The table to the right carries the invoice reference ("FATURA 2026.03"). If it is far
+  // "Consolidado seguro" carries the invoice reference ("FATURA 2026.03"). If it is far
   // from the month being presented, the tab was probably not updated this month.
-  const faturaHeader = findCells(sheet, (v) => v === 'FATURA')[0];
-  const ref = faturaHeader && text(sheet, faturaHeader.r + 1, faturaHeader.c).match(/^(\d{4})[.\/-](\d{1,2})$/);
-  const label = parseMonthLabel(monthLabel);
-  if (ref && label) {
-    const refIndex = parseInt(ref[1], 10) * 12 + parseInt(ref[2], 10) - 1;
-    const labelIndex = (2000 + label.year) * 12 + label.month;
-    if (labelIndex - refIndex > 2) {
-      ctx.warn('custo-fatura', `A aba "${sheet.name.trim()}" está marcada com a fatura ${ref[1]}.${ref[2].padStart(2, '0')} — confira se ela foi atualizada com a fatura deste mês.`);
+  if (sheet === legacySheet) {
+    const faturaHeader = findCells(sheet, (v) => v === 'FATURA')[0];
+    const ref = faturaHeader && text(sheet, faturaHeader.r + 1, faturaHeader.c).match(/^(\d{4})[.\/-](\d{1,2})$/);
+    const label = parseMonthLabel(monthLabel);
+    if (ref && label) {
+      const refIndex = parseInt(ref[1], 10) * 12 + parseInt(ref[2], 10) - 1;
+      const labelIndex = (2000 + label.year) * 12 + label.month;
+      if (labelIndex - refIndex > 2) {
+        ctx.warn('custo-fatura', `A aba "${sheet.name.trim()}" está marcada com a fatura ${ref[1]}.${ref[2].padStart(2, '0')} — confira se ela foi atualizada com a fatura deste mês.`);
+      }
     }
   }
 
-  // The management CNPJ invoice is not in the workbook, but its comments quote the main total.
   const ger = ctx.slide('custo-fatura-gerenciamento');
-  if (ger) {
-    const g = Number(ger.content.total) || 0;
-    ger.content.comments = (ger.content.comments || []).map((c: string) => {
-      if (/CNPJ principal/i.test(c)) return `Fatura do CNPJ de gerenciamento fecha em ${brl(g)}, valor residual frente aos ${brl(total)} do CNPJ principal.`;
-      if (/^Somadas/i.test(c)) return `Somadas, as duas faturas totalizam ${brl(round2(g + total))} de despesa mensal com seguros.`;
-      return c;
-    });
-    ctx.warn('custo-fatura-gerenciamento', 'Fatura do CNPJ de gerenciamento não está na planilha — itens mantidos; só os comentários que citam o CNPJ principal foram recalculados.');
+  if (!ger) return;
+  const gerTable = gerHeader && sheet === faturaSheet ? readInvoiceTable(sheet, gerHeader, ger.content.invoiceItems || []) : null;
+  if (gerTable && gerTable.items.length) {
+    const gerTotal = round2(sum(gerTable.items, (i) => i.value));
+    ger.content.total = gerTotal;
+    ger.content.invoiceItems = gerTable.items;
+    if (ger.content.kpis?.[0]) ger.content.kpis[0].value = gerTotal;
+    const indevido = gerTable.items.filter((i) => i.isCredit || /INDEVID|CONTEST/.test(norm(i.name)));
+    ger.content.comments = [
+      `Fatura do CNPJ de gerenciamento fecha em ${brl(gerTotal)}, valor residual frente aos ${brl(total)} do CNPJ principal.`,
+      ...(indevido.length
+        ? [`${indevido.map((i) => `${i.name} (${brl(Math.abs(i.value))})`).join(', ')} identificado na conciliação do mês.`]
+        : [`${plural(gerTable.items.length, 'item', 'itens')} na fatura do mês: ${gerTable.items.map((i) => i.name).join(', ')}.`]),
+      `Somadas, as duas faturas totalizam ${brl(round2(gerTotal + total))} de despesa mensal com seguros.`,
+    ];
+    ctx.updated('custo-fatura-gerenciamento', `Aba ${sheet.name.trim()}: ${plural(gerTable.items.length, 'item', 'itens')}, total ${brl(gerTotal)}.`);
+    if (gerTable.sheetTotal !== null && Math.abs(gerTable.sheetTotal - gerTotal) > 0.05) {
+      ctx.warn('custo-fatura-gerenciamento', `A soma dos itens (${brl(gerTotal)}) não bate com o TOTAL da planilha (${brl(gerTable.sheetTotal)}).`);
+    }
+    return;
   }
+
+  // No management table in the workbook: keep its items, but its comments quote the main total.
+  const g = Number(ger.content.total) || 0;
+  ger.content.comments = (ger.content.comments || []).map((c: string) => {
+    if (/CNPJ principal/i.test(c)) return `Fatura do CNPJ de gerenciamento fecha em ${brl(g)}, valor residual frente aos ${brl(total)} do CNPJ principal.`;
+    if (/^Somadas/i.test(c)) return `Somadas, as duas faturas totalizam ${brl(round2(g + total))} de despesa mensal com seguros.`;
+    return c;
+  });
+  ctx.warn('custo-fatura-gerenciamento', 'Tabela "CUSTO FATURA CNPJ GERENCIAMENTO" não encontrada na aba FATURA — itens mantidos; só os comentários que citam o CNPJ principal foram recalculados.');
+}
+
+// ─── Laboratório Técnico ─────────────────────────────────────────────────────
+
+const MONTH_TITLE = MONTH_NAMES.map((m) => m.charAt(0) + m.slice(1).toLowerCase());
+
+const KIND_SINGULAR: Record<string, string> = {
+  APs: 'AP',
+  switches: 'switch',
+  fontes: 'fonte',
+  CPEs: 'CPE',
+  impressoras: 'impressora',
+  notebooks: 'notebook',
+  'outros equipamentos': 'outro equipamento',
+};
+
+/** What kind of equipment a model is, for the per-client summary. */
+function equipmentKind(model: string): string {
+  const n = norm(model);
+  if (/^AP\b|CW91|AIR-|ACCESS POINT/.test(n)) return 'APs';
+  if (/SWITCH|^C9\d{3}|CATALYST/.test(n)) return 'switches';
+  if (n.startsWith('FONTE') || n.includes('CARREGADOR')) return 'fontes';
+  if (n.includes('CPE') || n.includes('ROTEADOR') || n.includes('ROUTER')) return 'CPEs';
+  if (n.includes('ZEBRA') || n.includes('IMPRESSORA') || /^ZT\d/.test(n)) return 'impressoras';
+  if (/LENOVO|HP |DELL|MACBOOK|ACER|ASUS|SAMSUNG|NOTEBOOK|IDEAPAD|INSPIRON|INSPIRION|THINKPAD|LATITUDE/.test(n)) return 'notebooks';
+  return 'outros equipamentos';
+}
+
+/** First sentence-ish chunk of a free-text note, for the "sem reparo" summary. */
+function shortReason(note: string): string {
+  const clean = note.replace(/["“”]/g, '').replace(/\s+/g, ' ').trim();
+  const cut = clean.split(/ - | – |;|\.(?=\s)/)[0].trim();
+  return cut.length > 60 ? `${cut.slice(0, 57).trimEnd()}…` : cut;
+}
+
+const LAB_CLIENT_NAMES: Record<string, string> = {
+  NTT: 'NTT — Redes',
+  CORPORATIVO: 'Corporativo Faiston',
+};
+
+function importLaboratorio(ctx: ImportContext) {
+  const slide = ctx.slide('laboratorio-tecnico');
+  if (!slide) return;
+  const sheet = findSheet(ctx.wb, 'Laboratorio Tecnico', 'Laboratório Técnico', 'LABORATORIO');
+  if (!sheet) {
+    return ctx.kept('laboratorio-tecnico', 'Aba "Laboratorio Técnico" não encontrada — slide mantido com os dados anteriores.');
+  }
+  const header = findCells(sheet, (v) => v === 'CHAMADO')[0];
+  if (!header) return ctx.kept('laboratorio-tecnico', 'Cabeçalho "Chamado" não encontrado na aba Laboratorio Técnico.');
+  const cols = mapHeader(sheet, header, {
+    modelo: (h) => h.startsWith('MODELO'),
+    descricao: (h) => h === 'SITUACAO 2' || h.startsWith('DESCRI') || h.startsWith('SERVICO'),
+    status: (h) => h === 'DATA' || h.startsWith('STATUS'),
+    obs: (h) => h.startsWith('PECAS') || h.startsWith('OBS'),
+  });
+  if (cols.status === undefined) return ctx.kept('laboratorio-tecnico', 'Coluna "DATA" (OK/BAD) não encontrada na aba Laboratorio Técnico.');
+
+  type Chamado = { cliente: string; modelo: string; ok: boolean; bad: boolean; descricao: string; obs: string };
+  const chamados: Chamado[] = [];
+  const months = new Map<string, number>();
+  dataRows(sheet, header).forEach((r) => {
+    const cliente = text(sheet, r, header.c);
+    const status = norm(cell(sheet, r, cols.status));
+    const date = text(sheet, r, cols.status).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (date) {
+      const key = `${date[3]}-${date[2].padStart(2, '0')}`;
+      months.set(key, (months.get(key) ?? 0) + 1);
+    }
+    chamados.push({
+      cliente,
+      modelo: cols.modelo !== undefined ? text(sheet, r, cols.modelo) : '',
+      ok: status.startsWith('OK'),
+      bad: status.startsWith('BAD'),
+      descricao: cols.descricao !== undefined ? text(sheet, r, cols.descricao) : '',
+      obs: cols.obs !== undefined ? text(sheet, r, cols.obs) : '',
+    });
+  });
+  if (!chamados.length) return ctx.kept('laboratorio-tecnico', 'Aba Laboratorio Técnico sem chamados.');
+
+  const reparados = chamados.filter((c) => c.ok).length;
+  const pendentes = chamados.length - reparados;
+
+  // One card per client, biggest first.
+  const byClient = new Map<string, Chamado[]>();
+  chamados.forEach((c) => {
+    const key = norm(c.cliente) || 'OUTROS';
+    byClient.set(key, [...(byClient.get(key) ?? []), c]);
+  });
+  const categorias = Array.from(byClient.entries())
+    .map(([key, list]) => {
+      const kinds = new Map<string, number>();
+      list.forEach((c) => kinds.set(equipmentKind(c.modelo), (kinds.get(equipmentKind(c.modelo)) ?? 0) + 1));
+      const composicao = Array.from(kinds.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([kind, n]) => `${n} ${n === 1 ? KIND_SINGULAR[kind] ?? kind : kind}`)
+        .join(', ');
+      const ok = list.filter((c) => c.ok).length;
+      const semReparo = list.filter((c) => !c.ok);
+      const desc =
+        `${composicao}. ${
+          ok === list.length ? 'Todos reparados e liberados para uso' : ok === 0 ? 'Nenhum reparado no período' : `${ok} ${ok === 1 ? 'reparado e liberado' : 'reparados e liberados'} para uso`
+        }` +
+        (semReparo.length
+          ? `; sem reparo: ${semReparo
+              .map((c) => `${c.modelo || 'equipamento'} (${shortReason(c.descricao) || 'em análise'}${/EXTERN/i.test(c.obs) ? ' — enviado para análise externa' : ''})`)
+              .join(', ')}.`
+          : '.');
+      const first = list[0].cliente.trim();
+      return {
+        name: LAB_CLIENT_NAMES[key] ?? (first === first.toUpperCase() && first.length > 4 ? titleCase(first.toLowerCase()) : first),
+        total: list.length,
+        reparados: ok,
+        pendentes: semReparo.length,
+        desc,
+      };
+    })
+    .sort((a, b) => b.total - a.total);
+
+  slide.content.kpis = [
+    { label: 'Chamados Atendidos', value: chamados.length, type: 'number' },
+    { label: 'Equipamentos Reparados', value: reparados, type: 'number', isHighlight: true },
+    { label: 'Sem Reparo / Pendente', value: pendentes, type: 'number' },
+  ];
+  slide.content.categorias = categorias;
+
+  // The lab reports the month its repairs were closed in — usually the one before the
+  // presentation. Take the month most of the status dates fall in.
+  const topMonth = Array.from(months.entries()).sort((a, b) => b[1] - a[1])[0]?.[0];
+  if (topMonth) {
+    const [y, m] = topMonth.split('-').map(Number);
+    slide.subtitle = `Reparos e manutenções de equipamentos — ${MONTH_TITLE[m - 1]}/${String(y).slice(-2)}`;
+  }
+
+  ctx.updated(
+    'laboratorio-tecnico',
+    `${plural(chamados.length, 'chamado', 'chamados')} em ${plural(categorias.length, 'cliente', 'clientes')}: ${reparados} reparados, ${pendentes} sem reparo/pendentes.`
+  );
 }
 
 /** Slides that only combine numbers already imported (patrimonial, divisor). */
@@ -1026,6 +1236,7 @@ const IMPORTERS: ((ctx: ImportContext, monthLabel: string) => void)[] = [
   importDescarte,
   importSeguros,
   importFaturas,
+  importLaboratorio,
   importSegurosDerivados,
 ];
 
@@ -1043,10 +1254,6 @@ export function importWorkbook(wb: Workbook, baseSlides: Slide[], monthLabel = d
     }
   }
 
-  if (ctx.slide('laboratorio-tecnico')) {
-    ctx.kept('laboratorio-tecnico', 'Laboratório não está na planilha de fechamento (a aba LAB está oculta e desatualizada) — slide mantido.');
-  }
-
   applyMonthLabel(slides, monthLabel);
   ctx.updated('capa', `Mês da apresentação: ${monthLabel}.`);
 
@@ -1057,6 +1264,7 @@ export function importWorkbook(wb: Workbook, baseSlides: Slide[], monthLabel = d
 export const KNOWN_SHEETS = [
   'CORREIOS', 'TRANSPORTADORAS', 'RESUMO', 'GOL', 'LATAM', 'AZUL', 'LOGGI', 'Consolidado Dedicados', 'DEDICADOS',
   'SELF STORAGE', 'Base Consolidado', 'Seguro', 'Notas Saída', 'Consolidado seguro', 'SANLIEN', 'SALIEN',
+  'FATURA', 'Laboratorio Tecnico',
 ].map(norm);
 
 export function unusedSheets(wb: Workbook): string[] {
