@@ -1,5 +1,5 @@
 import { Slide } from '../../types';
-import { competenciaAbbr, competenciaLabel, competenciaYear } from './competencia';
+import { competenciaAbbr, competenciaLabel, competenciaYear, previousCompetencia } from './competencia';
 import { MonthSnapshot, averageSeries, sumSeries, variation } from './series';
 
 // Builds the slides that only exist because the workbook keeps history:
@@ -36,7 +36,9 @@ function trendPoints(snapshots: MonthSnapshot[], pick: (s: MonthSnapshot) => num
 export function buildEvolucaoSlide(
   snapshots: MonthSnapshot[],
   competenciaAtual: string,
-  slideNumber: number
+  slideNumber: number,
+  /** True when the snapshots are a hand-picked subset of the history (see withComparativeSlides). */
+  isRecorte = false
 ): Slide | null {
   if (snapshots.length < 2) return null;
 
@@ -71,6 +73,12 @@ export function buildEvolucaoSlide(
     }))
     .sort((a, b) => (b.atual ?? 0) - (a.atual ?? 0));
 
+  // With a hand-picked subset the "previous" point may be months away — say which one.
+  const variacaoLabel =
+    !anterior || anterior.competencia === previousCompetencia(competenciaAtual)
+      ? 'Variação vs. Mês Anterior'
+      : `Variação vs. ${competenciaAbbr(anterior.competencia)}`;
+
   const destaques: { type: string; text: string }[] = [];
   const comVariacao = modalidades.filter((m) => m.variacao !== null);
   if (comVariacao.length) {
@@ -85,22 +93,31 @@ export function buildEvolucaoSlide(
   }
   if (media !== null && atual.custoLogistico !== null) {
     const ante = atual.custoLogistico > media ? 'acima' : 'abaixo';
-    destaques.push({ type: 'info', text: `Mês ${ante} da média histórica de ${snapshots.length} competências` });
+    destaques.push({
+      type: 'info',
+      text: isRecorte
+        ? `Mês ${ante} da média das ${snapshots.length} competências comparadas`
+        : `Mês ${ante} da média histórica de ${snapshots.length} competências`,
+    });
   }
 
   return {
     id: EVOLUCAO_SLIDE_ID,
     number: slideNumber,
     title: 'Evolução Mensal do Custo Logístico',
-    subtitle: `Série histórica e variação mês a mês (${competenciaAbbr(competenciaAtual)})`,
+    subtitle: isRecorte
+      ? `Comparação entre as competências selecionadas: ${snapshots.map((s) => competenciaAbbr(s.competencia)).join(' · ')}`
+      : `Série histórica e variação mês a mês (${competenciaAbbr(competenciaAtual)})`,
     category: 'comparative',
     content: {
       competenciaAtual,
       competenciaAnterior: anterior?.competencia ?? null,
+      atualLabel: competenciaAbbr(competenciaAtual),
+      anteriorLabel: anterior ? competenciaAbbr(anterior.competencia) : null,
       kpis: [
         { label: 'Custo do Mês', value: atual.custoLogistico ?? 0, type: 'currency', isHighlight: true },
-        { label: 'Variação vs. Mês Anterior', value: variacaoMoM === null ? '—' : `${variacaoMoM > 0 ? '+' : ''}${variacaoMoM.toFixed(1)}%`, type: 'text' },
-        { label: 'Média Histórica', value: media ?? 0, type: 'currency' },
+        { label: variacaoLabel, value: variacaoMoM === null ? '—' : `${variacaoMoM > 0 ? '+' : ''}${variacaoMoM.toFixed(1)}%`, type: 'text' },
+        { label: isRecorte ? 'Média das Selecionadas' : 'Média Histórica', value: media ?? 0, type: 'currency' },
         { label: 'Acumulado no Período', value: sumSeries(custos), type: 'currency' },
       ],
       serie: custoSerie,
@@ -115,7 +132,7 @@ export function buildEvolucaoSlide(
  * everything already presented. Shown whenever the workbook has at least two
  * competências.
  */
-export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: number): Slide | null {
+export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: number, isRecorte = false): Slide | null {
   if (snapshots.length < 2) return null;
 
   const meses = snapshots.map((s) => ({
@@ -150,7 +167,9 @@ export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: n
     id: CONSOLIDADO_SLIDE_ID,
     number: slideNumber,
     title: 'Comparativo Consolidado',
-    subtitle: `Todos os indicadores já apresentados — ${periodo}`,
+    subtitle: isRecorte
+      ? `Competências selecionadas — ${meses.map((m) => m.label).join(' · ')}`
+      : `Todos os indicadores já apresentados — ${periodo}`,
     category: 'comparative',
     content: {
       periodo,
@@ -170,14 +189,23 @@ export function buildConsolidadoSlide(snapshots: MonthSnapshot[], slideNumber: n
 /**
  * Inserts the comparative slides right after the consolidated cost slide (or at
  * the end, when that slide is absent) and renumbers the whole deck.
+ *
+ * @param recorte Competências picked in the "Comparar" menu. The month being
+ *   presented always takes part; empty/omitted compares the whole history.
  */
 export function withComparativeSlides(
   slides: Slide[],
   snapshots: MonthSnapshot[],
-  competenciaAtual: string
+  competenciaAtual: string,
+  recorte?: string[] | null
 ): Slide[] {
-  const evolucao = buildEvolucaoSlide(snapshots, competenciaAtual, 0);
-  const consolidado = buildConsolidadoSlide(snapshots, 0);
+  const selecionados = recorte?.length
+    ? snapshots.filter((s) => s.competencia === competenciaAtual || recorte.includes(s.competencia))
+    : snapshots;
+  const isRecorte = selecionados.length < snapshots.length;
+
+  const evolucao = buildEvolucaoSlide(selecionados, competenciaAtual, 0, isRecorte);
+  const consolidado = buildConsolidadoSlide(selecionados, 0, isRecorte);
   const extras = [evolucao, consolidado].filter((s): s is Slide => s !== null);
   if (!extras.length) return slides;
 

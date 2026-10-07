@@ -9,6 +9,7 @@ import { buildWorkbook } from '../src/data/sheet/loadSlides';
 import { normalizeCompetencia, competenciaAbbr } from '../src/data/sheet/competencia';
 import { slidesData } from '../src/data/slidesData';
 import { buildHub, ImportedMonth } from '../src/data/hub';
+import { atalhosRecorte, normalizeRecorte, recorteFromSearch } from '../src/data/recorte';
 
 let failures = 0;
 function check(name: string, actual: unknown, expected: unknown) {
@@ -167,6 +168,34 @@ global,mesAbrev,SET.26
 const hubLegado = buildHub(legadoComMes, [xlsxMes('2026-10', 'OUT.26', 1500)], slidesData);
 check('legado vira SET.26 no hub', hubLegado.competencias.map((c) => `${c.abbr}:${c.source}`), ['SET.26:sheets', 'OUT.26:importada']);
 check('hub sem importação não muda o legado', buildHub(legadoComMes, [], slidesData).competencias.length, 0);
+
+// --- recorte: comparar só alguns meses ---------------------------------------
+const hub4 = buildHub(null, [
+  xlsxMes('2025-10', 'OUT.25', 800),
+  xlsxMes('2026-07', 'JUL.26', 1000),
+  xlsxMes('2026-09', 'SET.26', 1200),
+  xlsxMes('2026-10', 'OUT.26', 1500),
+], slidesData);
+const todos4 = ['2025-10', '2026-07', '2026-09', '2026-10'];
+const comRecorte = hub4.slidesFor('2026-10', ['2026-07']);
+const consRecorte = comRecorte.find((s) => s.id === 'comparativo-consolidado') as any;
+const evoRecorte = comRecorte.find((s) => s.id === 'evolucao-mensal') as any;
+check('recorte: consolidado só com os meses escolhidos + o aberto', consRecorte.content.meses.map((m: any) => m.label), ['JUL.26', 'OUT.26']);
+check('recorte: variação contra o mês escolhido', evoRecorte.content.kpis[1].label, 'Variação vs. JUL.26');
+check('recorte: série só com os escolhidos', evoRecorte.content.serie.map((p: any) => p.label), ['JUL.26', 'OUT.26']);
+check('recorte: subtítulo avisa o recorte', consRecorte.subtitle.startsWith('Competências selecionadas'), true);
+const semRecorte = hub4.slidesFor('2026-10') .find((s) => s.id === 'comparativo-consolidado') as any;
+check('sem recorte: todos os meses', semRecorte.content.meses.length, 4);
+check('sem recorte: variação vs mês anterior', (hub4.slidesFor('2026-10').find((s) => s.id === 'evolucao-mensal') as any).content.kpis[1].label, 'Variação vs. Mês Anterior');
+check('recorte só com o mês aberto não gera comparativo', hub4.slidesFor('2026-10', ['2026-10']).some((s) => s.id === 'evolucao-mensal'), false);
+check('normalize: todos = vazio', normalizeRecorte(todos4, todos4), []);
+check('normalize: descarta mês fora da base', normalizeRecorte(['2026-09', '2020-01'], todos4), ['2026-09']);
+check('url: ?comparar=', recorteFromSearch('?mes=2026-10&comparar=2026-07,2026-10,lixo'), ['2026-07', '2026-10']);
+const atalhos = Object.fromEntries(atalhosRecorte(todos4, '2026-10').map((a) => [a.label, a.recorte]));
+check('atalho últimos 3', atalhos['Últimos 3 meses'], ['2026-07', '2026-09', '2026-10']);
+check('atalho trimestre', atalhos['4º trimestre/2026'], null);
+check('atalho ano anterior', atalhos['Mesmo mês do ano anterior'], ['2025-10', '2026-10']);
+check('atalho trimestre com 2 meses', Object.fromEntries(atalhosRecorte(todos4, '2026-09').map((a) => [a.label, a.recorte]))['3º trimestre/2026'], ['2026-07', '2026-09']);
 
 console.log(failures === 0 ? '\nTODOS OS TESTES PASSARAM' : `\n${failures} TESTE(S) FALHARAM`);
 process.exit(failures === 0 ? 0 : 1);

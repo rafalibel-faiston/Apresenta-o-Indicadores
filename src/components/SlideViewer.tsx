@@ -393,7 +393,7 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                             <VariationBadge value={mod.variacao} size="sm" isDarkMode={isDarkMode} />
                           </div>
                         </div>
-                        {/* Paired bars: the pale one is last month, the solid one is this month. */}
+                        {/* Paired bars: the pale one is the month compared against, the solid one is this month. */}
                         <div className="flex flex-col gap-1">
                           <div className={`h-1.5 rounded-full overflow-hidden ${isDarkMode ? 'bg-white/5' : 'bg-slate-100'}`}>
                             <div
@@ -418,11 +418,11 @@ export default function SlideViewer({ slide, isFullscreen = false, isDarkMode = 
                 }`}>
                   <span className="flex items-center gap-1.5">
                     <span className="w-4 h-1.5 rounded-full" style={{ backgroundColor: seriesColor(0, isDarkMode), opacity: 0.4 }} />
-                    Mês anterior
+                    {content.anteriorLabel ?? 'Mês anterior'}
                   </span>
                   <span className="flex items-center gap-1.5">
                     <span className="w-4 h-2.5 rounded-full" style={{ backgroundColor: seriesColor(0, isDarkMode) }} />
-                    Mês atual
+                    {content.atualLabel ?? 'Mês atual'}
                   </span>
                 </div>
               </div>
