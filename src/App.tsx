@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
   Layers, HelpCircle, Download, FileText, Sparkles, Menu, X,
-  Sun, Moon
+  Sun, Moon, Upload, Trash2
 } from 'lucide-react';
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
-import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
+import { Workbook, loadWorkbook } from './data/sheet/loadSlides';
+import { normalizeCompetencia } from './data/sheet/competencia';
+import { buildHub, ImportedMonth } from './data/hub';
+import CompetenciaSelector from './components/CompetenciaSelector';
 import SlideViewer from './components/SlideViewer';
+import ImportWorkbookModal, { AppliedImport } from './components/ImportWorkbookModal';
+import { readXlsx } from './data/workbook/readXlsx';
+import { fetchMonthFile, listStoredMonths, removeMonth, saveMonth } from './data/workbook/storage';
 import FaistonLogo from './components/FaistonLogo';
 import { formatCurrency } from './components/MiniCharts';
 
@@ -69,10 +75,52 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [slidesData, setSlidesData] = useState(staticSlidesData);
-  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
+  // The Google Sheets workbook (when configured): every competência the sheet
+  // carries, loaded once. Switching months never refetches anything.
+  const [workbook, setWorkbook] = useState<Workbook | null>(null);
+  // Closing workbooks uploaded month by month, stored on the server (see
+  // data/workbook/storage.ts and server/). Only the parsed files are kept: their
+  // slides are derived in data/hub.ts with the current code.
+  const [importedMonths, setImportedMonths] = useState<ImportedMonth[]>([]);
+  // Explicit choice in the selector; null = the month in the URL, else the newest.
+  const [competencia, setCompetencia] = useState<string | null>(null);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
+  const [isLoadingMonths, setIsLoadingMonths] = useState(true);
+  const [showImportModal, setShowImportModal] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    listStoredMonths()
+      .then((stored) =>
+        Promise.all(
+          stored.map(async (month): Promise<ImportedMonth | null> => {
+            try {
+              const wb = await readXlsx(await fetchMonthFile(month.id), month.fileName);
+              return { ...month, wb, saveState: 'saved' };
+            } catch (err) {
+              console.error(`Não foi possível ler a planilha salva de ${month.monthLabel}.`, err);
+              return null;
+            }
+          })
+        )
+      )
+      .then((loaded) => {
+        if (cancelled) return;
+        setImportedMonths((current) => {
+          // A month uploaded in this tab while the list was loading wins.
+          const uploadedHere = new Set(current.map((m) => m.competencia));
+          return [...current, ...loaded.filter((m): m is ImportedMonth => !!m && !uploadedHere.has(m.competencia))];
+        });
+      })
+      .catch((err) => console.error('Não foi possível carregar os meses salvos no servidor.', err))
+      .finally(() => {
+        if (!cancelled) setIsLoadingMonths(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const sheetId = import.meta.env.VITE_GOOGLE_SHEET_ID;
@@ -81,11 +129,9 @@ export default function App() {
     let cancelled = false;
     setIsSheetSyncing(true);
 
-    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
-      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
-        if (cancelled) return;
-        setSlidesData(slides);
-        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
+    loadWorkbook(sheetId, staticSlidesData)
+      .then((loaded) => {
+        if (!cancelled) setWorkbook(loaded);
       })
       .catch((err) => {
         console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
@@ -99,6 +145,74 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  const hub = useMemo(() => buildHub(workbook, importedMonths, staticSlidesData), [workbook, importedMonths]);
+  const competenciaOptions = hub.competencias;
+
+  // A shared link like `?mes=2026-09` opens straight on that month; otherwise
+  // the newest competência is the one presented.
+  const selectedCompetencia = useMemo(() => {
+    const exists = (c: string | null) => !!c && competenciaOptions.some((o) => o.competencia === c);
+    if (exists(competencia)) return competencia;
+    const fromUrl = normalizeCompetencia(new URLSearchParams(window.location.search).get('mes'));
+    if (exists(fromUrl)) return fromUrl;
+    return competenciaOptions[competenciaOptions.length - 1]?.competencia ?? null;
+  }, [competencia, competenciaOptions]);
+
+  const slidesData = useMemo(
+    () => (selectedCompetencia ? hub.slidesFor(selectedCompetencia) : hub.fallbackSlides),
+    [hub, selectedCompetencia]
+  );
+
+  const mesAbrev =
+    competenciaOptions.find((option) => option.competencia === selectedCompetencia)?.abbr ??
+    hub.fallbackMesAbrev ??
+    null;
+  const selectedImport = importedMonths.find((m) => m.competencia === selectedCompetencia) ?? null;
+
+  const handleCompetenciaChange = (next: string | null) => {
+    setCompetencia(next);
+    // Keep the URL shareable — reopening the link lands on the same month.
+    const url = new URL(window.location.href);
+    if (next) url.searchParams.set('mes', next);
+    else url.searchParams.delete('mes');
+    window.history.replaceState({}, '', url);
+  };
+
+  const applyImport = ({ wb, monthLabel, fileName, bytes }: AppliedImport) => {
+    const target = normalizeCompetencia(monthLabel);
+    if (!target) return;
+    setImportedMonths((current) => [
+      ...current.filter((m) => m.competencia !== target),
+      { competencia: target, monthLabel, fileName, wb, saveState: 'saving' },
+    ]);
+    handleCompetenciaChange(target);
+    setCurrentSlideIndex(0);
+    setShowImportModal(false);
+    saveMonth(target, bytes, fileName, monthLabel).then((result) => {
+      setImportedMonths((current) =>
+        current.map((m) =>
+          m.wb !== wb ? m : 'saved' in result ? { ...m, saveState: 'saved', importedAt: result.saved.importedAt } : { ...m, saveState: { error: result.error } }
+        )
+      );
+    });
+  };
+
+  const removeImportedMonth = async (month: ImportedMonth) => {
+    if (month.saveState === 'saving') return;
+    if (!window.confirm(`Tirar ${month.monthLabel} da apresentação? A planilha continua guardada no histórico do banco.`)) return;
+    // Only the local view has it if the upload never made it — nothing to undo on the server.
+    if (month.saveState === 'saved') {
+      const error = await removeMonth(month.competencia);
+      if (error) {
+        window.alert(`Não foi possível remover no servidor: ${error}`);
+        return;
+      }
+    }
+    setImportedMonths((current) => current.filter((m) => m.competencia !== month.competencia));
+    handleCompetenciaChange(null);
+    setCurrentSlideIndex(0);
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
@@ -114,6 +228,12 @@ export default function App() {
   const [zipProgress, setZipProgress] = useState<number | null>(null);
 
   const mainContainerRef = useRef<HTMLDivElement>(null);
+
+  // Decks of different competências can have different lengths (the comparative
+  // slides only exist once there is history), so keep the cursor in range.
+  useEffect(() => {
+    setCurrentSlideIndex((index) => Math.min(index, Math.max(slidesData.length - 1, 0)));
+  }, [slidesData.length]);
 
   const currentSlide = slidesData[currentSlideIndex];
 
@@ -406,12 +526,53 @@ export default function App() {
             </h1>
           </div>
 
-          {isSheetSyncing && (
-            <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">Sincronizando planilha…</span>
+          {competenciaOptions.length > 0 && (
+            <CompetenciaSelector
+              options={competenciaOptions}
+              value={selectedCompetencia}
+              onChange={handleCompetenciaChange}
+              isDarkMode={dk}
+            />
+          )}
+
+          {(isSheetSyncing || isLoadingMonths) && (
+            <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">
+              {isSheetSyncing ? 'Sincronizando planilha…' : 'Carregando meses…'}
+            </span>
           )}
           {!isSheetSyncing && sheetSyncError && (
             <span className="text-[10px] font-bold text-amber-500 ml-1" title="Não foi possível carregar a planilha do Google Sheets. Exibindo os últimos dados salvos no código.">
               ⚠ Planilha indisponível
+            </span>
+          )}
+          {selectedImport && (
+            <span
+              className={`hidden md:flex items-center gap-1.5 text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
+                typeof selectedImport.saveState === 'object'
+                  ? 'text-amber-600 bg-amber-50 border-amber-200'
+                  : selectedImport.saveState === 'saving'
+                    ? 'text-slate-500 bg-slate-50 border-slate-200'
+                    : 'text-emerald-700 bg-emerald-50 border-emerald-200'
+              }`}
+              title={
+                typeof selectedImport.saveState === 'object'
+                  ? `A planilha não foi salva no servidor (${selectedImport.saveState.error}). Só você está vendo esses dados e, ao recarregar a página, eles somem.`
+                  : selectedImport.saveState === 'saving'
+                    ? 'Salvando a planilha no servidor…'
+                    : `${selectedImport.monthLabel} veio desta planilha, salva no banco — todo mundo que abrir a apresentação vê esta versão.${
+                        selectedImport.importedAt ? ` Importada em ${new Date(selectedImport.importedAt).toLocaleString('pt-BR')}.` : ''
+                      }`
+              }
+            >
+              <span className="max-w-[180px] truncate">📊 {selectedImport.fileName}</span>
+              <button
+                onClick={() => removeImportedMonth(selectedImport)}
+                disabled={selectedImport.saveState === 'saving'}
+                className="flex items-center gap-0.5 underline-offset-2 hover:underline disabled:opacity-40 disabled:no-underline"
+                title={`Tirar ${selectedImport.monthLabel} da apresentação (a planilha continua no histórico do banco)`}
+              >
+                <Trash2 size={10} /> Remover mês
+              </button>
             </span>
           )}
         </div>
@@ -430,6 +591,15 @@ export default function App() {
           >
             <HelpCircle size={13} />
             Atalhos
+          </button>
+
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="flex items-center gap-1 font-bold px-3 py-1.5 text-[11px] rounded-lg transition-all border border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 active:scale-95 cursor-pointer"
+            title="Gerar a apresentação a partir da planilha de fechamento (.xlsx)"
+          >
+            <Upload size={12} />
+            Importar planilha
           </button>
 
           <button
@@ -570,7 +740,8 @@ export default function App() {
                              item.category === 'expeditions' ? 'Expedição' :
                              item.category === 'financials' ? 'Financeiro' :
                              item.category === 'operations' ? 'Operações' :
-                             item.category === 'insurance' ? 'Seguro' : 'Contato'}
+                             item.category === 'insurance' ? 'Seguro' :
+                             item.category === 'comparative' ? 'Comparativo' : 'Contato'}
                           </span>
                         </div>
 
@@ -802,6 +973,15 @@ export default function App() {
             </button>
           </div>
         </div>
+      )}
+
+      {showImportModal && (
+        <ImportWorkbookModal
+          baseSlidesFor={hub.baseFor}
+          storedMonths={importedMonths}
+          onApply={applyImport}
+          onClose={() => setShowImportModal(false)}
+        />
       )}
 
       {/* Hidden capture stage for PPT/ZIP export */}
