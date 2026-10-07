@@ -197,5 +197,13 @@ check('atalho trimestre', atalhos['4º trimestre/2026'], null);
 check('atalho ano anterior', atalhos['Mesmo mês do ano anterior'], ['2025-10', '2026-10']);
 check('atalho trimestre com 2 meses', Object.fromEntries(atalhosRecorte(todos4, '2026-09').map((a) => [a.label, a.recorte]))['3º trimestre/2026'], ['2026-07', '2026-09']);
 
+// --- liga/desliga comparativos e dados visuais do consolidado -----------------
+check('comparativos desligados: sem slides comparativos', hub4.slidesFor('2026-10', [], false).some((s) => s.id === 'evolucao-mensal' || s.id === 'comparativo-consolidado'), false);
+check('comparativos desligados: mesma quantidade do deck base', hub4.slidesFor('2026-10', [], false).length, hub4.slidesFor('2026-10').length - 2);
+const consVisual = hub4.slidesFor('2026-10').find((s) => s.id === 'comparativo-consolidado') as any;
+check('consolidado traz a composição por mês', consVisual.content.composicao.map((m: any) => m.label), ['OUT.25', 'JUL.26', 'SET.26', 'OUT.26']);
+check('consolidado sabe o mês aberto', consVisual.content.competenciaAtual, '2026-10');
+check('custo tem polaridade "down"', consVisual.content.linhas.find((l: any) => l.label === 'Custo Logístico Total')?.polarity, 'down');
+
 console.log(failures === 0 ? '\nTODOS OS TESTES PASSARAM' : `\n${failures} TESTE(S) FALHARAM`);
 process.exit(failures === 0 ? 0 : 1);

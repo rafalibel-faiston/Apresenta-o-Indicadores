@@ -5,7 +5,7 @@
 //   GET    /api/planilhas                    → meses salvos [{ id, competencia, monthLabel, fileName, importedAt }]
 //   GET    /api/planilhas/arquivo/:id        → o .xlsx daquela versão (imutável, cacheado no navegador)
 //   PUT    /api/planilhas/:competencia       → salva/substitui o mês ({ fileName, monthLabel, base64 })
-//   DELETE /api/planilhas/:competencia       → tira o mês da apresentação (a versão fica no histórico)
+//   DELETE /api/planilhas/:competencia       → apaga o mês da base (todas as versões)
 //   GET    /api/health                       → status do servidor e do banco
 //
 // Banco: Postgres via DATABASE_URL (Railway). Sem DATABASE_URL, cai em arquivos
@@ -98,9 +98,9 @@ async function handleApi(req, res, pathname) {
   if (!authorized(req)) return sendJson(res, 401, { error: 'Senha de importação inválida.' });
 
   if (req.method === 'DELETE') {
-    await store.remove(competencia);
-    console.log(`[planilha] mês removido: ${competencia}`);
-    return sendJson(res, 200, { ok: true });
+    const removed = await store.remove(competencia);
+    console.log(`[planilha] mês apagado: ${competencia} (${removed} versões)`);
+    return sendJson(res, 200, { ok: true, removed });
   }
 
   const body = await readJsonBody(req);

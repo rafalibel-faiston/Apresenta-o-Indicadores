@@ -104,7 +104,7 @@ export async function saveMonth(
   }
 }
 
-/** Returns an error message, or null when the month left the presentation. */
+/** Deletes every stored version of the month. Returns an error message, or null on success. */
 export async function removeMonth(competencia: string): Promise<string | null> {
   try {
     const res = await writeRequest(`${API}/${competencia}`, 'DELETE');

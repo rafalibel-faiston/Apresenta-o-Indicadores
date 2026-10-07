@@ -17,19 +17,31 @@ arraste a planilha `Atualização Gráficos Fechamento <Mês>.xlsx` e clique em
   Logístico** e **Comparativo Consolidado**, logo depois do Custo Consolidado.
   Só entram na comparação os slides que a planilha daquele mês realmente
   preencheu.
-- **Comparar só alguns meses**: com 3 meses ou mais na base, aparece o botão
-  **Comparar** ao lado do seletor de mês. Marque os meses que devem entrar nos
+- **Comparar só alguns meses**: com 3 meses ou mais na base, a parte da direita
+  do botão **Comparativos** (ao lado do seletor de mês) abre a escolha. Marque os meses que devem entrar nos
   slides comparativos (o mês aberto sempre entra) ou use um atalho: **Todos**,
   **Últimos 3 meses**, **Nº trimestre** do mês aberto e **Mesmo mês do ano
   anterior**. A variação passa a ser contra o mês escolhido (ex.: "Variação vs.
   OUT.25"), e os subtítulos avisam que é um recorte. A escolha fica no link
   (`?comparar=2025-10,2026-10`) e vale também para o PPT/ZIP/PNG exportado.
+- **Comparativos ligados/desligados**: o botão **Comparativos** no topo tem uma
+  chave. Desligada, os dois slides comparativos saem da apresentação (e do
+  PPT/ZIP/PNG). O link guarda a escolha (`?comparativos=0`).
+- O **Comparativo Consolidado** é visual: colunas empilhadas com o custo por
+  modalidade em cada mês (passe o mouse para ver o valor de cada modalidade) e
+  um card por indicador com mini gráfico dos meses — o mês aberto em azul.
+  A variação fica verde quando é boa notícia (custo caindo, receita subindo) e
+  neutra quando não é nem boa nem ruim (estoque, notas). O botão **Tabela**
+  mostra os números lado a lado.
 - Subir de novo um mês que já existe **substitui** aquele mês (a janela avisa).
   A versão anterior continua guardada no banco.
-- O selo no topo mostra a planilha do mês aberto: verde = salva, cinza =
-  salvando, amarelo = não salvou (só você está vendo; passe o mouse para ver o
-  motivo). **Remover mês** tira o mês da apresentação, mas o arquivo continua
-  no histórico do banco.
+- **Base de meses** (botão no topo) lista todos os meses: dá para abrir
+  qualquer um ou **apagar** da base. Apagar remove a planilha daquele mês de
+  vez (todas as versões) e não dá para desfazer. Meses que vêm do Google
+  Sheets só saem editando a planilha online.
+- O ícone 📊 no topo indica que o mês aberto veio de planilha: verde = salva,
+  cinza = salvando, amarelo = não salvou (só você está vendo; passe o mouse para
+  ver o motivo).
 - Antes de aplicar, a janela mostra um relatório por slide:
   - ✅ **Atualizado**: veio da planilha.
   - ⚠️ **Conferir**: veio da planilha, mas algum total não bateu ou falta algo.
@@ -68,8 +80,8 @@ do Self Storage, comentários fixos).
 
 Tabela `planilhas` (criada sozinha no primeiro start): uma linha por upload, com
 a competência (`AAAA-MM`), o nome do arquivo e o .xlsx original. Para cada mês,
-vale a linha mais recente com `ativa = true`. Substituir ou remover um mês só
-desativa as linhas antigas, então nada se perde.
+vale a linha mais recente com `ativa = true`. Substituir um mês só desativa a
+versão antiga; **apagar** o mês remove todas as linhas dele.
 
 O banco guarda o .xlsx, não os slides prontos: cada mês é recalculado com o
 código atual, então correções no importador valem também para os meses antigos.
@@ -107,8 +119,12 @@ local, mas no Railway esse arquivo some a cada deploy.
 - `src/data/workbook/storage.ts`: chamadas à API (e o pedido de senha).
 - `src/data/hub.ts`: junta os meses do Google Sheets com os meses importados num
   histórico só e gera os slides comparativos.
-- `src/data/recorte.ts` + `src/components/CompareMonthsPicker.tsx`: o menu
-  **Comparar** (recorte de meses, atalhos e `?comparar=` na URL).
+- `src/data/recorte.ts` + `src/components/CompareMonthsPicker.tsx`: o botão
+  **Comparativos** (liga/desliga, recorte de meses, atalhos, `?comparar=` e
+  `?comparativos=0` na URL).
+- `src/components/ComparativeCharts.tsx`: colunas empilhadas por modalidade e
+  cards de indicador do Comparativo Consolidado.
+- `src/components/MonthsBaseModal.tsx`: a janela **Base de meses**.
 - Para rodar local: `npm run dev:server` (API na porta 3000) e `npm run dev` em
   outro terminal (o Vite repassa `/api` para a 3000). Ou `npm run build && npm start`.
 

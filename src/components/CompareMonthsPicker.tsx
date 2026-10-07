@@ -10,14 +10,26 @@ interface CompareMonthsPickerProps {
   /** Picked competências; empty = the whole history. */
   value: string[];
   onChange: (recorte: string[]) => void;
+  /** Whether the comparative slides are in the deck at all. */
+  enabled: boolean;
+  onToggle: () => void;
   isDarkMode?: boolean;
 }
 
 /**
- * "Comparar" menu: picks which competências the comparative slides (evolution
- * and consolidated table) compare, instead of the whole history.
+ * "Comparativos" control. Left half switches the comparative slides (evolution
+ * and consolidated) on or off; right half — from three months on — picks which
+ * competências they compare, instead of the whole history.
  */
-export default function CompareMonthsPicker({ options, current, value, onChange, isDarkMode = false }: CompareMonthsPickerProps) {
+export default function CompareMonthsPicker({
+  options,
+  current,
+  value,
+  onChange,
+  enabled,
+  onToggle,
+  isDarkMode = false,
+}: CompareMonthsPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -41,6 +53,8 @@ export default function CompareMonthsPicker({ options, current, value, onChange,
   const compared = effectiveRecorte(value, available, current);
   const isAll = value.length === 0;
   const atalhos = atalhosRecorte(available, current);
+  // With two months there is nothing to pick — both are always compared.
+  const canPick = options.length > 2;
 
   const toggle = (competencia: string) => {
     const next = compared.includes(competencia) ? compared.filter((c) => c !== competencia) : [...compared, competencia];
@@ -51,27 +65,52 @@ export default function CompareMonthsPicker({ options, current, value, onChange,
 
   return (
     <div className="relative" ref={containerRef}>
-      <button
-        type="button"
-        onClick={() => setIsOpen((open) => !open)}
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
-        title="Escolher quais meses entram nos slides comparativos"
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-[11px] font-bold whitespace-nowrap transition-colors ${
-          !isAll
-            ? 'bg-[#0054ec]/8 border-[#0054ec]/40 text-[#0054ec]'
-            : isDarkMode
-              ? 'bg-white/5 border-white/10 text-slate-200 hover:bg-white/10 hover:border-white/20'
-              : 'bg-white border-slate-200 text-slate-700 hover:border-[#0054ec]/40 hover:text-[#0054ec] shadow-sm'
-        }`}
-      >
-        <GitCompareArrows size={14} className={isDarkMode ? 'text-[#00fafb]' : 'text-[#0054ec]'} />
-        <span>Comparar</span>
-        <span className="font-mono tracking-wider">{isAll ? 'todos' : `${compared.length} meses`}</span>
-        <ChevronDown size={13} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
+      <div className={`flex items-stretch rounded-xl border text-[11px] font-bold whitespace-nowrap overflow-hidden ${
+        isDarkMode ? 'border-white/10' : 'border-slate-200 shadow-sm'
+      }`}>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={enabled}
+          onClick={onToggle}
+          title={enabled ? 'Esconder os slides comparativos da apresentação' : 'Mostrar os slides comparativos na apresentação'}
+          className={`flex items-center gap-2 pl-3 pr-2.5 py-1.5 transition-colors ${
+            isDarkMode ? 'bg-white/5 text-slate-200 hover:bg-white/10' : 'bg-white text-slate-700 hover:text-[#0054ec]'
+          }`}
+        >
+          <GitCompareArrows size={14} className={isDarkMode ? 'text-[#00fafb]' : 'text-[#0054ec]'} />
+          <span>Comparativos</span>
+          <span
+            className={`relative inline-flex w-7 h-4 rounded-full transition-colors ${
+              enabled ? 'bg-[#0054ec]' : isDarkMode ? 'bg-slate-700' : 'bg-slate-300'
+            }`}
+          >
+            <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white shadow transition-all ${enabled ? 'left-3.5' : 'left-0.5'}`} />
+          </span>
+        </button>
+        {canPick && (
+          <button
+            type="button"
+            onClick={() => setIsOpen((open) => !open)}
+            disabled={!enabled}
+            aria-haspopup="dialog"
+            aria-expanded={isOpen}
+            title="Escolher quais meses entram nos slides comparativos"
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 border-l transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+              isDarkMode ? 'border-white/10' : 'border-slate-200'
+            } ${
+              !isAll && enabled
+                ? 'bg-[#0054ec]/8 text-[#0054ec]'
+                : isDarkMode ? 'bg-white/5 text-slate-300 hover:bg-white/10' : 'bg-white text-slate-600 hover:text-[#0054ec]'
+            }`}
+          >
+            <span className="font-mono tracking-wider">{isAll ? 'todos' : `${compared.length} meses`}</span>
+            <ChevronDown size={13} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          </button>
+        )}
+      </div>
 
-      {isOpen && (
+      {isOpen && enabled && canPick && (
         <div
           role="dialog"
           aria-label="Meses comparados"
