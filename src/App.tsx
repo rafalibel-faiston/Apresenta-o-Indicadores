@@ -12,6 +12,8 @@ import { Workbook, loadWorkbook } from './data/sheet/loadSlides';
 import { normalizeCompetencia } from './data/sheet/competencia';
 import { buildHub, ImportedMonth } from './data/hub';
 import CompetenciaSelector from './components/CompetenciaSelector';
+import CompareMonthsPicker from './components/CompareMonthsPicker';
+import { normalizeRecorte, recorteFromSearch } from './data/recorte';
 import SlideViewer from './components/SlideViewer';
 import ImportWorkbookModal, { AppliedImport } from './components/ImportWorkbookModal';
 import { readXlsx } from './data/workbook/readXlsx';
@@ -84,6 +86,8 @@ export default function App() {
   const [importedMonths, setImportedMonths] = useState<ImportedMonth[]>([]);
   // Explicit choice in the selector; null = the month in the URL, else the newest.
   const [competencia, setCompetencia] = useState<string | null>(null);
+  // Months picked in "Comparar" (`?comparar=` in the URL); empty = the whole history.
+  const [recorte, setRecorte] = useState<string[]>(() => recorteFromSearch(window.location.search));
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
   const [isLoadingMonths, setIsLoadingMonths] = useState(true);
@@ -159,9 +163,15 @@ export default function App() {
     return competenciaOptions[competenciaOptions.length - 1]?.competencia ?? null;
   }, [competencia, competenciaOptions]);
 
+  // Months that left the base (or a stale link) simply drop out of the cut.
+  const activeRecorte = useMemo(
+    () => normalizeRecorte(recorte, competenciaOptions.map((o) => o.competencia)),
+    [recorte, competenciaOptions]
+  );
+
   const slidesData = useMemo(
-    () => (selectedCompetencia ? hub.slidesFor(selectedCompetencia) : hub.fallbackSlides),
-    [hub, selectedCompetencia]
+    () => (selectedCompetencia ? hub.slidesFor(selectedCompetencia, activeRecorte) : hub.fallbackSlides),
+    [hub, selectedCompetencia, activeRecorte]
   );
 
   const mesAbrev =
@@ -176,6 +186,14 @@ export default function App() {
     const url = new URL(window.location.href);
     if (next) url.searchParams.set('mes', next);
     else url.searchParams.delete('mes');
+    window.history.replaceState({}, '', url);
+  };
+
+  const handleRecorteChange = (next: string[]) => {
+    setRecorte(next);
+    const url = new URL(window.location.href);
+    if (next.length) url.searchParams.set('comparar', next.join(','));
+    else url.searchParams.delete('comparar');
     window.history.replaceState({}, '', url);
   };
 
@@ -535,6 +553,17 @@ export default function App() {
             />
           )}
 
+          {/* With two months there is nothing to pick — both are always compared. */}
+          {competenciaOptions.length > 2 && (
+            <CompareMonthsPicker
+              options={competenciaOptions}
+              current={selectedCompetencia}
+              value={activeRecorte}
+              onChange={handleRecorteChange}
+              isDarkMode={dk}
+            />
+          )}
+
           {(isSheetSyncing || isLoadingMonths) && (
             <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">
               {isSheetSyncing ? 'Sincronizando planilha…' : 'Carregando meses…'}
@@ -547,7 +576,7 @@ export default function App() {
           )}
           {selectedImport && (
             <span
-              className={`hidden md:flex items-center gap-1.5 text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
+              className={`hidden md:flex items-center gap-1.5 whitespace-nowrap text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
                 typeof selectedImport.saveState === 'object'
                   ? 'text-amber-600 bg-amber-50 border-amber-200'
                   : selectedImport.saveState === 'saving'
@@ -564,7 +593,7 @@ export default function App() {
                       }`
               }
             >
-              <span className="max-w-[180px] truncate">📊 {selectedImport.fileName}</span>
+              <span className="max-w-[140px] truncate">📊 {selectedImport.fileName}</span>
               <button
                 onClick={() => removeImportedMonth(selectedImport)}
                 disabled={selectedImport.saveState === 'saving'}
@@ -595,7 +624,7 @@ export default function App() {
 
           <button
             onClick={() => setShowImportModal(true)}
-            className="flex items-center gap-1 font-bold px-3 py-1.5 text-[11px] rounded-lg transition-all border border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 active:scale-95 cursor-pointer"
+            className="flex items-center gap-1 whitespace-nowrap font-bold px-3 py-1.5 text-[11px] rounded-lg transition-all border border-emerald-500/40 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/20 active:scale-95 cursor-pointer"
             title="Gerar a apresentação a partir da planilha de fechamento (.xlsx)"
           >
             <Upload size={12} />

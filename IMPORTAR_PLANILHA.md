@@ -17,6 +17,13 @@ arraste a planilha `Atualização Gráficos Fechamento <Mês>.xlsx` e clique em
   Logístico** e **Comparativo Consolidado**, logo depois do Custo Consolidado.
   Só entram na comparação os slides que a planilha daquele mês realmente
   preencheu.
+- **Comparar só alguns meses**: com 3 meses ou mais na base, aparece o botão
+  **Comparar** ao lado do seletor de mês. Marque os meses que devem entrar nos
+  slides comparativos (o mês aberto sempre entra) ou use um atalho: **Todos**,
+  **Últimos 3 meses**, **Nº trimestre** do mês aberto e **Mesmo mês do ano
+  anterior**. A variação passa a ser contra o mês escolhido (ex.: "Variação vs.
+  OUT.25"), e os subtítulos avisam que é um recorte. A escolha fica no link
+  (`?comparar=2025-10,2026-10`) e vale também para o PPT/ZIP/PNG exportado.
 - Subir de novo um mês que já existe **substitui** aquele mês (a janela avisa).
   A versão anterior continua guardada no banco.
 - O selo no topo mostra a planilha do mês aberto: verde = salva, cinza =
@@ -100,6 +107,8 @@ local, mas no Railway esse arquivo some a cada deploy.
 - `src/data/workbook/storage.ts`: chamadas à API (e o pedido de senha).
 - `src/data/hub.ts`: junta os meses do Google Sheets com os meses importados num
   histórico só e gera os slides comparativos.
+- `src/data/recorte.ts` + `src/components/CompareMonthsPicker.tsx`: o menu
+  **Comparar** (recorte de meses, atalhos e `?comparar=` na URL).
 - Para rodar local: `npm run dev:server` (API na porta 3000) e `npm run dev` em
   outro terminal (o Vite repassa `/api` para a 3000). Ou `npm run build && npm start`.
 

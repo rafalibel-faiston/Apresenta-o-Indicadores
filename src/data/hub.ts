@@ -27,8 +27,11 @@ export interface ImportedMonth {
 export interface Hub {
   /** Every competência, oldest first. Empty when there is no history at all. */
   competencias: CompetenciaOption[];
-  /** Ready-to-present deck, including the comparative slides. */
-  slidesFor(competencia: string): Slide[];
+  /**
+   * Ready-to-present deck, including the comparative slides. `recorte` limits the
+   * comparison to the picked competências (the presented month always joins).
+   */
+  slidesFor(competencia: string, recorte?: string[] | null): Slide[];
   /** Deck an uploaded workbook of this month is applied on top of. */
   baseFor(competencia: string | null): Slide[];
   /** Deck when no competência is selected. */
@@ -79,9 +82,9 @@ export function buildHub(sheet: SheetWorkbook | null, imports: ImportedMonth[], 
 
   return {
     competencias: Array.from(options.values()).sort((a, b) => (a.competencia < b.competencia ? -1 : 1)),
-    slidesFor(competencia) {
+    slidesFor(competencia, recorte) {
       const deck = decks.get(competencia);
-      return deck ? withComparativeSlides(deck, snapshots, competencia) : fallbackSlides;
+      return deck ? withComparativeSlides(deck, snapshots, competencia, recorte) : fallbackSlides;
     },
     baseFor,
     fallbackSlides,
