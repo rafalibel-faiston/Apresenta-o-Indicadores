@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   ChevronLeft, ChevronRight, Play, Pause, Maximize2, Minimize2,
@@ -8,10 +8,11 @@ import {
 import pptxgen from 'pptxgenjs';
 import { toPng } from 'html-to-image';
 import { slidesData as staticSlidesData } from './data/slidesData';
-import { loadSlidesFromGoogleSheet } from './data/sheet/loadSlides';
+import { Workbook, loadWorkbook, resolveCompetenciaFromUrl } from './data/sheet/loadSlides';
+import CompetenciaSelector from './components/CompetenciaSelector';
 import SlideViewer from './components/SlideViewer';
 import ImportWorkbookModal, { AppliedImport } from './components/ImportWorkbookModal';
-import { readXlsx } from './data/workbook/readXlsx';
+import { readXlsx, Workbook as XlsxWorkbook } from './data/workbook/readXlsx';
 import { importWorkbook } from './data/workbook/importWorkbook';
 import { clearStoredWorkbook, fromBase64, loadStoredWorkbook, saveWorkbook } from './data/workbook/storage';
 import FaistonLogo from './components/FaistonLogo';
@@ -73,25 +74,27 @@ function replaceOklchInCss(css: string): string {
 }
 
 export default function App() {
-  const [slidesData, setSlidesData] = useState(staticSlidesData);
-  // Slides before any .xlsx import (code data, or Google Sheets when configured).
-  const [baseSlides, setBaseSlides] = useState(staticSlidesData);
-  const [baseMesAbrev, setBaseMesAbrev] = useState<string | null>(null);
-  const [mesAbrev, setMesAbrev] = useState<string | null>(null);
+  // The workbook is the whole historical database: every competência the sheet
+  // carries, loaded once. Switching months never refetches anything.
+  const [workbook, setWorkbook] = useState<Workbook | null>(null);
+  const [competencia, setCompetencia] = useState<string | null>(null);
   const [isSheetSyncing, setIsSheetSyncing] = useState(false);
   const [sheetSyncError, setSheetSyncError] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
-  const [importInfo, setImportInfo] = useState<{
+  // The imported .xlsx (saved on the server, see data/workbook/storage.ts and server/).
+  // Only the parsed file is kept: its slides are derived below on top of the
+  // current base deck, so whoever imports and whoever just opens the link see the same.
+  const [imported, setImported] = useState<{
+    wb: XlsxWorkbook;
     fileName: string;
     monthLabel: string;
     importedAt?: string;
     /** 'saving' while the upload is in flight; an error message when the server refused it. */
     saveState: 'saving' | 'saved' | { error: string };
   } | null>(null);
-  const importInfoRef = useRef(importInfo);
-  importInfoRef.current = importInfo;
+  const importedRef = useRef(imported);
+  importedRef.current = imported;
 
-  // Re-applies the workbook saved on the server (see data/workbook/storage.ts and server/).
   useEffect(() => {
     let cancelled = false;
     loadStoredWorkbook()
@@ -99,11 +102,8 @@ export default function App() {
         if (!stored || cancelled) return;
         const wb = await readXlsx(fromBase64(stored.base64), stored.fileName);
         // Someone imported a new workbook while this one was loading — theirs wins.
-        if (cancelled || importInfoRef.current) return;
-        const { slides, monthLabel } = importWorkbook(wb, staticSlidesData, stored.monthLabel);
-        setSlidesData(slides);
-        setMesAbrev(monthLabel);
-        setImportInfo({ fileName: stored.fileName, monthLabel, importedAt: stored.importedAt, saveState: 'saved' });
+        if (cancelled || importedRef.current) return;
+        setImported({ wb, fileName: stored.fileName, monthLabel: stored.monthLabel, importedAt: stored.importedAt, saveState: 'saved' });
       })
       .catch((err) => console.error('Não foi possível carregar a planilha salva no servidor.', err));
     return () => {
@@ -111,32 +111,28 @@ export default function App() {
     };
   }, []);
 
-  const applyImport = ({ slides, monthLabel, fileName, bytes }: AppliedImport) => {
-    setSlidesData(slides);
-    setMesAbrev(monthLabel);
-    setImportInfo({ fileName, monthLabel, saveState: 'saving' });
+  const applyImport = ({ wb, monthLabel, fileName, bytes }: AppliedImport) => {
+    setImported({ wb, fileName, monthLabel, saveState: 'saving' });
     setCurrentSlideIndex(0);
     setShowImportModal(false);
     saveWorkbook(bytes, fileName, monthLabel).then((error) => {
-      setImportInfo((info) =>
-        info && info.fileName === fileName ? { ...info, saveState: error ? { error } : 'saved', importedAt: new Date().toISOString() } : info
+      setImported((current) =>
+        current && current.wb === wb ? { ...current, saveState: error ? { error } : 'saved', importedAt: new Date().toISOString() } : current
       );
     });
   };
 
   const restoreOriginalData = async () => {
-    if (importInfo?.saveState === 'saving') return;
+    if (imported?.saveState === 'saving') return;
     // Only the local view was changed if the upload never made it — nothing to undo on the server.
-    if (importInfo?.saveState === 'saved') {
+    if (imported?.saveState === 'saved') {
       const error = await clearStoredWorkbook();
       if (error) {
         window.alert(`Não foi possível restaurar no servidor: ${error}`);
         return;
       }
     }
-    setSlidesData(baseSlides);
-    setMesAbrev(baseMesAbrev);
-    setImportInfo(null);
+    setImported(null);
     setCurrentSlideIndex(0);
   };
 
@@ -147,15 +143,15 @@ export default function App() {
     let cancelled = false;
     setIsSheetSyncing(true);
 
-    loadSlidesFromGoogleSheet(sheetId, staticSlidesData)
-      .then(({ slides, mesAbrev: fetchedMesAbrev }) => {
+    loadWorkbook(sheetId, staticSlidesData)
+      .then((loaded) => {
         if (cancelled) return;
-        setBaseSlides(slides);
-        if (fetchedMesAbrev) setBaseMesAbrev(fetchedMesAbrev);
-        // An imported .xlsx takes precedence over the Google Sheets data.
-        if (importInfoRef.current) return;
-        setSlidesData(slides);
-        if (fetchedMesAbrev) setMesAbrev(fetchedMesAbrev);
+        setWorkbook(loaded);
+        // A shared link like `?mes=2026-09` opens straight on that month;
+        // otherwise the newest competência is the one presented.
+        const fromUrl = resolveCompetenciaFromUrl(loaded, window.location.search);
+        const latest = loaded.competencias[loaded.competencias.length - 1]?.competencia ?? null;
+        setCompetencia(fromUrl ?? latest);
       })
       .catch((err) => {
         console.error('Falha ao carregar a planilha do Google Sheets — mantendo dados estáticos.', err);
@@ -169,6 +165,34 @@ export default function App() {
       cancelled = true;
     };
   }, []);
+
+  // Deck before any .xlsx import: code data, or the Google Sheets competência.
+  const baseSlides = useMemo(() => {
+    if (!workbook) return staticSlidesData;
+    if (competencia) return workbook.slidesFor(competencia);
+    return workbook.fallbackSlides;
+  }, [workbook, competencia]);
+
+  // An imported .xlsx takes precedence over the Google Sheets data.
+  const slidesData = useMemo(
+    () => (imported ? importWorkbook(imported.wb, baseSlides, imported.monthLabel).slides : baseSlides),
+    [imported, baseSlides]
+  );
+
+  const competenciaOptions = workbook?.competencias ?? [];
+  const mesAbrev =
+    imported?.monthLabel ??
+    competenciaOptions.find((option) => option.competencia === competencia)?.abbr ??
+    workbook?.fallbackMesAbrev ??
+    null;
+
+  const handleCompetenciaChange = (next: string) => {
+    setCompetencia(next);
+    // Keep the URL shareable — reopening the link lands on the same month.
+    const url = new URL(window.location.href);
+    url.searchParams.set('mes', next);
+    window.history.replaceState({}, '', url);
+  };
 
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isDarkMode] = useState(false);
@@ -184,6 +208,12 @@ export default function App() {
   const [zipProgress, setZipProgress] = useState<number | null>(null);
 
   const mainContainerRef = useRef<HTMLDivElement>(null);
+
+  // Decks of different competências can have different lengths (the comparative
+  // slides only exist once there is history), so keep the cursor in range.
+  useEffect(() => {
+    setCurrentSlideIndex((index) => Math.min(index, Math.max(slidesData.length - 1, 0)));
+  }, [slidesData.length]);
 
   const currentSlide = slidesData[currentSlideIndex];
 
@@ -476,6 +506,15 @@ export default function App() {
             </h1>
           </div>
 
+          {competenciaOptions.length > 1 && !imported && (
+            <CompetenciaSelector
+              options={competenciaOptions}
+              value={competencia}
+              onChange={handleCompetenciaChange}
+              isDarkMode={dk}
+            />
+          )}
+
           {isSheetSyncing && (
             <span className="text-[10px] font-bold text-slate-400 animate-pulse ml-1">Sincronizando planilha…</span>
           )}
@@ -484,29 +523,29 @@ export default function App() {
               ⚠ Planilha indisponível
             </span>
           )}
-          {importInfo && (
+          {imported && (
             <span
               className={`hidden md:flex items-center gap-1.5 text-[10px] font-bold ml-1 px-2 py-1 rounded-lg border ${
-                typeof importInfo.saveState === 'object'
+                typeof imported.saveState === 'object'
                   ? 'text-amber-600 bg-amber-50 border-amber-200'
-                  : importInfo.saveState === 'saving'
+                  : imported.saveState === 'saving'
                     ? 'text-slate-500 bg-slate-50 border-slate-200'
                     : 'text-emerald-700 bg-emerald-50 border-emerald-200'
               }`}
               title={
-                typeof importInfo.saveState === 'object'
-                  ? `A planilha não foi salva no servidor (${importInfo.saveState.error}). Só você está vendo esses dados e, ao recarregar a página, eles somem.`
-                  : importInfo.saveState === 'saving'
+                typeof imported.saveState === 'object'
+                  ? `A planilha não foi salva no servidor (${imported.saveState.error}). Só você está vendo esses dados e, ao recarregar a página, eles somem.`
+                  : imported.saveState === 'saving'
                     ? 'Salvando a planilha no servidor…'
                     : `Dados da planilha importada, salvos no servidor — todo mundo que abrir a apresentação vê esta versão.${
-                        importInfo.importedAt ? ` Importada em ${new Date(importInfo.importedAt).toLocaleString('pt-BR')}.` : ''
+                        imported.importedAt ? ` Importada em ${new Date(imported.importedAt).toLocaleString('pt-BR')}.` : ''
                       }`
               }
             >
-              <span className="max-w-[180px] truncate">📊 {importInfo.fileName}</span>
+              <span className="max-w-[180px] truncate">📊 {imported.fileName}</span>
               <button
                 onClick={restoreOriginalData}
-                disabled={importInfo.saveState === 'saving'}
+                disabled={imported.saveState === 'saving'}
                 className="flex items-center gap-0.5 underline-offset-2 hover:underline disabled:opacity-40 disabled:no-underline"
                 title="Descartar a planilha importada e voltar aos dados originais"
               >
@@ -679,7 +718,8 @@ export default function App() {
                              item.category === 'expeditions' ? 'Expedição' :
                              item.category === 'financials' ? 'Financeiro' :
                              item.category === 'operations' ? 'Operações' :
-                             item.category === 'insurance' ? 'Seguro' : 'Contato'}
+                             item.category === 'insurance' ? 'Seguro' :
+                             item.category === 'comparative' ? 'Comparativo' : 'Contato'}
                           </span>
                         </div>
 

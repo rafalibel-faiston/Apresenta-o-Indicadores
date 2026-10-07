@@ -4,6 +4,55 @@ A apresentação pode ler seus dados de uma planilha do Google Sheets em vez do
 código. Isso é opcional: se a variável `VITE_GOOGLE_SHEET_ID` não estiver
 configurada, o app usa os dados fixos de `src/data/slidesData.ts` normalmente.
 
+## A coluna `mes` — a planilha é um histórico, não uma foto
+
+**Toda aba aceita uma coluna `mes`**, e é ela que transforma a planilha num
+banco de dados de indicadores. A regra é simples: **ninguém apaga nada**. Todo
+mês você acrescenta linhas novas com a competência daquele mês, e os meses
+anteriores continuam ali, intactos.
+
+| mes | slide | order | label | value | type |
+|---|---|---|---|---|---|
+| `2026-08` | `correios` | 1 | Custo Total | 4011.20 | currency |
+| `2026-09` | `correios` | 1 | Custo Total | 4573.11 | currency |
+
+Com o histórico preenchido o app ganha duas coisas:
+
+- **Seletor de competência** no cabeçalho: dá para reabrir qualquer mês já
+  apresentado, exatamente como ele foi apresentado. O link aceita `?mes=2026-09`
+  para abrir direto num mês específico.
+- **Dois slides comparativos automáticos**, que não existem em mês nenhum da
+  planilha porque são calculados a partir dela: *Evolução Mensal do Custo
+  Logístico* (série histórica, variação mês a mês e variação por modalidade) e
+  *Comparativo Consolidado* (todos os indicadores × todas as competências, com
+  a coluna de fechamento do período).
+
+Ambos aparecem sozinhos a partir da **segunda** competência preenchida — com um
+mês só não há o que comparar.
+
+### Formatos aceitos na coluna `mes`
+
+Escreva como for mais natural; o app normaliza todos para a mesma competência:
+
+`2026-09` · `09/2026` · `SET.26` · `set/26` · `setembro/2026` · `SETEMBRO 2026`
+
+### Regras da coluna `mes`
+
+- **Deixar `mes` em branco** faz a linha valer para **todos** os meses. Use isso
+  só para constantes que não mudam (um título, um texto fixo). Números do mês
+  nunca devem ficar sem competência.
+- Uma planilha **sem nenhuma coluna `mes`** continua funcionando como antes,
+  como uma foto de um mês só — nada quebra, só não existe comparativo.
+- **Um mês só entra no comparativo nas abas que ele realmente preencheu.** Se
+  setembro tem `KPIs` mas ninguém preencheu `ConsolidadoBreakdown`, a
+  apresentação de setembro continua mostrando o dado do código (para nunca ficar
+  vazia), mas o comparativo mostra `—` naquela linha em vez de repetir um número
+  que não é daquele mês. Na prática: **preencha o mês inteiro**, senão o
+  histórico fica furado.
+- `global.mesAbrev` pode ter uma linha por competência, para controlar o rótulo
+  (`SET.26`) que aparece no cabeçalho e nos gráficos daquele mês. Sem ele, o
+  rótulo é gerado automaticamente a partir da competência.
+
 ## Como funciona
 
 - Uma única planilha do Google Sheets, com várias **abas** (guias na parte
@@ -30,9 +79,11 @@ configurada, o app usa os dados fixos de `src/data/slidesData.ts` normalmente.
 4. Configure a variável de ambiente `VITE_GOOGLE_SHEET_ID` com esse ID
    (no Railway: Settings → Variables; localmente: copie `env.example` para
    `.env` e cole o ID).
-5. Todo início de mês, abra a planilha e atualize os números. A apresentação
-   busca os dados a cada carregamento da página — não precisa gerar build
-   nem fazer deploy.
+5. Todo início de mês, abra a planilha e **acrescente** as linhas do mês novo,
+   preenchendo a coluna `mes` com a competência (ex.: `2026-10`). Não apague nem
+   sobrescreva os meses anteriores — é o histórico deles que alimenta os slides
+   comparativos. A apresentação busca os dados a cada carregamento da página —
+   não precisa gerar build nem fazer deploy.
 
 ## Formato dos números
 
@@ -69,6 +120,9 @@ Use exatamente estes valores na coluna `slide`:
 | `seguros-trags` | Seguro TRAGs e Arcos Dourados |
 | `seguros-satelite` | Seguro Starlink & Medição |
 | `custo-fatura` | Composição de Despesa de Faturas de Seguros |
+
+Os slides `evolucao-mensal` e `comparativo-consolidado` são **gerados** a partir
+do histórico — não têm abas próprias e não devem aparecer na coluna `slide`.
 
 O slide `agradecimento` (contato) não tem dados mensais e não precisa de
 planilha.

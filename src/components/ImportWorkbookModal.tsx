@@ -5,7 +5,7 @@ import { readXlsx, Workbook } from '../data/workbook/readXlsx';
 import { detectMonthLabel, importWorkbook, parseMonthLabel, SlideReport, unusedSheets } from '../data/workbook/importWorkbook';
 
 export interface AppliedImport {
-  slides: Slide[];
+  wb: Workbook;
   monthLabel: string;
   fileName: string;
   bytes: Uint8Array;
@@ -180,7 +180,7 @@ export default function ImportWorkbookModal({ baseSlides, onApply, onClose }: Pr
           </button>
           <button
             disabled={!result || !loaded}
-            onClick={() => result && loaded && onApply({ slides: result.slides, monthLabel: result.monthLabel, fileName: loaded.wb.fileName, bytes: loaded.bytes })}
+            onClick={() => result && loaded && onApply({ wb: loaded.wb, monthLabel: result.monthLabel, fileName: loaded.wb.fileName, bytes: loaded.bytes })}
             className="px-4 py-2 rounded-xl text-[12px] font-bold text-white disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90"
             style={{ backgroundColor: '#0054ec' }}
           >

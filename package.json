@@ -7,6 +7,7 @@
     "dev": "vite",
     "dev:server": "node server/index.mjs",
     "build": "tsc -b && vite build",
+    "test": "esbuild scripts/test-sheet.ts --bundle --platform=node --format=esm --outfile=node_modules/.cache/test-sheet.mjs --log-level=error && node node_modules/.cache/test-sheet.mjs",
     "preview": "vite preview",
     "start": "node server/index.mjs"
   },
